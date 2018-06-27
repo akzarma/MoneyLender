@@ -3,13 +3,24 @@ package com.oxvsys.moneylender;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
 
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.oxvsys.moneylender.MainActivity.database;
 
@@ -31,6 +42,10 @@ public class FragmentMonthlyLoan extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    String agent_selected;
+    String agents[] = {"Agent_0" , "Agent_1" , "Agent_2"};
+    String cust_id = "8";
 
     private OnFragmentInteractionListener mListener;
 
@@ -70,14 +85,66 @@ public class FragmentMonthlyLoan extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_fragment_monthly_loan, container, false);
+        agent_selected = agents[0];
         Button save_button = (Button) view.findViewById(R.id.grant_button_monthly);
+        final EditText account_no = (EditText) view.findViewById(R.id.account_number_monthly_grant);
+        final EditText edit_amount = (EditText) view.findViewById(R.id.amount_monthly_grant);
+        final EditText edit_o_date = (EditText) view.findViewById(R.id.start_date_monthly_grant);
+        final EditText edit_c_date = (EditText) view.findViewById(R.id.end_date_monthly_grant);
+        final EditText edit_roi = (EditText) view.findViewById(R.id.roi_monthly_grant);
+
+        Spinner spinner = (Spinner) view.findViewById(R.id.agent_link_monthly_grant);
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_dropdown_item,agents);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(spinnerAdapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                agent_selected = agents[position];
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                agent_selected = agents[0];
+            }
+        });
         save_button.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View v) {
-                String cust_id = "-LFy1_-zKuhq4JRajbpd";
-                DatabaseReference customer = database.getReference("customers").child(cust_id);
-                customer.child("amount").setValue("dayumboiyyya");
+
+                DatabaseReference agent_customer = database.getReference("AgentCustomer");
+                agent_customer.child(agent_selected).child(account_no.getText().toString()).setValue("");
+
+                String o_date = edit_o_date.getText().toString();
+                String c_date = edit_c_date.getText().toString();
+                String amount = edit_amount.getText().toString();
+                String roi = edit_roi.getText().toString();
+
+                DatabaseReference customers = database.getReference("Customers").child(cust_id).child("accounts");
+
+                Map<String , String> account_number_details = new HashMap<>();
+                account_number_details.put("no", account_no.getText().toString());
+                account_number_details.put("amt" , amount);
+                account_number_details.put("o_date" , o_date);
+                account_number_details.put("c_date" , c_date);
+                account_number_details.put("roi" , roi);
+                account_number_details.put("type" , "monthly");
+
+                Map<String,Object> map = new HashMap<>();
+                map.put(account_no.getText().toString(),account_number_details);
+
+                customers.updateChildren(map, new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                        Log.d("monthly stuff", "onComplete: " + databaseError);
+                    }
+                });
+
+//                customers.child("act_nos").child(account_no.getText().toString()).;
+
+//                agent_customer.child(agent_selected).push().setValue(account_no);
             }
         });
         return view;
@@ -106,6 +173,8 @@ public class FragmentMonthlyLoan extends Fragment {
         super.onDetach();
         mListener = null;
     }
+
+
 
     /**
      * This interface must be implemented by activities that contain this

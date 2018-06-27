@@ -48,17 +48,33 @@
         android:layout_below="@id/start_date_monthly_grant"/>
 
     <EditText
+        android:id="@+id/roi_monthly_grant"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="File end date"
+        android:inputType="date"
+        android:layout_below="@id/end_date_monthly_grant"/>
+
+    <EditText
         android:id="@+id/additional_info_monthly_grant"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/end_date_monthly_grant"
+        android:layout_below="@id/roi_monthly_grant"
         android:hint="Additional information"/>
+
+    <Spinner
+        android:id="@+id/agent_link_monthly_grant"
+        android:layout_width="match_parent"
+        android:layout_below="@id/additional_info_monthly_grant"
+        android:layout_height="wrap_content">
+
+    </Spinner>
 
     <Button
         android:id="@+id/grant_button_monthly"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/additional_info_monthly_grant"
+        android:layout_below="@id/agent_link_monthly_grant"
         android:text="Grant Loan"/>
 
 </RelativeLayout>
