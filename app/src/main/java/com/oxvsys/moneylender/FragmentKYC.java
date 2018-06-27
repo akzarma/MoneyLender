@@ -105,6 +105,8 @@ public class FragmentKYC extends Fragment {
                     @Override
                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                         if (databaseError == null) {
+
+                        } else {
                             Toast.makeText(getContext(), "There is some error in saving the details.", Toast.LENGTH_SHORT).show();
                         }
                     }

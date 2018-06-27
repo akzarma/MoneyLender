@@ -89,13 +89,17 @@ public class MainActivity extends AppCompatActivity
                     commit();
         } else if (id == R.id.nav_gallery) {
             if (getSupportActionBar() != null)
-                getSupportActionBar().setTitle("Monthly Loan");
-            FragmentMonthlyLoan fragmentKYC = new FragmentMonthlyLoan();
-            fragmentTransaction.replace(R.id.fragment_container, fragmentKYC).addToBackStack(null).
+                getSupportActionBar().setTitle("Daily Collect Loan");
+            FragmentCollectDaily fragmentCollectDaily = new FragmentCollectDaily();
+            fragmentTransaction.replace(R.id.fragment_container, fragmentCollectDaily).addToBackStack(null).
                     commit();
 
         } else if (id == R.id.nav_slideshow) {
-
+            if (getSupportActionBar() != null)
+                getSupportActionBar().setTitle("Monthly Collect Loan");
+            FragmentCollectMonthly fragmentCollectMonthly = new FragmentCollectMonthly();
+            fragmentTransaction.replace(R.id.fragment_container, fragmentCollectMonthly).addToBackStack(null).
+                    commit();
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {

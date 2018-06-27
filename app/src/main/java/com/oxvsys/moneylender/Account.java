@@ -8,7 +8,7 @@ public class Account {
         private Calendar o_date;
         private Calendar c_date;
         private int roi;
-        private int type; //    "daily" or  "monthly"
+        private String type; //    "daily" or  "monthly"
 
     public String getNo() {
         return no;
@@ -50,11 +50,11 @@ public class Account {
         this.roi = roi;
     }
 
-    public int getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(String type) {
         this.type = type;
     }
 }

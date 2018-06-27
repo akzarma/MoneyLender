@@ -1,5 +1,7 @@
 package com.oxvsys.moneylender;
 
+import java.util.List;
+
 public class Customer {
     private String id;
     private String name;
@@ -7,6 +9,7 @@ public class Customer {
     private String aadhar_id;
     private String mobile;
     private String DOB;
+    private List<Account> accounts;
 
     public String getId() {
         return id;
