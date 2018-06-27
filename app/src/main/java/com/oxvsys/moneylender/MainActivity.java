@@ -100,10 +100,12 @@ public class MainActivity extends AppCompatActivity
             FragmentCollectMonthly fragmentCollectMonthly = new FragmentCollectMonthly();
             fragmentTransaction.replace(R.id.fragment_container, fragmentCollectMonthly).addToBackStack(null).
                     commit();
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
+        } else if (id == R.id.nav_monthly_loan_grant) {
+            if (getSupportActionBar() != null)
+                getSupportActionBar().setTitle("Monthly Loan Grant");
+            FragmentMonthlyLoan fragmentCollectMonthly = new FragmentMonthlyLoan();
+            fragmentTransaction.replace(R.id.fragment_container, fragmentCollectMonthly).addToBackStack(null).
+                    commit();
         } else if (id == R.id.nav_send) {
 
         }
