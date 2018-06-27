@@ -7,6 +7,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+
+import com.google.firebase.database.DatabaseReference;
+
+import static com.oxvsys.moneylender.MainActivity.database;
 
 
 /**
@@ -64,7 +69,18 @@ public class FragmentMonthlyLoan extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_fragment_monthly_loan, container, false);
+        View view = inflater.inflate(R.layout.fragment_fragment_monthly_loan, container, false);
+        Button save_button = (Button) view.findViewById(R.id.grant_button_monthly);
+        save_button.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                String cust_id = "-LFy1_-zKuhq4JRajbpd";
+                DatabaseReference customer = database.getReference("customers").child(cust_id);
+                customer.child("amount").setValue("dayumboiyyya");
+            }
+        });
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -80,8 +96,8 @@ public class FragmentMonthlyLoan extends Fragment {
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+//            throw new RuntimeException(context.toString()
+//                    + " must implement OnFragmentInteractionListener");
         }
     }
 

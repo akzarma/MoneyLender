@@ -4,8 +4,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.oxvsys.moneylender.R;
-
 public class HomeActivity extends AppCompatActivity implements FragmentKYC.OnFragmentInteractionListener {
 
     @Override
