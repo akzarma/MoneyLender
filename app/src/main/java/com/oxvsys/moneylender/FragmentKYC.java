@@ -3,25 +3,20 @@ package com.oxvsys.moneylender;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static android.content.ContentValues.TAG;
 import static com.oxvsys.moneylender.MainActivity.database;
 
 
@@ -89,8 +84,8 @@ public class FragmentKYC extends Fragment {
         final EditText mobile_field = (EditText) view.findViewById(R.id.mobile_field);
         final EditText dob_field = (EditText) view.findViewById(R.id.dob_field);
         final EditText address_field = (EditText) view.findViewById(R.id.address_field);
-        Button save_button = (Button) view.findViewById(R.id.save_button);
-        save_button.setOnClickListener(new View.OnClickListener(){
+        Button save_button = (Button) view.findViewById(R.id.deposit_button);
+        save_button.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -105,12 +100,12 @@ public class FragmentKYC extends Fragment {
                 attrs.put("dob", dob_field.getText().toString());
                 attrs.put("address", address_field.getText().toString());
 
-                id.put( key, attrs);
+                id.put(key, attrs);
                 customers.updateChildren(id, new DatabaseReference.CompletionListener() {
                     @Override
                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                         if (databaseError == null) {
-
+                            Toast.makeText(getContext(), "There is some error in saving the details.", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
