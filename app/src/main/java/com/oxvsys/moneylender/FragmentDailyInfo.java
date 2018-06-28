@@ -4,9 +4,17 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 
 /**
@@ -22,6 +30,10 @@ public class FragmentDailyInfo extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private RecyclerView recyclerView;
+    private AgentAdapter mAdapter;
+    private TextView currentDay_textView;
+
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -65,6 +77,57 @@ public class FragmentDailyInfo extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_daily_info, container, false);
+        recyclerView = view.findViewById(R.id.recycler);
+        currentDay_textView = view.findViewById(R.id.fragment_textV_day);
+        currentDay_textView.setText("Daily Info");
+
+        Agent agent = new Agent();
+        agent.setId("0");
+        agent.setName("AkshayAgent");
+        Agent agent1 = new Agent();
+        agent1.setId("1");
+        agent1.setName("Anish");
+
+        Account account = new Account();
+        account.setAmt(1000);
+        account.setNo("230");
+        account.setType("daily");
+
+        Account account1 = new Account();
+        account1.setAmt(2000);
+        account1.setNo("231");
+        account1.setType("daily");
+
+        List<AccountAmountCollect> accountAmountCollectList = new ArrayList<>();
+        accountAmountCollectList.add(new AccountAmountCollect(account, 100));
+        accountAmountCollectList.add(new AccountAmountCollect(account1, 200));
+
+        Calendar collect_date = Calendar.getInstance();
+        collect_date.set(2018, 6 - 1, 28);
+        collect_date.set(Calendar.HOUR_OF_DAY, 0);
+        collect_date.set(Calendar.MINUTE, 0);
+        collect_date.set(Calendar.SECOND, 0);
+        collect_date.set(Calendar.MILLISECOND, 0);
+
+        List<AgentCollect> agentCollectList = new ArrayList<>();
+        AgentCollect agentCollect = new AgentCollect(agent, "daily", collect_date, accountAmountCollectList);
+        AgentCollect agentCollect1 = new AgentCollect(agent1, "daily", collect_date, accountAmountCollectList);
+
+        agentCollectList.add(agentCollect);
+        agentCollectList.add(agentCollect1);
+
+        Calendar selected_cal = Calendar.getInstance();
+        selected_cal.set(2018, 6 - 1, 28);
+        selected_cal.set(Calendar.HOUR_OF_DAY, 0);
+        selected_cal.set(Calendar.MINUTE, 0);
+        selected_cal.set(Calendar.SECOND, 0);
+        selected_cal.set(Calendar.MILLISECOND, 0);
+
+        mAdapter = new AgentAdapter(agentCollectList, selected_cal, getContext());
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(mAdapter);
 
         return view;
     }
@@ -82,8 +145,7 @@ public class FragmentDailyInfo extends Fragment {
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+
         }
     }
 

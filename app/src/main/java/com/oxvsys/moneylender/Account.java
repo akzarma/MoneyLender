@@ -57,4 +57,6 @@ public class Account {
     public void setType(String type) {
         this.type = type;
     }
+
+
 }

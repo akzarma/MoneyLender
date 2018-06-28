@@ -109,8 +109,14 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_dashboard) {
             if (getSupportActionBar() != null)
                 getSupportActionBar().setTitle("Dashboard");
-            FragmentDashboard fragmentCollectMonthly = new FragmentDashboard();
-            fragmentTransaction.replace(R.id.fragment_container, fragmentCollectMonthly).addToBackStack(null).
+            FragmentDashboard fragmentDashboard = new FragmentDashboard();
+            fragmentTransaction.replace(R.id.fragment_container, fragmentDashboard).addToBackStack(null).
+                    commit();
+        } else if(id == R.id.nav_send){
+            if (getSupportActionBar() != null)
+                getSupportActionBar().setTitle("Daily Info");
+            FragmentDailyInfo fragmentDailyInfo = new FragmentDailyInfo();
+            fragmentTransaction.replace(R.id.fragment_container, fragmentDailyInfo).addToBackStack(null).
                     commit();
         }
 
