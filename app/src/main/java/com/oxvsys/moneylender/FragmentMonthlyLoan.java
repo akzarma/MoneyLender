@@ -28,17 +28,7 @@ import java.util.Map;
 import static com.oxvsys.moneylender.MainActivity.database;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link FragmentMonthlyLoan.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link FragmentMonthlyLoan#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class FragmentMonthlyLoan extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -56,15 +46,6 @@ public class FragmentMonthlyLoan extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment FragmentMonthlyLoan.
-     */
-    // TODO: Rename and change types and number of parameters
     public static FragmentMonthlyLoan newInstance(String param1, String param2) {
         FragmentMonthlyLoan fragment = new FragmentMonthlyLoan();
         Bundle args = new Bundle();
@@ -86,11 +67,10 @@ public class FragmentMonthlyLoan extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_fragment_monthly_loan, container, false);
         agent_selected = agents[0];
         Button save_button = (Button) view.findViewById(R.id.grant_button_monthly);
-        final EditText account_no = (EditText) view.findViewById(R.id.account_number_monthly_grant);
+        final EditText account_no = view.findViewById(R.id.account_number_monthly_grant);
         final EditText edit_amount = (EditText) view.findViewById(R.id.amount_monthly_grant);
         final EditText edit_o_date = (EditText) view.findViewById(R.id.start_date_monthly_grant);
         final EditText edit_c_date = (EditText) view.findViewById(R.id.end_date_monthly_grant);
@@ -125,7 +105,7 @@ public class FragmentMonthlyLoan extends Fragment {
         });
 
         Spinner spinner = (Spinner) view.findViewById(R.id.agent_link_monthly_grant);
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, agents);
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, agents);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(spinnerAdapter);
 

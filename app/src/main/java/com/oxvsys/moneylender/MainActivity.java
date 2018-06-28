@@ -106,8 +106,12 @@ public class MainActivity extends AppCompatActivity
             FragmentMonthlyLoan fragmentCollectMonthly = new FragmentMonthlyLoan();
             fragmentTransaction.replace(R.id.fragment_container, fragmentCollectMonthly).addToBackStack(null).
                     commit();
-        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.nav_dashboard) {
+            if (getSupportActionBar() != null)
+                getSupportActionBar().setTitle("Monthly Loan Grant");
+            FragmentDashboard fragmentCollectMonthly = new FragmentDashboard();
+            fragmentTransaction.replace(R.id.fragment_container, fragmentCollectMonthly).addToBackStack(null).
+                    commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
