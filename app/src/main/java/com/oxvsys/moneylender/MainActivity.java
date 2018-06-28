@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity
                     commit();
         } else if (id == R.id.nav_dashboard) {
             if (getSupportActionBar() != null)
-                getSupportActionBar().setTitle("Monthly Loan Grant");
+                getSupportActionBar().setTitle("Dashboard");
             FragmentDashboard fragmentCollectMonthly = new FragmentDashboard();
             fragmentTransaction.replace(R.id.fragment_container, fragmentCollectMonthly).addToBackStack(null).
                     commit();
