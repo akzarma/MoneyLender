@@ -15,6 +15,8 @@ import android.view.MenuItem;
 
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Calendar;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,FragmentKYC.OnFragmentInteractionListener {
 
@@ -109,7 +111,8 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_dashboard) {
             if (getSupportActionBar() != null)
                 getSupportActionBar().setTitle("Dashboard");
-            FragmentDashboard fragmentDashboard = new FragmentDashboard();
+            Calendar calendar = Calendar.getInstance();
+            FragmentDashboard fragmentDashboard = FragmentDashboard.newInstance(calendar);
             fragmentTransaction.replace(R.id.fragment_container, fragmentDashboard).addToBackStack(null).
                     commit();
         } else if(id == R.id.nav_send){

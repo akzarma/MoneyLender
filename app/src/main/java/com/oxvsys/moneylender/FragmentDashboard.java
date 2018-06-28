@@ -1,15 +1,18 @@
 package com.oxvsys.moneylender;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -31,6 +34,7 @@ public class FragmentDashboard extends Fragment {
     private String mParam2;
 
     Bundle date_bundle;
+    Button date_button;
     int total_daily_amount = 0;
     int total_monthly_amount_till_today = 0;
     TextView todays_value;
@@ -43,13 +47,11 @@ public class FragmentDashboard extends Fragment {
         // Required empty public constructor
     }
 
-    public static FragmentDashboard newInstance(String param1, String param2 , Calendar sel_cal) {
+    public static FragmentDashboard newInstance(Calendar sel_cal) {
         FragmentDashboard fragment = new FragmentDashboard();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putSerializable(ARG_PARAM1,sel_cal);
         fragment.setArguments(args);
-
         return fragment;
     }
 
@@ -68,18 +70,27 @@ public class FragmentDashboard extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
-        final Button date_button = (Button) view.findViewById(R.id.dashboard_date_select);
+
+        date_button = (Button) view.findViewById(R.id.dashboard_title_button);
+
         todays_value = (TextView) view.findViewById(R.id.todays_collection_value_dashboard);
         view_monthly_value_till_today = (TextView) view.findViewById(R.id.monthly_collection_value_dashboard);
 
+        sel_calendar = (Calendar) getArguments().getSerializable(ARG_PARAM1);
 
-        DatabaseReference ref = database.getReference("agents").child("daily");
+        int month = sel_calendar.get(Calendar.MONTH) + 1;
+        final String sel_date = sel_calendar.get(Calendar.DAY_OF_MONTH) + "-" +
+                month + "-" +
+                sel_calendar.get(Calendar.YEAR);
+
+        date_button.setText(sel_date);
+        DatabaseReference ref = database.getReference("agentCollect").child("daily");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot agents : dataSnapshot.getChildren()){
                     for (DataSnapshot date : agents.getChildren()){
-                        if(date.getKey().equals("29-6-2018")){
+                        if(date.getKey().equals(sel_date)){
                             for (DataSnapshot accounts : date.getChildren()){
                                 total_daily_amount += Long.parseLong(accounts.getValue().toString());
                                 Log.d("------", "onDataChange: " + total_daily_amount);
@@ -97,13 +108,13 @@ public class FragmentDashboard extends Fragment {
             }
         });
 
-        ref = database.getReference("agents").child("monthly");
-        ref.addValueEventListener(new ValueEventListener() {
+        DatabaseReference month_ref = database.getReference("agentCollect").child("monthly");
+        month_ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot agents : dataSnapshot.getChildren()){
                     for (DataSnapshot date : agents.getChildren()){
-                        if(date.getKey().equals("28-6-2018")){
+                        if(date.getKey().equals(sel_date)){
                             for (DataSnapshot accounts : date.getChildren()){
                                 total_monthly_amount_till_today += Integer.parseInt(accounts.getValue().toString());
                                 Log.d("------", "onDataChange: " + total_daily_amount);
@@ -121,38 +132,33 @@ public class FragmentDashboard extends Fragment {
             }
         });
 
-//        date_button.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Calendar mcurrentDate = Calendar.getInstance();
-//                int mYear = mcurrentDate.get(Calendar.YEAR);
-//                int mMonth = mcurrentDate.get(Calendar.MONTH);
-//                int mDay = mcurrentDate.get(Calendar.DAY_OF_MONTH);
-//
-//                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-//                    DatePickerDialog mDatePicker = new DatePickerDialog(
-//                            getActivity(), new DatePickerDialog.OnDateSetListener() {
-//                        public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
-//                            Calendar selected_cal = Calendar.getInstance();
-//                            selected_cal.set(selectedyear,selectedmonth,selectedday);
-//                            selected_cal.set(Calendar.HOUR_OF_DAY, 0);
-//                            selected_cal.set(Calendar.MINUTE, 0);
-//                            selected_cal.set(Calendar.SECOND, 0);
-//                            selected_cal.set(Calendar.MILLISECOND, 0);
-//                            FragmentTransaction ft = getFragmentManager().beginTransaction();
-//                            FragmentDashboard fd = new FragmentDashboard();
-//                            String date_string_selected;
-//                            date_bundle.put
-//                            date_bundle.putString("date" , );
-//                            fd.setArguments(date_bundle);
-//                            ft.detach(getParentFragment()).attach(getParentFragment()).commit();
-//                        }
-//                    }, mYear, mMonth, mDay);
-//                    mDatePicker.setTitle("Select date");
-//                    mDatePicker.show();
-//                }
-//            }
-//        });
+        date_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar mcurrentDate = Calendar.getInstance();
+                int mYear = sel_calendar.get(Calendar.YEAR);
+                int mMonth = sel_calendar.get(Calendar.MONTH);
+                int mDay = sel_calendar.get(Calendar.DAY_OF_MONTH);
+
+                    DatePickerDialog mDatePicker = new DatePickerDialog(
+                            getActivity(), new DatePickerDialog.OnDateSetListener() {
+                        public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
+                            Calendar selected_cal = Calendar.getInstance();
+                            selected_cal.set(selectedyear,selectedmonth,selectedday);
+                            selected_cal.set(Calendar.HOUR_OF_DAY, 0);
+                            selected_cal.set(Calendar.MINUTE, 0);
+                            selected_cal.set(Calendar.SECOND, 0);
+                            selected_cal.set(Calendar.MILLISECOND, 0);
+                            FragmentTransaction ft = getFragmentManager().beginTransaction();
+                            FragmentDashboard fd = FragmentDashboard.newInstance(selected_cal);
+                            ft.replace(R.id.fragment_container, fd).addToBackStack(null).
+                                    commit();
+                        }
+                    }, mYear, mMonth, mDay);
+                    mDatePicker.setTitle("Select date");
+                    mDatePicker.show();
+            }
+        });
 
         return view;
     }
