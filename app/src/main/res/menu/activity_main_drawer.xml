@@ -17,17 +17,20 @@
             android:icon="@drawable/ic_menu_slideshow"
             android:title="Collect Monthly Loan" />
         <item
-            android:id="@+id/nav_manage"
+            android:id="@+id/nav_monthly_loan_grant"
             android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+            android:title="Monthly Loan Grant" />
+
+        <!--<item-->
+
     </group>
 
     <item android:title="Communicate">
         <menu>
             <item
-                android:id="@+id/nav_share"
+                android:id="@+id/nav_dashboard"
                 android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
+                android:title="Dashboard" />
             <item
                 android:id="@+id/nav_send"
                 android:icon="@drawable/ic_menu_send"
