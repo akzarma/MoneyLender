@@ -81,7 +81,7 @@ public class FragmentDashboard extends Fragment {
                     for (DataSnapshot date : agents.getChildren()){
                         if(date.getKey().equals("29-6-2018")){
                             for (DataSnapshot accounts : date.getChildren()){
-                                total_daily_amount += Integer.parseInt(accounts.getValue().toString());
+                                total_daily_amount += Long.parseLong(accounts.getValue().toString());
                                 Log.d("------", "onDataChange: " + total_daily_amount);
                             }
                         }

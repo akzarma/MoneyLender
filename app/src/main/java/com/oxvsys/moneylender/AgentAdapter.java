@@ -1,5 +1,6 @@
 package com.oxvsys.moneylender;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
@@ -32,6 +33,7 @@ public class AgentAdapter extends RecyclerView.Adapter<AgentAdapter.AgentHolder>
         return new AgentHolder(itemView);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull AgentHolder holder, int position) {
         AgentCollect agentCollect = agentCollectList.get(position);
@@ -41,7 +43,7 @@ public class AgentAdapter extends RecyclerView.Adapter<AgentAdapter.AgentHolder>
             total_collect += accountAmountCollect.getAmount();
         }
         holder.agent_name.setText(agentCollect.getAgent().getName());
-        holder.total_collection.setText(String.valueOf(total_collect));
+        holder.total_collection.setText("₹ "+String.valueOf(total_collect));
     }
 
     @Override

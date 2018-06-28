@@ -3,6 +3,7 @@ package com.oxvsys.moneylender;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,9 +13,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import static com.oxvsys.moneylender.MainActivity.database;
 
 
 /**
@@ -80,6 +88,45 @@ public class FragmentDailyInfo extends Fragment {
         recyclerView = view.findViewById(R.id.recycler);
         currentDay_textView = view.findViewById(R.id.fragment_textV_day);
         currentDay_textView.setText("Daily Info");
+
+        DatabaseReference agentDailyCollects = database.getReference("agentCollects").child("daily");
+
+
+        agentDailyCollects.addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                List<Agent> agents = new ArrayList<>();
+                for(DataSnapshot each_agent: dataSnapshot.getChildren()){
+                    Agent curr_agent = new Agent();
+                    curr_agent.setId(each_agent.getKey());
+                    agents.add(curr_agent);
+
+                    Calendar selected_cal = Calendar.getInstance();
+                    selected_cal.set(2018, 6 - 1, 28);
+                    selected_cal.set(Calendar.HOUR_OF_DAY, 0);
+                    selected_cal.set(Calendar.MINUTE, 0);
+                    selected_cal.set(Calendar.SECOND, 0);
+                    selected_cal.set(Calendar.MILLISECOND, 0);
+
+                    for(DataSnapshot date_snap: each_agent.getChildren()){
+
+                    }
+
+
+                }
+
+
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         Agent agent = new Agent();
         agent.setId("0");
