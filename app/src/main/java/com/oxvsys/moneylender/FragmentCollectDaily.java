@@ -14,7 +14,7 @@ import com.google.firebase.database.DatabaseReference;
 
 import java.util.Calendar;
 
-import static com.oxvsys.moneylender.MainActivity.database;
+import static com.oxvsys.moneylender.LoginActivity.database;
 
 
 /**

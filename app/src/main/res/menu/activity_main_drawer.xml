@@ -20,6 +20,10 @@
             android:id="@+id/nav_monthly_loan_grant"
             android:icon="@drawable/ic_menu_manage"
             android:title="Monthly Loan Grant" />
+        <item
+            android:id="@+id/nav_agent_register"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Agent Register" />
 
         <!--<item-->
 
