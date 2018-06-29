@@ -45,16 +45,13 @@ public class FragmentCollectDaily extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment FragmentCollectDaily.
      */
     // TODO: Rename and change types and number of parameters
-    public static FragmentCollectDaily newInstance(String param1, String param2) {
+    public static FragmentCollectDaily newInstance(Account account) {
         FragmentCollectDaily fragment = new FragmentCollectDaily();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putSerializable(ARG_PARAM1, account);
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,10 +59,6 @@ public class FragmentCollectDaily extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -79,18 +72,16 @@ public class FragmentCollectDaily extends Fragment {
 //        selected_customer.setId("A1");
         final EditText amount_field = view.findViewById(R.id.amount_field);
         Button deposit_button = view.findViewById(R.id.deposit_button);
+        final Account selected_account = (Account) getArguments().getSerializable(ARG_PARAM1);
+        amount_field.setText(selected_account.getNo());
         deposit_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int amount_recieved = Integer.parseInt(String.valueOf(amount_field.getText()));
-                Account selected_account = new Account();
-                selected_account.setNo("1");
-                selected_account.setAmt(1000);
-                selected_account.setType("daily");
+
                 //=========================================================================================================
 
                 final Calendar curr_cal = Calendar.getInstance();
-                curr_cal.set(2018, 6 - 1, 28);
                 curr_cal.set(Calendar.HOUR_OF_DAY, 0);
                 curr_cal.set(Calendar.MINUTE, 0);
                 curr_cal.set(Calendar.SECOND, 0);

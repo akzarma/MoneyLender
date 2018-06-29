@@ -92,21 +92,17 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_gallery) {
             if (getSupportActionBar() != null)
                 getSupportActionBar().setTitle("Daily Collect Loan");
-            FragmentCollectDaily fragmentCollectDaily = new FragmentCollectDaily();
-            fragmentTransaction.replace(R.id.fragment_container, fragmentCollectDaily).addToBackStack(null).
+            FragmentSelectAccount fragmentSelectAccount = new FragmentSelectAccount();
+            fragmentTransaction.replace(R.id.fragment_container, fragmentSelectAccount).addToBackStack(null).
                     commit();
 
         } else if (id == R.id.nav_slideshow) {
-            if (getSupportActionBar() != null)
-                getSupportActionBar().setTitle("Monthly Collect Loan");
-            FragmentCollectMonthly fragmentCollectMonthly = new FragmentCollectMonthly();
-            fragmentTransaction.replace(R.id.fragment_container, fragmentCollectMonthly).addToBackStack(null).
-                    commit();
+
         } else if (id == R.id.nav_monthly_loan_grant) {
             if (getSupportActionBar() != null)
                 getSupportActionBar().setTitle("Monthly Loan Grant");
-            FragmentMonthlyLoan fragmentCollectMonthly = new FragmentMonthlyLoan();
-            fragmentTransaction.replace(R.id.fragment_container, fragmentCollectMonthly).addToBackStack(null).
+            FragmentSelectCustomer fragmentSelectCustomer = new FragmentSelectCustomer();
+            fragmentTransaction.replace(R.id.fragment_container, fragmentSelectCustomer).addToBackStack(null).
                     commit();
         } else if (id == R.id.nav_dashboard) {
             if (getSupportActionBar() != null)

@@ -150,7 +150,7 @@ public class FragmentDailyLoan extends Fragment {
             @Override
             public void onClick(View v) {
 
-                DatabaseReference agent_customer = database.getReference("AgentCustomer");
+                DatabaseReference agent_customer = database.getReference("agentAccount");
                 agent_customer.child(agent_selected).child(account_no.getText().toString()).setValue("");
 
                 String o_date = edit_o_date.getText().toString();

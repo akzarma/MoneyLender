@@ -1,5 +1,8 @@
 package com.oxvsys.moneylender;
 
+import java.io.Serializable;
+import java.io.SerializablePermission;
+
 public class Agent {
     String id;
     String name;

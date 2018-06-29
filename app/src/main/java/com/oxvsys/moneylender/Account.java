@@ -1,8 +1,9 @@
 package com.oxvsys.moneylender;
 
+import java.io.Serializable;
 import java.util.Calendar;
 
-public class Account {
+public class Account implements Serializable {
         private String no;
         private int amt;
         private Calendar o_date;

@@ -3,18 +3,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FragmentCollectMonthly">
+    tools:context=".FragmentSelectAccount">
 
     <!-- TODO: Update blank fragment layout -->
-    <EditText
-        android:id="@+id/amount_field"
+    <Spinner
+        android:id="@+id/account_spinner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
+
+    </Spinner>
+
     <Button
-        android:id="@+id/deposit_button"
+        android:id="@+id/next_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/amount_field"
-        android:text="Collect"/>
+        android:layout_below="@id/account_spinner"
+        android:layout_alignParentStart="true"
+        android:text="Next" />
+
 
 </RelativeLayout>
