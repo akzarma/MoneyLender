@@ -8,7 +8,7 @@ public class Account {
         private Calendar o_date;
         private Calendar c_date;
         private int roi;
-        private String type; //    "daily" or  "monthly"
+        private String type; //    "0" or  "1"
 
     public String getNo() {
         return no;

@@ -74,7 +74,7 @@ public class FragmentCollectDaily extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_collect_daily, container, false);
         //==================HARD CODED=============================================================================
-        final String agent_id = "0"; //get logged in id and check type of user == "agent" and also customer in next line
+        final String agent_id = "agent_0"; //get logged in id and check type of user == "agent" and also customer in next line
 //        Customer selected_customer = new Customer();
 //        selected_customer.setId("A1");
         final EditText amount_field = view.findViewById(R.id.amount_field);
@@ -99,7 +99,7 @@ public class FragmentCollectDaily extends Fragment {
                         String.valueOf(curr_cal.get(Calendar.MONTH)) + "-" +
                         String.valueOf(curr_cal.get(Calendar.YEAR));
 
-                final DatabaseReference agent = database.getReference("agents/");
+                final DatabaseReference agent = database.getReference("agentCollect");
 
 //        agent.addListenerForSingleValueEvent(new ValueEventListener() {
 //            @Override
@@ -124,7 +124,7 @@ public class FragmentCollectDaily extends Fragment {
 //
 //            }
 //        });
-                agent.child("daily").child(agent_id).child(String.valueOf(curr_cal.get(Calendar.DAY_OF_MONTH)) + "-" +
+                agent.child(agent_id).child(String.valueOf(curr_cal.get(Calendar.DAY_OF_MONTH)) + "-" +
                         String.valueOf(curr_cal.get(Calendar.MONTH) + 1) + "-" +
                         String.valueOf(curr_cal.get(Calendar.YEAR))).child(selected_account.getNo()).setValue(amount_recieved);
 

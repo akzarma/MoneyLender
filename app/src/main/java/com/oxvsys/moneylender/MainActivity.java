@@ -118,7 +118,8 @@ public class MainActivity extends AppCompatActivity
         } else if(id == R.id.nav_send){
             if (getSupportActionBar() != null)
                 getSupportActionBar().setTitle("Daily Info");
-            FragmentDailyInfo fragmentDailyInfo = new FragmentDailyInfo();
+            Calendar calendar = Calendar.getInstance();
+            FragmentDailyInfo fragmentDailyInfo = FragmentDailyInfo.newInstance(calendar);
             fragmentTransaction.replace(R.id.fragment_container, fragmentDailyInfo).addToBackStack(null).
                     commit();
         }

@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,11 +42,10 @@ public class FragmentDailyInfo extends Fragment {
     private RecyclerView recyclerView;
     private AgentAdapter mAdapter;
     private TextView currentDay_textView;
+    Calendar sel_calendar;
 
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+
 
     private OnFragmentInteractionListener mListener;
 
@@ -57,16 +57,13 @@ public class FragmentDailyInfo extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment FragmentDailyInfo.
      */
     // TODO: Rename and change types and number of parameters
-    public static FragmentDailyInfo newInstance(String param1, String param2) {
+    public static FragmentDailyInfo newInstance(Calendar sel_cal) {
         FragmentDailyInfo fragment = new FragmentDailyInfo();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putSerializable(ARG_PARAM1, sel_cal);
         fragment.setArguments(args);
         return fragment;
     }
@@ -74,10 +71,6 @@ public class FragmentDailyInfo extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -89,7 +82,14 @@ public class FragmentDailyInfo extends Fragment {
         currentDay_textView = view.findViewById(R.id.fragment_textV_day);
         currentDay_textView.setText("Daily Info");
 
-        DatabaseReference agentDailyCollects = database.getReference("agentCollects").child("daily");
+        sel_calendar = (Calendar) getArguments().getSerializable(ARG_PARAM1);
+
+        int month = sel_calendar.get(Calendar.MONTH) + 1;
+        final String sel_date = sel_calendar.get(Calendar.DAY_OF_MONTH) + "-" +
+                month + "-" +
+                sel_calendar.get(Calendar.YEAR);
+
+        DatabaseReference agentDailyCollects = database.getReference("agentCollect");
 
 
         agentDailyCollects.addValueEventListener(new ValueEventListener() {
@@ -98,26 +98,36 @@ public class FragmentDailyInfo extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 List<Agent> agents = new ArrayList<>();
-                for(DataSnapshot each_agent: dataSnapshot.getChildren()){
+                for (DataSnapshot each_agent : dataSnapshot.getChildren()) {
                     Agent curr_agent = new Agent();
                     curr_agent.setId(each_agent.getKey());
                     agents.add(curr_agent);
 
-                    Calendar selected_cal = Calendar.getInstance();
-                    selected_cal.set(2018, 6 - 1, 28);
-                    selected_cal.set(Calendar.HOUR_OF_DAY, 0);
-                    selected_cal.set(Calendar.MINUTE, 0);
-                    selected_cal.set(Calendar.SECOND, 0);
-                    selected_cal.set(Calendar.MILLISECOND, 0);
+                    List<AgentCollect> agentCollectList = new ArrayList<>();
 
-                    for(DataSnapshot date_snap: each_agent.getChildren()){
+                    for (DataSnapshot date : each_agent.getChildren()) {
+                        if (date.getKey().equals(sel_date)) {
+                            List<AccountAmountCollect> accountAmountCollectList = new ArrayList<>();
+                            for (DataSnapshot each_account : date.getChildren()) {
+                                Account account = new Account();
+                                account.setType("daily");
+                                account.setNo(each_account.getKey());
 
+                                accountAmountCollectList.add(new AccountAmountCollect(account,
+                                        Integer.parseInt(each_account.getValue().toString())));
+                            }
+                            agentCollectList.add(new AgentCollect(curr_agent, "daily", sel_calendar, accountAmountCollectList));
+
+                        }
                     }
 
+                    mAdapter = new AgentAdapter(agentCollectList, sel_calendar, getContext());
+                    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+                    recyclerView.setLayoutManager(mLayoutManager);
+                    recyclerView.setItemAnimator(new DefaultItemAnimator());
+                    recyclerView.setAdapter(mAdapter);
 
                 }
-
-
 
 
             }
@@ -128,53 +138,53 @@ public class FragmentDailyInfo extends Fragment {
             }
         });
 
-        Agent agent = new Agent();
-        agent.setId("0");
-        agent.setName("AkshayAgent");
-        Agent agent1 = new Agent();
-        agent1.setId("1");
-        agent1.setName("Anish");
-
-        Account account = new Account();
-        account.setAmt(1000);
-        account.setNo("230");
-        account.setType("daily");
-
-        Account account1 = new Account();
-        account1.setAmt(2000);
-        account1.setNo("231");
-        account1.setType("daily");
-
-        List<AccountAmountCollect> accountAmountCollectList = new ArrayList<>();
-        accountAmountCollectList.add(new AccountAmountCollect(account, 100));
-        accountAmountCollectList.add(new AccountAmountCollect(account1, 200));
-
-        Calendar collect_date = Calendar.getInstance();
-        collect_date.set(2018, 6 - 1, 28);
-        collect_date.set(Calendar.HOUR_OF_DAY, 0);
-        collect_date.set(Calendar.MINUTE, 0);
-        collect_date.set(Calendar.SECOND, 0);
-        collect_date.set(Calendar.MILLISECOND, 0);
-
-        List<AgentCollect> agentCollectList = new ArrayList<>();
-        AgentCollect agentCollect = new AgentCollect(agent, "daily", collect_date, accountAmountCollectList);
-        AgentCollect agentCollect1 = new AgentCollect(agent1, "daily", collect_date, accountAmountCollectList);
-
-        agentCollectList.add(agentCollect);
-        agentCollectList.add(agentCollect1);
-
-        Calendar selected_cal = Calendar.getInstance();
-        selected_cal.set(2018, 6 - 1, 28);
-        selected_cal.set(Calendar.HOUR_OF_DAY, 0);
-        selected_cal.set(Calendar.MINUTE, 0);
-        selected_cal.set(Calendar.SECOND, 0);
-        selected_cal.set(Calendar.MILLISECOND, 0);
-
-        mAdapter = new AgentAdapter(agentCollectList, selected_cal, getContext());
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(mAdapter);
+//        Agent agent = new Agent();
+//        agent.setId("0");
+//        agent.setName("AkshayAgent");
+//        Agent agent1 = new Agent();
+//        agent1.setId("1");
+//        agent1.setName("Anish");
+//
+//        Account account = new Account();
+//        account.setAmt(1000);
+//        account.setNo("230");
+//        account.setType("daily");
+//
+//        Account account1 = new Account();
+//        account1.setAmt(2000);
+//        account1.setNo("231");
+//        account1.setType("daily");
+//
+//        List<AccountAmountCollect> accountAmountCollectList = new ArrayList<>();
+//        accountAmountCollectList.add(new AccountAmountCollect(account, 100));
+//        accountAmountCollectList.add(new AccountAmountCollect(account1, 200));
+//
+//        Calendar collect_date = Calendar.getInstance();
+//        collect_date.set(2018, 6 - 1, 28);
+//        collect_date.set(Calendar.HOUR_OF_DAY, 0);
+//        collect_date.set(Calendar.MINUTE, 0);
+//        collect_date.set(Calendar.SECOND, 0);
+//        collect_date.set(Calendar.MILLISECOND, 0);
+//
+//        List<AgentCollect> agentCollectList = new ArrayList<>();
+//        AgentCollect agentCollect = new AgentCollect(agent, "daily", collect_date, accountAmountCollectList);
+//        AgentCollect agentCollect1 = new AgentCollect(agent1, "daily", collect_date, accountAmountCollectList);
+//
+//        agentCollectList.add(agentCollect);
+//        agentCollectList.add(agentCollect1);
+//
+//        Calendar selected_cal = Calendar.getInstance();
+//        selected_cal.set(2018, 6 - 1, 28);
+//        selected_cal.set(Calendar.HOUR_OF_DAY, 0);
+//        selected_cal.set(Calendar.MINUTE, 0);
+//        selected_cal.set(Calendar.SECOND, 0);
+//        selected_cal.set(Calendar.MILLISECOND, 0);
+//
+//        mAdapter = new AgentAdapter(agentCollectList, selected_cal, getContext());
+//        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+//        recyclerView.setLayoutManager(mLayoutManager);
+//        recyclerView.setItemAnimator(new DefaultItemAnimator());
+//        recyclerView.setAdapter(mAdapter);
 
         return view;
     }

@@ -20,7 +20,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
 
 import static com.oxvsys.moneylender.MainActivity.database;
 
@@ -50,7 +53,7 @@ public class FragmentDashboard extends Fragment {
     public static FragmentDashboard newInstance(Calendar sel_cal) {
         FragmentDashboard fragment = new FragmentDashboard();
         Bundle args = new Bundle();
-        args.putSerializable(ARG_PARAM1,sel_cal);
+        args.putSerializable(ARG_PARAM1, sel_cal);
         fragment.setArguments(args);
         return fragment;
     }
@@ -58,10 +61,6 @@ public class FragmentDashboard extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -84,23 +83,57 @@ public class FragmentDashboard extends Fragment {
                 sel_calendar.get(Calendar.YEAR);
 
         date_button.setText(sel_date);
-        DatabaseReference ref = database.getReference("agentCollect").child("daily");
+        DatabaseReference ref = database.getReference("agentCollect");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot agents : dataSnapshot.getChildren()){
-                    for (DataSnapshot date : agents.getChildren()){
-                        if(date.getKey().equals(sel_date)){
-                            for (DataSnapshot accounts : date.getChildren()){
-                                total_daily_amount += Long.parseLong(accounts.getValue().toString());
-                                Log.d("------", "onDataChange: " + total_daily_amount);
+                final List<AccountAmountCollect> accountAmountCollectList = new ArrayList<>();
+                for (DataSnapshot agents : dataSnapshot.getChildren()) {
+                    List<AgentCollect> agentCollectList = new ArrayList<>();
+                    for (DataSnapshot date : agents.getChildren()) {
+                        if (date.getKey().equals(sel_date)) {
+
+                            for (DataSnapshot account : date.getChildren()) {
+                                Account account_temp = new Account();
+                                account_temp.setNo(account.getKey());
+                                accountAmountCollectList.add(new AccountAmountCollect(account_temp,
+                                        Integer.parseInt(account.getValue().toString())));
+
+
+//                                total_daily_amount += Long.parseLong(account.getValue().toString());
+//                                Log.d("------", "onDataChange: " + total_daily_amount);
                             }
                         }
                     }
                 }
-                todays_value.setText(String.valueOf(total_daily_amount));
-                total_daily_amount = 0;
+                DatabaseReference account_type_db_ref = database.getReference("accountType");
+                account_type_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (AccountAmountCollect each_account_amount : accountAmountCollectList) {
+                            String type = ((HashMap<String, String>) dataSnapshot.getValue()).get(each_account_amount.getAccount().getNo());
+                            each_account_amount.getAccount().setType(type.toString());
+                            if (type.toString().equals("0")) {
+                                total_daily_amount += each_account_amount.getAmount();
+                            } else if (type.toString().equals("1")) {
+                                total_monthly_amount_till_today += each_account_amount.getAmount();
+                            }
+                        }
+
+
+                        todays_value.setText(String.valueOf(total_daily_amount));
+                        view_monthly_value_till_today.setText(String.valueOf(total_monthly_amount_till_today));
+                        total_daily_amount = 0;
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
             }
+
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -108,29 +141,30 @@ public class FragmentDashboard extends Fragment {
             }
         });
 
-        DatabaseReference month_ref = database.getReference("agentCollect").child("monthly");
-        month_ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot agents : dataSnapshot.getChildren()){
-                    for (DataSnapshot date : agents.getChildren()){
-                        if(date.getKey().equals(sel_date)){
-                            for (DataSnapshot accounts : date.getChildren()){
-                                total_monthly_amount_till_today += Integer.parseInt(accounts.getValue().toString());
-                                Log.d("------", "onDataChange: " + total_daily_amount);
-                            }
-                        }
-                    }
-                }
-                view_monthly_value_till_today.setText(String.valueOf(total_monthly_amount_till_today));
-                total_monthly_amount_till_today = 0;
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+//        DatabaseReference month_ref = database.getReference("agentCollect").child("monthly");
+//        month_ref.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                for(DataSnapshot agents : dataSnapshot.getChildren()){
+//                    for (DataSnapshot date : agents.getChildren()){
+//                        if(date.getKey().equals(sel_date)){
+//                            for (DataSnapshot accounts : date.getChildren()){
+//                                total_monthly_amount_till_today += Integer.parseInt(accounts.getValue().toString());
+//                                Log.d("------", "onDataChange: " + total_daily_amount);
+//                            }
+//                        }
+//                    }
+//                }
+//                view_monthly_value_till_today.setText(String.valueOf(total_monthly_amount_till_today));
+//                total_monthly_amount_till_today = 0;
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
 
         date_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,23 +174,23 @@ public class FragmentDashboard extends Fragment {
                 int mMonth = sel_calendar.get(Calendar.MONTH);
                 int mDay = sel_calendar.get(Calendar.DAY_OF_MONTH);
 
-                    DatePickerDialog mDatePicker = new DatePickerDialog(
-                            getActivity(), new DatePickerDialog.OnDateSetListener() {
-                        public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
-                            Calendar selected_cal = Calendar.getInstance();
-                            selected_cal.set(selectedyear,selectedmonth,selectedday);
-                            selected_cal.set(Calendar.HOUR_OF_DAY, 0);
-                            selected_cal.set(Calendar.MINUTE, 0);
-                            selected_cal.set(Calendar.SECOND, 0);
-                            selected_cal.set(Calendar.MILLISECOND, 0);
-                            FragmentTransaction ft = getFragmentManager().beginTransaction();
-                            FragmentDashboard fd = FragmentDashboard.newInstance(selected_cal);
-                            ft.replace(R.id.fragment_container, fd).addToBackStack(null).
-                                    commit();
-                        }
-                    }, mYear, mMonth, mDay);
-                    mDatePicker.setTitle("Select date");
-                    mDatePicker.show();
+                DatePickerDialog mDatePicker = new DatePickerDialog(
+                        getActivity(), new DatePickerDialog.OnDateSetListener() {
+                    public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
+                        Calendar selected_cal = Calendar.getInstance();
+                        selected_cal.set(selectedyear, selectedmonth, selectedday);
+                        selected_cal.set(Calendar.HOUR_OF_DAY, 0);
+                        selected_cal.set(Calendar.MINUTE, 0);
+                        selected_cal.set(Calendar.SECOND, 0);
+                        selected_cal.set(Calendar.MILLISECOND, 0);
+                        FragmentTransaction ft = getFragmentManager().beginTransaction();
+                        FragmentDashboard fd = FragmentDashboard.newInstance(selected_cal);
+                        ft.replace(R.id.fragment_container, fd).addToBackStack(null).
+                                commit();
+                    }
+                }, mYear, mMonth, mDay);
+                mDatePicker.setTitle("Select date");
+                mDatePicker.show();
             }
         });
 

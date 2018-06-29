@@ -34,11 +34,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="16dp">
+                <TextView
+                    android:id="@+id/agent_id_field"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold" />
                 <!-- Class -->
                 <TextView
                     android:id="@+id/class_textView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/agent_id_field"
                     android:text=""
                     android:textColor="#FFFFFF"
                     android:textStyle="bold" />
