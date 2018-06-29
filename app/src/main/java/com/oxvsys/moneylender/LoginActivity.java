@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -22,6 +23,8 @@ public class LoginActivity extends AppCompatActivity {
     String TAG = "LoginActivity";
     static FirebaseDatabase database = FirebaseDatabase.getInstance();
 
+    boolean isInvalid, userDoesNotExist, networkError = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,7 +33,6 @@ public class LoginActivity extends AppCompatActivity {
         final EditText mobile_view = (EditText) findViewById(R.id.login_mobile);
         final EditText password_view = (EditText) findViewById(R.id.login_password);
         Button login_button = (Button) findViewById(R.id.login_button);
-
         login_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -47,15 +49,44 @@ public class LoginActivity extends AppCompatActivity {
                                 startActivity(intent);
                                 finish();
 
-                            } else Log.d(TAG, "onDataChange: " + "failure");
-                        } else Log.d(TAG, "onDataChange: " + "user does not exist");
+                            } else {
+                                Log.d(TAG, "onDataChange: " + "failure");
+                                Toast.makeText(getApplicationContext(),"Invalid Credentials",Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Log.d(TAG, "onDataChange: " + "user does not exist");
+                            Toast.makeText(getApplicationContext(),"User does not exist.",Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                        Toast.makeText(getApplicationContext(),"Network Error.",Toast.LENGTH_SHORT).show();
                     }
+
+
                 });
+
+
+//                if (finishedAdmins && finishedAgents) {
+//                    if (isInvalid) {
+//                        Toast.makeText(getApplicationContext(), "Invalid Credentials", Toast.LENGTH_SHORT).show();
+//                    } else if (userDoesNotExist) {
+//                        Toast.makeText(getApplicationContext(), "User does not exist.", Toast.LENGTH_SHORT).show();
+//                    } else if (networkError) {
+//                        Toast.makeText(getApplicationContext(), "Network Error.", Toast.LENGTH_SHORT).show();
+//                    }
+////                    else {
+////                        Toast.makeText(getApplicationContext(), "There seems to be a problem logging in. Try again.", Toast.LENGTH_LONG).show();
+////                    }
+//
+//                    isInvalid = false;
+//                    userDoesNotExist = false;
+//                    networkError = false;
+//                    finishedAdmins = false;
+//                    finishedAgents = false;
+//                }
+
             }
         });
     }

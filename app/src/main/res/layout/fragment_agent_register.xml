@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Full Name"
-        android:inputType="text" />
+        android:inputType="textPersonName" />
 
     <EditText
         android:id="@+id/agent_register_aadhar"
@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/agent_register_name"
         android:hint="Aadhar Number"
-        android:inputType="text" />
+        android:inputType="number" />
 
     <EditText
         android:id="@+id/agent_register_address"
@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/agent_register_aadhar"
         android:hint="Address"
-        android:inputType="text" />
+        android:inputType="textPostalAddress" />
 
     <EditText
         android:id="@+id/agent_register_mobile"
