@@ -25,7 +25,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.oxvsys.moneylender.MainActivity.database;
+import static com.oxvsys.moneylender.LoginActivity.database;
 
 
 public class FragmentMonthlyLoan extends Fragment {

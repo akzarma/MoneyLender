@@ -13,19 +13,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.google.firebase.database.FirebaseDatabase;
-
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,FragmentKYC.OnFragmentInteractionListener {
 
-    static FirebaseDatabase database = FirebaseDatabase.getInstance();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        database.setPersistenceEnabled(true);
+
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -122,9 +120,16 @@ public class MainActivity extends AppCompatActivity
             FragmentDailyInfo fragmentDailyInfo = FragmentDailyInfo.newInstance(calendar);
             fragmentTransaction.replace(R.id.fragment_container, fragmentDailyInfo).addToBackStack(null).
                     commit();
+        } else if(id == R.id.nav_agent_register){
+            if (getSupportActionBar() != null)
+                getSupportActionBar().setTitle("Register Agent");
+            Calendar calendar = Calendar.getInstance();
+            FragmentAgentRegister far = new FragmentAgentRegister();
+            fragmentTransaction.replace(R.id.fragment_container, far).addToBackStack(null).
+                    commit();
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

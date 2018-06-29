@@ -17,7 +17,7 @@ import com.google.firebase.database.DatabaseReference;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.oxvsys.moneylender.MainActivity.database;
+import static com.oxvsys.moneylender.LoginActivity.database;
 
 
 /**

@@ -2,7 +2,6 @@ package com.oxvsys.moneylender;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.service.autofill.Dataset;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -20,7 +19,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.oxvsys.moneylender.MainActivity.database;
+import static com.oxvsys.moneylender.LoginActivity.database;
 
 public class AgentAdapter extends RecyclerView.Adapter<AgentAdapter.AgentHolder> {
 

@@ -7,19 +7,15 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+
+import com.google.firebase.database.DatabaseReference;
+
+import static com.oxvsys.moneylender.LoginActivity.database;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link FragmentAgentRegister.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link FragmentAgentRegister#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class FragmentAgentRegister extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -27,21 +23,14 @@ public class FragmentAgentRegister extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    EditText name_view;
+
     private OnFragmentInteractionListener mListener;
 
     public FragmentAgentRegister() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment FragmentAgentRegister.
-     */
-    // TODO: Rename and change types and number of parameters
     public static FragmentAgentRegister newInstance(String param1, String param2) {
         FragmentAgentRegister fragment = new FragmentAgentRegister();
         Bundle args = new Bundle();
@@ -59,11 +48,30 @@ public class FragmentAgentRegister extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_agent_register, container, false);
+        View view = inflater.inflate(R.layout.fragment_agent_register, container, false);
+        final EditText name_view = view.findViewById(R.id.agent_register_name);
+        final EditText aadhar = view.findViewById(R.id.agent_register_aadhar);
+        final EditText address_view = view.findViewById(R.id.agent_register_address);
+        final EditText mobile_view = view.findViewById(R.id.agent_register_mobile);
+        Button register_button = view.findViewById(R.id.agent_register_button);
+
+        register_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String unique_agent_id = "agent_" + mobile_view.getText().toString();
+
+                DatabaseReference ref = database.getReference("agents").child(unique_agent_id);
+                ref.child("mobile").setValue(mobile_view.getText().toString());
+                ref.child("name").setValue(name_view.getText().toString());
+                ref.child("aadhar").setValue(aadhar.getText().toString());
+                ref.child("address").setValue(address_view.getText().toString());
+            }
+        });
+
+
+        return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
@@ -84,16 +92,6 @@ public class FragmentAgentRegister extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
     }
