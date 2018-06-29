@@ -78,13 +78,13 @@ public class FragmentKYC extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_fragment_kyc, container, false);
 
-        final EditText name_field = (EditText) view.findViewById(R.id.name_field);
-        final EditText aadhar_field = (EditText) view.findViewById(R.id.aadhar_field);
-        final EditText occupation_field = (EditText) view.findViewById(R.id.occupation_field);
-        final EditText mobile_field = (EditText) view.findViewById(R.id.mobile_field);
-        final EditText dob_field = (EditText) view.findViewById(R.id.dob_field);
-        final EditText address_field = (EditText) view.findViewById(R.id.address_field);
-        Button save_button = (Button) view.findViewById(R.id.deposit_button);
+        final EditText name_field = view.findViewById(R.id.name_field);
+        final EditText aadhar_field = view.findViewById(R.id.aadhar_field);
+        final EditText occupation_field = view.findViewById(R.id.occupation_field);
+        final EditText mobile_field = view.findViewById(R.id.mobile_field);
+        final EditText dob_field = view.findViewById(R.id.dob_field);
+        final EditText address_field = view.findViewById(R.id.address_field);
+        Button save_button = view.findViewById(R.id.deposit_button);
         save_button.setOnClickListener(new View.OnClickListener() {
 
             @Override

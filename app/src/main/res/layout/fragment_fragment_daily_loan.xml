@@ -61,11 +61,19 @@
         android:layout_below="@id/end_date_monthly_grant"
         android:hint="Additional information"/>
 
+    <Spinner
+        android:id="@+id/agent_spinner"
+        android:layout_below="@+id/rate_of_interest_grant"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </Spinner>
+
     <Button
         android:id="@+id/grant_button_monthly"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/additional_info_monthly_grant"
+        android:layout_below="@id/agent_spinner"
         android:text="Grant Loan"/>
 
 </RelativeLayout>
