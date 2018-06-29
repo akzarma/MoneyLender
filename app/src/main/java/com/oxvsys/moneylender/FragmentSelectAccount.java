@@ -23,11 +23,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.oxvsys.moneylender.MainActivity.database;
+import static com.oxvsys.moneylender.LoginActivity.database;
 
 
 /**
@@ -94,7 +95,6 @@ public class FragmentSelectAccount extends Fragment {
 
         Button next_button = view.findViewById(R.id.next_button);
         agent_account_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -103,7 +103,7 @@ public class FragmentSelectAccount extends Fragment {
                     account1.setNo(account.getKey());
                     accountList.add(account1);
                 }
-                accountList.sort(new Comparator<Account>() {
+                Collections.sort(accountList, new Comparator<Account>() {
                     @Override
                     public int compare(Account o1, Account o2) {
                         return o1.getNo().compareTo(o2.getNo());

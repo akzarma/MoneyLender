@@ -2,11 +2,32 @@ package com.oxvsys.moneylender;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import static com.oxvsys.moneylender.LoginActivity.database;
 
 
 /**
@@ -22,6 +43,9 @@ public class FragmentSelectCustomer extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    Spinner spinner;
+    Customer customer_selected;
+    List<Customer> customerList = new ArrayList<>();
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -59,6 +83,71 @@ public class FragmentSelectCustomer extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_select_customer, container, false);
+        String logged_agent = "admin";  //to be changed to dynamic logged in user
+
+        DatabaseReference customers_db_ref = database.getReference("customers");
+        spinner = view.findViewById(R.id.customer_spinner);
+        spinner.setAdapter(null);
+
+        Button next_button = view.findViewById(R.id.customer_next_button);
+        customers_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot customer : dataSnapshot.getChildren()) {
+                    Customer customer1 = customer.getValue(Customer.class);
+                    customer1.setId(customer.getKey());
+                    customerList.add(customer1);
+                }
+                Collections.sort(customerList, new Comparator<Customer>() {
+                    @Override
+                    public int compare(Customer o1, Customer o2) {
+                        return o1.getId().compareTo(o2.getId());
+                    }
+                });
+                List<String> customers = new ArrayList<>();
+                for (Customer each : customerList) {
+                    customers.add(each.getId() + " - "+ each.getName().split(" ")[0]);
+                }
+                ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, customers);
+                spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner.setAdapter(spinnerAdapter);
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        next_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                FragmentDailyLoan fragmentDailyLoan = FragmentDailyLoan.newInstance(customer_selected);
+                fragmentTransaction.replace(R.id.fragment_container, fragmentDailyLoan).addToBackStack(null).commit();
+                customerList.clear();
+            }
+        });
+
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+
+        {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                customer_selected = customerList.get(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                customer_selected = customerList.get(0);
+            }
+        });
         return view;
     }
 

@@ -1,15 +1,16 @@
 package com.oxvsys.moneylender;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Customer {
+public class Customer implements Serializable {
     private String id;
     private String name;
     private String occupation;
     private String aadhar_id;
     private String mobile;
     private String DOB;
-    private List<Account> accounts;
+    private List<Account> accounts1;
 
     public String getId() {
         return id;
