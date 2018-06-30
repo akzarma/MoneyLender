@@ -9,13 +9,12 @@
     tools:showIn="@layout/app_bar_main">
 
 
-
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottom_nav_view"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
         app:menu="@menu/bottom_menu">
 
     </android.support.design.widget.BottomNavigationView>
@@ -23,8 +22,8 @@
 
     <FrameLayout
         android:id="@+id/fragment_container"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_above="@+id/bottom_nav_view"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="61dp">
