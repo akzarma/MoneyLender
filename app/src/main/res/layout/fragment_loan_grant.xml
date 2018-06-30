@@ -29,7 +29,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/account_number_prefix_field"
-        android:hint="Account No"
+        android:hint="Account No (Optional)"
         android:inputType="number"/>
 
 
@@ -45,15 +45,17 @@
         android:id="@+id/start_date_monthly_grant"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="File start date"
+        android:hint="File Opening date"
         android:inputType="date"
+        android:text="10-06-2018"
         android:layout_below="@id/file_duration_monthly_grant"/>
 
     <EditText
         android:id="@+id/end_date_monthly_grant"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="File end date"
+        android:hint="File Closing date"
+        android:text="10-06-2019"
         android:inputType="date"
         android:layout_below="@id/start_date_monthly_grant"/>
 
@@ -64,26 +66,36 @@
         android:layout_below="@id/end_date_monthly_grant"
         android:hint="Additional information"/>
 
-    <EditText
-        android:id="@+id/rate_of_interest_grant"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/end_date_monthly_grant"
-        android:hint="Additional information"/>
+
 
     <Spinner
         android:id="@+id/agent_spinner"
-        android:layout_below="@+id/rate_of_interest_grant"
+        android:layout_below="@+id/additional_info_monthly_grant"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"/>
 
-    </Spinner>
+
+    <Spinner
+        android:id="@+id/account_type_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/agent_spinner"
+        android:entries="@array/account_type_items"/>
+
+
+    <EditText
+        android:id="@+id/rate_of_interest_grant"
+        android:visibility="invisible"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/account_type_field"
+        android:hint="Rante of Interest"/>
 
     <Button
         android:id="@+id/grant_button_monthly"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/agent_spinner"
+        android:layout_below="@id/rate_of_interest_grant"
         android:text="Grant Loan"/>
 
 </RelativeLayout>

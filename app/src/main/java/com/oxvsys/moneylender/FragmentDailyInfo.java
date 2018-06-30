@@ -113,7 +113,7 @@ public class FragmentDailyInfo extends Fragment {
                                 account.setNo(each_account.getKey());
 
                                 accountAmountCollectList.add(new AccountAmountCollect(account,
-                                        Integer.parseInt(each_account.getValue().toString())));
+                                        Long.parseLong(each_account.getValue().toString())));
                             }
                             agentCollectList.add(new AgentCollect(curr_agent, "daily", sel_calendar, accountAmountCollectList));
 

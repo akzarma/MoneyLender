@@ -23,8 +23,9 @@
 
     <FrameLayout
         android:id="@+id/fragment_container"
+        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:layout_height="450dp"
+        android:layout_above="@+id/bottom_nav_view"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="61dp">
 

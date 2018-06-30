@@ -58,6 +58,7 @@ public class FragmentLoanGrant extends Fragment {
     //    String cust_id = "8";
     Spinner spinner;
     Long lastAccountNo;
+    String account_type_selected;
 
     private OnFragmentInteractionListener mListener;
 
@@ -98,9 +99,11 @@ public class FragmentLoanGrant extends Fragment {
         final EditText edit_amount = view.findViewById(R.id.amount_monthly_grant);
         final EditText edit_o_date = view.findViewById(R.id.start_date_monthly_grant);
         final EditText edit_c_date = view.findViewById(R.id.end_date_monthly_grant);
-//        final EditText edit_roi = view.findViewById(R.id.roi_monthly_grant);
+        final EditText edit_roi = view.findViewById(R.id.rate_of_interest_grant);
         final TextView prefix_account_no = view.findViewById(R.id.account_number_prefix_field);
         spinner = view.findViewById(R.id.agent_spinner);
+        Spinner account_type_spinner = view.findViewById(R.id.account_type_field);
+        final EditText file_duration_field = view.findViewById(R.id.file_duration_monthly_grant);
 
         final Customer selected_customer = (Customer) getArguments().getSerializable(ARG_PARAM1);
 
@@ -202,6 +205,25 @@ public class FragmentLoanGrant extends Fragment {
             }
         });
 
+        account_type_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(position==0){
+                    account_type_selected = "0";  //daily basis
+                    edit_roi.setVisibility(View.INVISIBLE);
+                }
+                else if(position == 1){
+                    account_type_selected = "1"; //monthly
+                    edit_roi.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
 
@@ -209,6 +231,7 @@ public class FragmentLoanGrant extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 agent_selected = agentList.get(position);
+
             }
 
             @Override
@@ -222,6 +245,25 @@ public class FragmentLoanGrant extends Fragment {
 
             @Override
             public void onClick(View v) {
+                if( edit_amount.getText().toString().length() == 0 ) {
+                    edit_amount.setError("Amount is required!");
+                    return;
+                }else if( file_duration_field.getText().toString().length() == 0 ) {
+                    file_duration_field.setError("Duration is required!");
+                    return;
+                }else if( edit_o_date.getText().toString().length() == 0 ) {
+                    edit_o_date.setError("Opening date is required!");
+                    return;
+                }else if( edit_c_date.getText().toString().length() == 0 ) {
+                    edit_c_date.setError("Closing date is required!");
+                    return;
+                }
+                if(account_type_selected.equals("1")){
+                    if(edit_roi.getText().toString().length()==0){
+                        edit_roi.setError("Rate of interest is required for Monthly basis account!");
+                        return;
+                    }
+                }
                 final String final_account_no;
                 if (account_no.getText().toString().equals("")) {
                     final_account_no = String.valueOf(lastAccountNo + 1);
@@ -235,7 +277,7 @@ public class FragmentLoanGrant extends Fragment {
                 String o_date = edit_o_date.getText().toString();
                 String c_date = edit_c_date.getText().toString();
                 String amount = edit_amount.getText().toString();
-//                String roi = edit_roi.getText().toString();
+                String roi = edit_roi.getText().toString();
 
                 DatabaseReference customers = database.getReference("customers").child(selected_customer.getId()).child("accounts");
 
@@ -245,8 +287,10 @@ public class FragmentLoanGrant extends Fragment {
                 account_number_details.put("amt", amount);
                 account_number_details.put("o_date", o_date);
                 account_number_details.put("c_date", c_date);
-//                account_number_details.put("roi", roi);
-                account_number_details.put("type", "monthly");
+                if(account_type_selected.equals("1")) {
+                    account_number_details.put("roi", roi);
+                }
+                account_number_details.put("type", account_type_selected);
 
                 Map<String, Object> map = new HashMap<>();
                 map.put(final_account_no, account_number_details);
@@ -257,8 +301,22 @@ public class FragmentLoanGrant extends Fragment {
                         Log.d("monthly stuff", "onComplete: " + databaseError);
                         DatabaseReference lastAccountNo_ref = database.getReference("lastAccountNo");
                         lastAccountNo_ref.setValue(lastAccountNo + 1);
+
+                        //Update accountType
+                        DatabaseReference account_type_db_ref = database.getReference("accountType");
+                        Map<String, Object> account_type_map = new HashMap<>();
+                        account_type_map.put(final_account_no, account_type_selected);
+                        account_type_db_ref.updateChildren(account_type_map, new DatabaseReference.CompletionListener() {
+                            @Override
+                            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+
+                            }
+                        });
                     }
                 });
+
+
+
             }
         });
         return view;
