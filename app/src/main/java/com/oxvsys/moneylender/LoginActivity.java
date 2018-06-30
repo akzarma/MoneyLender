@@ -30,9 +30,9 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         database.setPersistenceEnabled(true);
-        final EditText mobile_view = (EditText) findViewById(R.id.login_mobile);
-        final EditText password_view = (EditText) findViewById(R.id.login_password);
-        Button login_button = (Button) findViewById(R.id.login_button);
+        final EditText mobile_view = findViewById(R.id.login_mobile);
+        final EditText password_view = findViewById(R.id.login_password);
+        Button login_button = findViewById(R.id.login_button);
         login_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

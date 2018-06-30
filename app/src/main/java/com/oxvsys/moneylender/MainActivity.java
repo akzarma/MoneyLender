@@ -94,8 +94,6 @@ public class MainActivity extends AppCompatActivity
             fragmentTransaction.replace(R.id.fragment_container, fragmentSelectAccount).addToBackStack(null).
                     commit();
 
-        } else if (id == R.id.nav_slideshow) {
-
         } else if (id == R.id.nav_monthly_loan_grant) {
             if (getSupportActionBar() != null)
                 getSupportActionBar().setTitle("Monthly Loan Grant");
@@ -121,6 +119,15 @@ public class MainActivity extends AppCompatActivity
                 getSupportActionBar().setTitle("Register Agent");
             Calendar calendar = Calendar.getInstance();
             FragmentAgentRegister far = new FragmentAgentRegister();
+            fragmentTransaction.replace(R.id.fragment_container, far).addToBackStack(null).
+                    commit();
+        }
+
+        else if(id == R.id.nav_customer_daily){
+            if (getSupportActionBar() != null)
+                getSupportActionBar().setTitle("Customer Daily Info");
+            Calendar calendar = Calendar.getInstance();
+            FragmentCustomerDailyInfo far = FragmentCustomerDailyInfo.newInstance(calendar);
             fragmentTransaction.replace(R.id.fragment_container, far).addToBackStack(null).
                     commit();
         }

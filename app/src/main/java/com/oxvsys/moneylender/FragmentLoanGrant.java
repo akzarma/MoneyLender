@@ -118,7 +118,7 @@ public class FragmentLoanGrant extends Fragment {
                         public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
                             // TODO Auto-generated method stub
                             int month = selectedmonth + 1;
-                            String date_gen = selectedday + "/" + month + "/" + selectedyear;
+                            String date_gen = selectedday + "-" + month + "-" + selectedyear;
                             edit_o_date.setText(date_gen);
                         }
                     }, mYear, mMonth, mDay);
@@ -144,7 +144,7 @@ public class FragmentLoanGrant extends Fragment {
                         public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
                             // TODO Auto-generated method stub
                             int month = selectedmonth + 1;
-                            String date_gen = selectedday + "/" + month + "/" + selectedyear;
+                            String date_gen = selectedday + "-" + month + "-" + selectedyear;
                             edit_c_date.setText(date_gen);
                         }
                     }, mYear, mMonth, mDay);
@@ -241,7 +241,7 @@ public class FragmentLoanGrant extends Fragment {
 
                 Map<String, String> account_number_details = new HashMap<>();
 
-                account_number_details.put("no", final_account_no);
+//                account_number_details.put("no", final_account_no);
                 account_number_details.put("amt", amount);
                 account_number_details.put("o_date", o_date);
                 account_number_details.put("c_date", c_date);

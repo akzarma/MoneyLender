@@ -111,7 +111,7 @@ public class FragmentDashboard extends Fragment {
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (AccountAmountCollect each_account_amount : accountAmountCollectList) {
                             String type = ((HashMap<String, String>) dataSnapshot.getValue()).get(each_account_amount.getAccount().getNo());
-                            each_account_amount.getAccount().setType(type.toString());
+                            each_account_amount.getAccount().setType(type);
                             if (type.toString().equals("0")) {
                                 total_daily_amount += each_account_amount.getAmount();
                             } else if (type.toString().equals("1")) {
@@ -196,7 +196,6 @@ public class FragmentDashboard extends Fragment {
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
@@ -208,9 +207,6 @@ public class FragmentDashboard extends Fragment {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
-        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
         }
     }
 
