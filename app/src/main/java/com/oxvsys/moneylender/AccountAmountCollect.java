@@ -2,9 +2,9 @@ package com.oxvsys.moneylender;
 
 public class AccountAmountCollect{
     private Account account;
-    private int amount_collected;
+    private Long amount_collected;
 
-    AccountAmountCollect(Account account, int amount){
+    AccountAmountCollect(Account account, Long amount){
         this.account = account;
         this.amount_collected = amount;
     }
@@ -17,11 +17,11 @@ public class AccountAmountCollect{
         this.account = account;
     }
 
-    public int getAmount() {
+    public Long getAmount() {
         return amount_collected;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(Long amount) {
         this.amount_collected = amount;
     }
 }

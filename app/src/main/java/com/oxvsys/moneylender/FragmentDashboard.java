@@ -7,11 +7,13 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -30,18 +32,22 @@ import static com.oxvsys.moneylender.LoginActivity.database;
 public class FragmentDashboard extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_PARAM3 = "param3";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
     Bundle date_bundle;
-    Button date_button;
-    int total_daily_amount = 0;
-    int total_monthly_amount_till_today = 0;
+    Button date_button, from_date_button, to_date_button;
+    Long total_daily_amount = 0L;
+    Long total_monthly_amount_till_today = 0L;
+    Long total_collection = 0L;
     TextView todays_value;
     TextView view_monthly_value_till_today;
-    Calendar sel_calendar;
+    TextView total_collection_value_dashboard;
+    RelativeLayout totat_collection_card_layout;
+    Calendar sel_calendar, from_calendar;
 
     private OnFragmentInteractionListener mListener;
 
@@ -70,10 +76,12 @@ public class FragmentDashboard extends Fragment {
 
 
         date_button = (Button) view.findViewById(R.id.dashboard_title_button);
-
+        from_date_button = view.findViewById(R.id.dashboard_from_button);
+        to_date_button = view.findViewById(R.id.dashboard_to_button);
         todays_value = (TextView) view.findViewById(R.id.todays_collection_value_dashboard);
         view_monthly_value_till_today = (TextView) view.findViewById(R.id.monthly_collection_value_dashboard);
-
+        total_collection_value_dashboard = view.findViewById(R.id.total_collection_value_dashboard);
+        totat_collection_card_layout = view.findViewById(R.id.totat_collection_card_layout);
         sel_calendar = (Calendar) getArguments().getSerializable(ARG_PARAM1);
 
         int month = sel_calendar.get(Calendar.MONTH) + 1;
@@ -82,6 +90,8 @@ public class FragmentDashboard extends Fragment {
                 sel_calendar.get(Calendar.YEAR);
 
         date_button.setText(sel_date);
+
+
         DatabaseReference ref = database.getReference("agentCollect");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -96,7 +106,7 @@ public class FragmentDashboard extends Fragment {
                                 Account account_temp = new Account();
                                 account_temp.setNo(account.getKey());
                                 accountAmountCollectList.add(new AccountAmountCollect(account_temp,
-                                        Integer.parseInt(account.getValue().toString())));
+                                        Long.parseLong(account.getValue().toString())));
 
 
 //                                total_daily_amount += Long.parseLong(account.getValue().toString());
@@ -111,18 +121,27 @@ public class FragmentDashboard extends Fragment {
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (AccountAmountCollect each_account_amount : accountAmountCollectList) {
                             String type = ((HashMap<String, String>) dataSnapshot.getValue()).get(each_account_amount.getAccount().getNo());
+                            if (type == null) {
+                                type = "";
+                            }
+                            Log.d("accountType query for:", each_account_amount.getAccount().getNo());
                             each_account_amount.getAccount().setType(type);
-                            if (type.toString().equals("0")) {
+                            if (type.equals("0")) {
                                 total_daily_amount += each_account_amount.getAmount();
-                            } else if (type.toString().equals("1")) {
+                            } else if (type.equals("1")) {
                                 total_monthly_amount_till_today += each_account_amount.getAmount();
                             }
+                            total_collection = total_monthly_amount_till_today + total_daily_amount;
+
                         }
 
 
                         todays_value.setText(String.valueOf(total_daily_amount));
                         view_monthly_value_till_today.setText(String.valueOf(total_monthly_amount_till_today));
-                        total_daily_amount = 0;
+                        total_collection_value_dashboard.setText(String.valueOf(total_collection));
+                        total_daily_amount = 0L;
+                        total_monthly_amount_till_today = 0L;
+                        total_collection = 0L;
                     }
 
                     @Override
@@ -190,6 +209,79 @@ public class FragmentDashboard extends Fragment {
                 }, mYear, mMonth, mDay);
                 mDatePicker.setTitle("Select date");
                 mDatePicker.show();
+            }
+        });
+
+        from_date_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar mcurrentDate = Calendar.getInstance();
+                int mYear = sel_calendar.get(Calendar.YEAR);
+                int mMonth = sel_calendar.get(Calendar.MONTH);
+                int mDay = sel_calendar.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog mDatePicker = new DatePickerDialog(
+                        getActivity(), new DatePickerDialog.OnDateSetListener() {
+                    public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
+
+                        Calendar from_cal = Calendar.getInstance();
+                        from_cal.set(selectedyear, selectedmonth, selectedday);
+                        from_cal.set(Calendar.HOUR_OF_DAY, 0);
+                        from_cal.set(Calendar.MINUTE, 0);
+                        from_cal.set(Calendar.SECOND, 0);
+                        from_cal.set(Calendar.MILLISECOND, 0);
+                        int month = from_cal.get(Calendar.MONTH) + 1;
+                        String from_date = from_cal.get(Calendar.DAY_OF_MONTH) + "-" +
+                                month + "-" +
+                                from_cal.get(Calendar.YEAR);
+                        from_date_button.setText(from_date);
+                        from_calendar = from_cal;
+
+                    }
+                }, mYear, mMonth, mDay);
+                mDatePicker.setTitle("Select date");
+                mDatePicker.show();
+            }
+        });
+
+        to_date_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar mcurrentDate = Calendar.getInstance();
+                int mYear = sel_calendar.get(Calendar.YEAR);
+                int mMonth = sel_calendar.get(Calendar.MONTH);
+                int mDay = sel_calendar.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog mDatePicker = new DatePickerDialog(
+                        getActivity(), new DatePickerDialog.OnDateSetListener() {
+                    public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
+                        Calendar selected_cal = Calendar.getInstance();
+                        selected_cal.set(Calendar.HOUR_OF_DAY, 0);
+                        selected_cal.set(Calendar.MINUTE, 0);
+                        selected_cal.set(Calendar.SECOND, 0);
+                        selected_cal.set(Calendar.MILLISECOND, 0);
+
+                        Calendar to_cal = (Calendar) selected_cal.clone();
+                        to_cal.set(selectedyear, selectedmonth, selectedday);
+                        to_cal.set(Calendar.HOUR_OF_DAY, 0);
+                        to_cal.set(Calendar.MINUTE, 0);
+                        to_cal.set(Calendar.SECOND, 0);
+                        to_cal.set(Calendar.MILLISECOND, 0);
+                        FragmentTransaction ft = getFragmentManager().beginTransaction();
+                        FragmentDateRangeReport fragmentDateRangeReport = FragmentDateRangeReport.newInstance(from_calendar, to_cal);
+                        ft.replace(R.id.fragment_container, fragmentDateRangeReport).addToBackStack(null).
+                                commit();
+                    }
+                }, mYear, mMonth, mDay);
+                mDatePicker.setTitle("Select date");
+                mDatePicker.show();
+            }
+        });
+
+        totat_collection_card_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //anish yaha pe daal de
             }
         });
 

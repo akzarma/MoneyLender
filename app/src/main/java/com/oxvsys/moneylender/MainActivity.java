@@ -16,8 +16,7 @@ import android.view.MenuItem;
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,FragmentKYC.OnFragmentInteractionListener {
-
+        implements NavigationView.OnNavigationItemSelectedListener, FragmentKYC.OnFragmentInteractionListener {
 
 
     @Override
@@ -107,14 +106,14 @@ public class MainActivity extends AppCompatActivity
             FragmentDashboard fragmentDashboard = FragmentDashboard.newInstance(calendar);
             fragmentTransaction.replace(R.id.fragment_container, fragmentDashboard).addToBackStack(null).
                     commit();
-        } else if(id == R.id.nav_send){
+        } else if (id == R.id.nav_send) {
             if (getSupportActionBar() != null)
                 getSupportActionBar().setTitle("Daily Info");
             Calendar calendar = Calendar.getInstance();
             FragmentDailyInfo fragmentDailyInfo = FragmentDailyInfo.newInstance(calendar);
             fragmentTransaction.replace(R.id.fragment_container, fragmentDailyInfo).addToBackStack(null).
                     commit();
-        } else if(id == R.id.nav_agent_register){
+        } else if (id == R.id.nav_agent_register) {
             if (getSupportActionBar() != null)
                 getSupportActionBar().setTitle("Register Agent");
             Calendar calendar = Calendar.getInstance();
@@ -140,5 +139,19 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    public static String CaltoStringDate(Calendar cal){
+        return cal.get(Calendar.DAY_OF_MONTH)+"-"+ cal.get(Calendar.MONTH) +1 +"-"+ cal.get(Calendar.YEAR);
+    }
+    public static Calendar StringDateToCal(String date){
+        String[] date1 = date.split("-");
+        Calendar cal = Calendar.getInstance();
+        cal.set(Integer.parseInt(date1[2]), Integer.parseInt(date1[1])-1, Integer.parseInt(date1[0]));
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal;
     }
 }
