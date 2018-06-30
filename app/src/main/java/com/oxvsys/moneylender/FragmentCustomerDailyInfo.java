@@ -36,7 +36,7 @@ public class FragmentCustomerDailyInfo extends Fragment {
 
     private RecyclerView recyclerView;
     private CustomerDailyInfoAdapter mAdapter;
-    private TextView currentDay_textView;
+    private TextView currentDay_textView , customer_daily_info_title;
     Calendar sel_calendar;
     HashMap<String, CustomerAmount> customer_amount_map;
 
@@ -71,11 +71,13 @@ public class FragmentCustomerDailyInfo extends Fragment {
         sel_calendar = (Calendar) getArguments().getSerializable(ARG_PARAM1);
         recyclerView = view.findViewById(R.id.customer_daily_info_recycler);
 
+        customer_daily_info_title = view.findViewById(R.id.customer_daily_info_title);
         int month = sel_calendar.get(Calendar.MONTH) + 1;
         final String sel_date = sel_calendar.get(Calendar.DAY_OF_MONTH) + "-" +
                 month + "-" +
                 sel_calendar.get(Calendar.YEAR);
 
+        customer_daily_info_title.setText(sel_date);
         DatabaseReference agentDailyCollects = database.getReference("agentCollect");
 
         agentDailyCollects.addValueEventListener(new ValueEventListener() {

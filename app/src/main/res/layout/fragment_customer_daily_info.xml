@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/futura_book_font"
-        android:text="Customer Daily Report"
+        android:text="..."
         android:textAlignment="center"
         android:textAllCaps="false"
         android:textColor="@color/main_text_color_blue"

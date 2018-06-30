@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity
 
         else if(id == R.id.nav_customer_daily){
             if (getSupportActionBar() != null)
-                getSupportActionBar().setTitle("Customer Daily Info");
+                getSupportActionBar().setTitle("Customer Daily Report");
             Calendar calendar = Calendar.getInstance();
             FragmentCustomerDailyInfo far = FragmentCustomerDailyInfo.newInstance(calendar);
             fragmentTransaction.replace(R.id.fragment_container, far).addToBackStack(null).

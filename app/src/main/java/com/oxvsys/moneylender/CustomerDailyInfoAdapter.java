@@ -38,8 +38,8 @@ public class CustomerDailyInfoAdapter extends RecyclerView.Adapter<CustomerDaily
             public int compare(CustomerAmount o1, CustomerAmount o2) {
                 if(NumberUtils.isNumeric(o1.getCustomer().getAccounts1().get(0).getNo()) &&
                         NumberUtils.isNumeric(o2.getCustomer().getAccounts1().get(0).getNo())){
-                    int o1_account_no = Integer.parseInt(o1.getCustomer().getAccounts1().get(0).getNo());
-                    int o2_account_no = Integer.parseInt(o2.getCustomer().getAccounts1().get(0).getNo());
+                    Long o1_account_no = Long.parseLong(o1.getCustomer().getAccounts1().get(0).getNo());
+                    Long o2_account_no = Long.parseLong(o2.getCustomer().getAccounts1().get(0).getNo());
                     if(o1_account_no >= o2_account_no){
                         return 1;
                     }else return 0;

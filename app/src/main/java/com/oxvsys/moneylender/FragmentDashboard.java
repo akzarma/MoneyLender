@@ -96,7 +96,7 @@ public class FragmentDashboard extends Fragment {
                                 Account account_temp = new Account();
                                 account_temp.setNo(account.getKey());
                                 accountAmountCollectList.add(new AccountAmountCollect(account_temp,
-                                        Integer.parseInt(account.getValue().toString())));
+                                        Long.parseLong(account.getValue().toString())));
 
 
 //                                total_daily_amount += Long.parseLong(account.getValue().toString());
