@@ -21,6 +21,11 @@
             android:icon="@drawable/ic_menu_manage"
             android:title="Agent Register" />
 
+        <item
+            android:id="@+id/nav_customer_daily"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Customer Daily Info" />
+
         <!--<item-->
 
     </group>

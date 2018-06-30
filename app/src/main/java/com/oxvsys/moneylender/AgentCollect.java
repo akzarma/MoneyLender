@@ -8,6 +8,20 @@ public class AgentCollect {
     private String type; //"daily" or "monthly"
     private Calendar date;
     private List<AccountAmountCollect> accountAmountCollectList;
+    private Customer customer;
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+
+
+
+
 
     public AgentCollect(Agent agent, String type, Calendar date, List<AccountAmountCollect> accountAmountCollectList) {
         this.agent = agent;

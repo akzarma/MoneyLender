@@ -122,7 +122,6 @@
         <android.support.v7.widget.CardView
             android:layout_width="0dp"
             android:layout_height="160dp"
-            android:layout_marginRight="8dp"
             android:layout_weight="1"
             app:cardCornerRadius="10dp">
 
@@ -163,17 +162,26 @@
 
 
     <View
+        android:id="@+id/line"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@+id/dashboard_total_layout"
-        android:layout_marginTop="10dp"
-        android:background="#212121" />
+        android:layout_marginTop="16dp"
+        android:background="#bebebe" />
+
+    <TextView
+        android:layout_marginTop="16dp"
+        android:id="@+id/select_range_text"
+        android:layout_below="@id/line"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Range"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/dashboard_total_layout"
-        android:layout_marginTop="15dp">
+        android:layout_below="@id/select_range_text"
+        android:layout_marginTop="16dp">
 
         <TextView
             android:layout_width="wrap_content"
