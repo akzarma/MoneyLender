@@ -3,11 +3,9 @@ package com.oxvsys.moneylender;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,7 +22,6 @@ import android.widget.TextView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -41,12 +38,12 @@ import static com.oxvsys.moneylender.LoginActivity.database;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link FragmentDailyLoan.OnFragmentInteractionListener} interface
+ * {@link FragmentLoanGrant.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link FragmentDailyLoan#newInstance} factory method to
+ * Use the {@link FragmentLoanGrant#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentDailyLoan extends Fragment {
+public class FragmentLoanGrant extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -64,7 +61,7 @@ public class FragmentDailyLoan extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public FragmentDailyLoan() {
+    public FragmentLoanGrant() {
         // Required empty public constructor
     }
 
@@ -72,11 +69,11 @@ public class FragmentDailyLoan extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @return A new instance of fragment FragmentDailyLoan.
+     * @return A new instance of fragment FragmentLoanGrant.
      */
     // TODO: Rename and change types and number of parameters
-    public static FragmentDailyLoan newInstance(Customer customer) {
-        FragmentDailyLoan fragment = new FragmentDailyLoan();
+    public static FragmentLoanGrant newInstance(Customer customer) {
+        FragmentLoanGrant fragment = new FragmentLoanGrant();
         Bundle args = new Bundle();
         args.putSerializable(ARG_PARAM1, customer);
         fragment.setArguments(args);
@@ -94,7 +91,7 @@ public class FragmentDailyLoan extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        View view = inflater.inflate(R.layout.fragment_fragment_daily_loan, container, false);
+        View view = inflater.inflate(R.layout.fragment_loan_grant, container, false);
 
         Button save_button = view.findViewById(R.id.grant_button_monthly);
         final EditText account_no = view.findViewById(R.id.account_number_monthly_grant);

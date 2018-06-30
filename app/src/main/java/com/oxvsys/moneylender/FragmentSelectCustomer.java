@@ -128,8 +128,8 @@ public class FragmentSelectCustomer extends Fragment {
 
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                FragmentDailyLoan fragmentDailyLoan = FragmentDailyLoan.newInstance(customer_selected);
-                fragmentTransaction.replace(R.id.fragment_container, fragmentDailyLoan).addToBackStack(null).commit();
+                FragmentLoanGrant fragmentLoanGrant = FragmentLoanGrant.newInstance(customer_selected);
+                fragmentTransaction.replace(R.id.fragment_container, fragmentLoanGrant).addToBackStack(null).commit();
                 customerList.clear();
             }
         });
