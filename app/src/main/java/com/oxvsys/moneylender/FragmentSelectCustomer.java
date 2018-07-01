@@ -45,8 +45,7 @@ public class FragmentSelectCustomer extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     Spinner spinner;
-    Customer customer_selected;
-    List<Customer> customerList = new ArrayList<>();
+    Customer customer_selected = new Customer();
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -87,6 +86,7 @@ public class FragmentSelectCustomer extends Fragment {
         final String agent_id = getData("user_id", getContext());
         final String logged_type = getData("user_type", getContext());
 
+        final List<Customer> customerList = new ArrayList<>();
         DatabaseReference customers_db_ref = database.getReference("customers");
         spinner = view.findViewById(R.id.customer_spinner);
         spinner.setAdapter(null);
