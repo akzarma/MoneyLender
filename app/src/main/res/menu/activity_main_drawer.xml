@@ -26,6 +26,8 @@
             android:icon="@drawable/ic_menu_manage"
             android:title="Customer Daily Info" />
 
+
+
         <!--<item-->
 
     </group>

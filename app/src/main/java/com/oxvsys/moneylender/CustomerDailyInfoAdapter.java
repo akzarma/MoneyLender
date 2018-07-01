@@ -23,16 +23,11 @@ public class CustomerDailyInfoAdapter extends RecyclerView.Adapter<CustomerDaily
 
     private HashMap<String, CustomerAmount> account_amount_map;
     private List<CustomerAmount> customerAmountList;
-    private Context context;
-    private Calendar selected_cal;
 
 
-    public CustomerDailyInfoAdapter(HashMap<String, CustomerAmount> dataset, Calendar selected_cal, Context context) {
+    public CustomerDailyInfoAdapter(HashMap<String, CustomerAmount> dataset) {
         this.account_amount_map = dataset;
-        this.selected_cal = selected_cal;
-        this.context = context;
-        CustomerAmount customerAmount = new CustomerAmount();
-        this.customerAmountList = new ArrayList<CustomerAmount>(dataset.values());
+        this.customerAmountList = new ArrayList<>(dataset.values());
         Collections.sort(this.customerAmountList, new Comparator<CustomerAmount>() {
             @Override
             public int compare(CustomerAmount o1, CustomerAmount o2) {

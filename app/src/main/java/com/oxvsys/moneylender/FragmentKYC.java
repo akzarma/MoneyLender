@@ -89,6 +89,7 @@ public class FragmentKYC extends Fragment {
 
             @Override
             public void onClick(View v) {
+
                 DatabaseReference customers = database.getReference("customers");
                 String key = customers.push().getKey();
                 Map<String, Object> id = new HashMap<>();

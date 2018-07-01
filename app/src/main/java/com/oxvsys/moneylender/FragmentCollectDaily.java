@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.oxvsys.moneylender.LoginActivity.database;
+import static com.oxvsys.moneylender.MainActivity.getData;
 
 
 /**
@@ -81,7 +82,7 @@ public class FragmentCollectDaily extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_collect_daily, container, false);
         //==================HARD CODED=============================================================================
-        final String agent_id = "agent_0"; //get logged in id and check type of user == "agent" and also customer in next line
+        final String agent_id = getData("user_id",getContext()); //get logged in id and check type of user == "agent" and also customer in next line
 //        Customer selected_customer = new Customer();
 //        selected_customer.setId("A1");
         final EditText amount_field = view.findViewById(R.id.amount_field);

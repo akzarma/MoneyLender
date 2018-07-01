@@ -91,11 +91,9 @@ public class FragmentCustomerDailyInfo extends Fragment {
                     curr_agent.setId(each_agent.getKey());
                     agents.add(curr_agent);
                     final HashMap<String, Object> account_amount_map = new HashMap<>();
-                    final List<AgentCollect> agentCollectList = new ArrayList<>();
 
                     for (DataSnapshot date : each_agent.getChildren()) {
                         if (date.getKey().equals(sel_date)) {
-                            List<AccountAmountCollect> accountAmountCollectList = new ArrayList<>();
                             for (DataSnapshot each_account : date.getChildren()) {
                                 account_amount_map.put(each_account.getKey(), each_account.getValue().toString());
                             }
@@ -149,7 +147,7 @@ public class FragmentCustomerDailyInfo extends Fragment {
 //                                Log.d("customer_daily", "onDataChange: " + accounts.get("3").toString());
                             }
 
-                            mAdapter = new CustomerDailyInfoAdapter(customer_amount_map, sel_calendar, getContext());
+                            mAdapter = new CustomerDailyInfoAdapter(customer_amount_map);
                             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
                             recyclerView.setLayoutManager(mLayoutManager);
                             recyclerView.setItemAnimator(new DefaultItemAnimator());

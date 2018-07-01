@@ -19,7 +19,7 @@
         android:paddingHorizontal="14dp"
         android:src="@drawable/ic_date_range_black_24dp"
         android:text="..."
-android:textColor="#fff"
+        android:textColor="#fff"
         android:textSize="16sp"
         tools:targetApi="o" />
 
@@ -168,14 +168,14 @@ android:textColor="#fff"
         android:background="#bebebe" />
 
     <TextView
-        android:layout_marginTop="16dp"
         android:id="@+id/select_range_text"
-        android:layout_below="@id/line"
         android:layout_width="wrap_content"
-        android:textColor="#fff"
-        android:fontFamily="@font/futura_book_font"
         android:layout_height="wrap_content"
-        android:text="Select Range"/>
+        android:layout_below="@id/line"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/futura_book_font"
+        android:text="Select Range"
+        android:textColor="#fff" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -186,10 +186,10 @@ android:textColor="#fff"
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#fff"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:text="From" />
+            android:text="From"
+            android:textColor="#fff" />
 
         <Button
             android:id="@+id/dashboard_from_button"
@@ -208,11 +208,11 @@ android:textColor="#fff"
 
         <TextView
             android:layout_width="wrap_content"
-            android:textColor="#fff"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:text="To" />
+            android:text="To"
+            android:textColor="#fff" />
 
         <Button
             android:id="@+id/dashboard_to_button"

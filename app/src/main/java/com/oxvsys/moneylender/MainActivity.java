@@ -54,12 +54,21 @@ public class MainActivity extends AppCompatActivity
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             Fragment fragment;
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             switch (item.getItemId()) {
                 case R.id.bottom_nav_home:
                     toolbar.setTitle("Home");
+
                     return true;
                 case R.id.bottom_nav_daily_basis:
-                    toolbar.setTitle("Daily");
+                    toolbar.setTitle("Daily Basis Accounts");
+                    if (getSupportActionBar() != null)
+                        getSupportActionBar().setTitle("Customer Daily Report");
+                    Calendar calendar = Calendar.getInstance();
+                    FragmentDailyBasisInfo fragmentDailyBasisInfo = FragmentDailyBasisInfo.newInstance(calendar);
+                    fragmentTransaction.replace(R.id.fragment_container, fragmentDailyBasisInfo).addToBackStack(null).
+                            commit();
                     return true;
                 case R.id.bottom_nav_monthly_basis:
                     toolbar.setTitle("Monthly");
