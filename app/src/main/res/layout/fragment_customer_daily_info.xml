@@ -14,37 +14,44 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/futura_book_font"
         android:text="..."
+
         android:textAlignment="center"
         android:textAllCaps="false"
         android:textColor="@color/main_text_color_blue"
         android:textSize="24sp"
         android:typeface="sans" />
 
-    <RelativeLayout
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp">
-
-        <TextView
-            android:id="@+id/customer_daily_account_no"
-            android:layout_width="wrap_content"
+        cardBackgroundColor="@color/current_card_color"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Account No" />
+            android:layout_marginTop="8dp">
 
-        <TextView
-            android:id="@+id/customer_daily_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_toRightOf="@id/customer_daily_account_no"
-            android:text="Name" />
+            <TextView
+                android:id="@+id/customer_daily_account_no"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Account No" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:text="Amount Deposited" />
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/customer_daily_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_toRightOf="@id/customer_daily_account_no"
+                android:text="Name" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:text="Amount Deposited" />
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
 
     <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/customer_daily_info_swipe"
