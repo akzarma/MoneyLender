@@ -211,8 +211,6 @@ public class FragmentKYC extends Fragment {
         return view;
     }
 
-    private void validateForm() {
-    }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

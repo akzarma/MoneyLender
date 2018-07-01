@@ -9,11 +9,11 @@
     <item
         android:id="@+id/bottom_nav_daily_basis"
         android:icon="@drawable/ic_today_black_24dp"
-        android:title="Daily" />
+        android:title="Daily Basis" />
     <item
         android:id="@+id/bottom_nav_monthly_basis"
         android:icon="@drawable/ic_timeline_black_24dp"
-        android:title="Monthly" />
+        android:title="Monthly Basis" />
 
     <!--<item-->
         <!--android:icon="@drawable/ic_outline_event_note_24px"-->
