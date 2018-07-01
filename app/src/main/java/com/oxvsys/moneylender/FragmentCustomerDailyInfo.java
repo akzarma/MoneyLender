@@ -118,6 +118,7 @@ public class FragmentCustomerDailyInfo extends Fragment {
                                 curr_customer.setId(each_customer.getKey());
                                 customer = (HashMap<String, Object>) each_customer.getValue();
                                 HashMap<String, Object> accounts = (HashMap<String, Object>) customer.get("accounts");
+                                Log.d("Account for Customer: ", curr_customer.getId());
 
                                 for (Map.Entry<String, Object> account : accounts.entrySet()) {
                                     if (account_amount_map.containsKey(account.getKey())) {

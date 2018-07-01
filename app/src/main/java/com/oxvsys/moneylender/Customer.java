@@ -10,6 +10,8 @@ public class Customer implements Serializable,Cloneable {
     private String aadhar_id;
     private String mobile;
     private String DOB;
+
+    private List<Account> accounts1;
     @Override
     public Object clone() {
         try {
@@ -27,7 +29,6 @@ public class Customer implements Serializable,Cloneable {
         this.accounts1 = accounts1;
     }
 
-    private List<Account> accounts1;
 
     public String getId() {
         return id;

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:padding="16dp"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".FragmentKYC">
 
     <!-- TODO: Update blank fragment layout -->
@@ -11,114 +11,85 @@
 
     <ScrollView
         android:layout_width="match_parent"
+        android:id="@+id/scroll_view_kyc"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="0dp"
         android:layout_marginBottom="50dp">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <EditText
                 android:id="@+id/name_field"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="92dp"
-                android:layout_marginTop="47dp"
-                android:layout_marginEnd="77dp"
                 android:ems="10"
                 android:hint="Full Name"
-                android:inputType="textPersonName"
-                tools:layout_editor_absoluteX="85dp"
-                tools:layout_editor_absoluteY="7dp" />
+                android:inputType="textPersonName" />
 
             <EditText
                 android:id="@+id/aadhar_field"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/occupation_field"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="92dp"
-                android:layout_marginEnd="77dp"
-                android:layout_marginBottom="11dp"
+                android:layout_below="@id/name_field"
                 android:ems="10"
                 android:hint="AADHAR ID"
-                android:inputType="textPersonName"
-                tools:layout_editor_absoluteX="84dp"
-                tools:layout_editor_absoluteY="70dp" />
+                android:inputType="textPersonName" />
 
             <EditText
                 android:id="@+id/occupation_field"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/mobile_field"
                 android:layout_alignStart="@+id/dob_field"
-                android:layout_marginStart="-2dp"
-                android:layout_marginBottom="18dp"
+                android:layout_below="@id/aadhar_field"
                 android:ems="10"
                 android:hint="Occupation"
-                android:inputType="textPersonName"
-                tools:layout_editor_absoluteX="85dp"
-                tools:layout_editor_absoluteY="135dp" />
+                android:inputType="textPersonName" />
 
             <EditText
                 android:id="@+id/mobile_field"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/deposit_button"
+                android:layout_below="@id/occupation_field"
                 android:layout_alignStart="@+id/name_field"
-                android:layout_marginStart="2dp"
-                android:layout_marginBottom="91dp"
                 android:ems="10"
                 android:hint="Mobile No."
-                android:inputType="phone"
-                tools:layout_editor_absoluteX="85dp"
-                tools:layout_editor_absoluteY="396dp" />
+                android:inputType="phone" />
 
 
 
             <EditText
                 android:id="@+id/dob_field"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/aadhar_field"
-                android:layout_alignStart="@+id/name_field"
-                android:layout_marginStart="2dp"
-                android:layout_marginBottom="24dp"
+                android:layout_below="@id/mobile_field"
                 android:ems="10"
                 android:hint="DOB"
                 android:inputType="date" />
 
             <EditText
                 android:id="@+id/address_field"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/dob_field"
                 android:layout_alignEnd="@+id/name_field"
-                android:layout_alignParentBottom="true"
-                android:layout_marginEnd="14dp"
-                android:layout_marginBottom="0dp"
-                android:ems="10"
                 android:hint="Full Address"
                 android:inputType="textMultiLine" />
+            <Button
+                android:id="@+id/deposit_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/address_field"
+                android:text="Save"/>
 
-        </LinearLayout>
+        </RelativeLayout>
+
     </ScrollView>
 
-    <Button
-        android:id="@+id/deposit_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="155dp"
-        android:layout_marginBottom="3dp"
-        android:text="Save"
-        tools:layout_editor_absoluteX="148dp"
-        tools:layout_editor_absoluteY="459dp" />
+
+
 
 </RelativeLayout>

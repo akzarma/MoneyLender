@@ -3,16 +3,28 @@ package com.oxvsys.moneylender;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.oxvsys.moneylender.LoginActivity.database;
 
@@ -30,6 +42,8 @@ public class FragmentCollectDaily extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    Customer selected_customer;
+    Long deposited = 0L;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -71,13 +85,77 @@ public class FragmentCollectDaily extends Fragment {
 //        Customer selected_customer = new Customer();
 //        selected_customer.setId("A1");
         final EditText amount_field = view.findViewById(R.id.amount_field);
-        Button deposit_button = view.findViewById(R.id.deposit_button);
+        final TextView customer_name_field = view.findViewById(R.id.customer_name_field);
+        final TextView customer_id_field = view.findViewById(R.id.customer_id_field);
+        final TextView customer_loan_amount_field = view.findViewById(R.id.customer_loan_amount_field);
+        final TextView customer_deposited_field = view.findViewById(R.id.customer_deposited_field);
+        final TextView customer_account_type_field = view.findViewById(R.id.customer_account_type_field);
+        final TextView customer_mobile_field = view.findViewById(R.id.customer_mobile_field);
+        final Button deposit_button = view.findViewById(R.id.deposit_button);
         final Account selected_account = (Account) getArguments().getSerializable(ARG_PARAM1);
-        amount_field.setText(selected_account.getNo());
+
+        final String logged_agent = "agent_0";  //to be changed to dynamic logged in user
+
+
+        DatabaseReference account_customer_db_ref = database.getReference("agentAccount").child(logged_agent).child(selected_account.getNo());
+        account_customer_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                DatabaseReference customers_db_ref = database.getReference("customers").child(dataSnapshot.getValue().toString());
+                customers_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        selected_customer = dataSnapshot.getValue(Customer.class);
+                        selected_customer.setId(dataSnapshot.getKey());
+                        HashMap<String, Object> accounts = (HashMap<String, Object>) ((HashMap<String, Object>) dataSnapshot.getValue()).get("accounts");
+
+                        Account account = new Account(accounts.get(selected_account.getNo()));
+                        account.setNo(selected_account.getNo());
+                        List<Account> accountList = new ArrayList<>();
+//                                    Account account1 = new Account(account.getValue());
+//                                    account.setNo(account.getKey());
+                        accountList.add(account);
+                        selected_customer.setAccounts1(accountList);
+
+                        customer_loan_amount_field.setText(String.valueOf(account.getAmt()));
+                        customer_deposited_field.setText(String.valueOf(account.getDeposited()));
+                        if (account.getType().equals("0"))
+                            customer_account_type_field.setText("Daily basis");
+                        else if (account.getType().equals("1"))
+                            customer_account_type_field.setText("Monthly basis");
+                        customer_mobile_field.setText(selected_customer.getMobile());
+
+
+//                                List<Account> accountList = new ArrayList<>();
+//                                accountList.add(selected_account);
+//                                selected_customer.setAccounts1(accountList);
+                        customer_name_field.setText(selected_customer.getName());
+                        customer_id_field.setText(selected_customer.getId());
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
         deposit_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int amount_recieved = Integer.parseInt(String.valueOf(amount_field.getText()));
+                if (amount_field.getText().toString().length() == 0) {
+                    amount_field.setError("Amount Money is required!");
+                    return;
+                }
+                final Long amount_recieved = Long.parseLong(String.valueOf(amount_field.getText()));
 
                 //=========================================================================================================
 
@@ -90,7 +168,6 @@ public class FragmentCollectDaily extends Fragment {
                         String.valueOf(curr_cal.get(Calendar.MONTH)) + "-" +
                         String.valueOf(curr_cal.get(Calendar.YEAR));
 
-                final DatabaseReference agent = database.getReference("agentCollect");
 
 //        agent.addListenerForSingleValueEvent(new ValueEventListener() {
 //            @Override
@@ -114,10 +191,71 @@ public class FragmentCollectDaily extends Fragment {
 //            public void onCancelled(@NonNull DatabaseError databaseError) {
 //
 //            }
+
+
 //        });
-                agent.child(agent_id).child(String.valueOf(curr_cal.get(Calendar.DAY_OF_MONTH)) + "-" +
-                        String.valueOf(curr_cal.get(Calendar.MONTH) + 1) + "-" +
-                        String.valueOf(curr_cal.get(Calendar.YEAR))).child(selected_account.getNo()).setValue(amount_recieved);
+
+
+                DatabaseReference account_deposited_db_ref = database.getReference("customers")
+                        .child(selected_customer.getId()).child("accounts")
+                        .child(selected_customer.getAccounts1().get(0).getNo())
+                        .child("deposited");
+                account_deposited_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        Object get_value = dataSnapshot.getValue();
+                        if (get_value != null) {
+                            deposited = Long.parseLong(dataSnapshot.getValue().toString());
+                        } else {
+                            deposited = 0L;
+                        }
+
+
+                        DatabaseReference agent_collect_date_db_ref = database.getReference("agentCollect").child(agent_id)
+                                .child(String.valueOf(curr_cal.get(Calendar.DAY_OF_MONTH)) + "-" +
+                                        String.valueOf(curr_cal.get(Calendar.MONTH) + 1) + "-" +
+                                        String.valueOf(curr_cal.get(Calendar.YEAR)));
+                        agent_collect_date_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.hasChild(selected_account.getNo())) {
+                                    Long prev_money = ((HashMap<String, Long>) dataSnapshot.getValue()).get(selected_account.getNo());
+                                    deposited -= prev_money;
+                                }
+                                deposited += amount_recieved;
+
+                                DatabaseReference agent = database.getReference("agentCollect");
+                                agent.child(agent_id).child(String.valueOf(curr_cal.get(Calendar.DAY_OF_MONTH)) + "-" +
+                                        String.valueOf(curr_cal.get(Calendar.MONTH) + 1) + "-" +
+                                        String.valueOf(curr_cal.get(Calendar.YEAR))).child(selected_account.getNo()).setValue(amount_recieved).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        database.getReference("customers")
+                                                .child(selected_customer.getId()).child("accounts")
+                                                .child(selected_customer.getAccounts1().get(0).getNo())
+                                                .child("deposited").setValue(deposited).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                Log.d("deposited new money: ", "Account: " + selected_account.getNo());
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
 
             }
         });

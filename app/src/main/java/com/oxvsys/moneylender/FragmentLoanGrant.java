@@ -309,7 +309,20 @@ public class FragmentLoanGrant extends Fragment {
                         account_type_db_ref.updateChildren(account_type_map, new DatabaseReference.CompletionListener() {
                             @Override
                             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                                Log.d("accountType query: ", "data updated.");
 
+                            }
+                        });
+
+
+                        //Update accountCustomer
+                        DatabaseReference account_customer_db_ref = database.getReference("accountCustomer");
+                        Map<String, Object> account_customer_map = new HashMap<>();
+                        account_type_map.put(final_account_no, selected_customer.getId());
+                        account_customer_db_ref.updateChildren(account_customer_map, new DatabaseReference.CompletionListener() {
+                            @Override
+                            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                                Log.d("accountCustomer query: ", "data updated.");
                             }
                         });
                     }

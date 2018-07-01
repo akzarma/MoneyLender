@@ -6,7 +6,8 @@ import java.util.HashMap;
 
 public class Account implements Serializable {
         private String no;
-        private long amt;
+        private Long amt;
+        private Long deposited = 0L;
         private Calendar o_date;
         private Calendar c_date;
         private int roi;
@@ -22,6 +23,8 @@ public class Account implements Serializable {
 
         if (value1.get("roi") !=null)
             this.roi = Integer.parseInt(value1.get("roi").toString());
+        if (value1.get("deposited")!=null)
+            this.deposited = Long.parseLong(value1.get("deposited").toString());
 
         this.type = value1.get("type").toString();
 
@@ -30,6 +33,14 @@ public class Account implements Serializable {
 
     public Account() {
 
+    }
+
+    public Long getDeposited() {
+        return deposited;
+    }
+
+    public void setDeposited(Long deposited) {
+        this.deposited = deposited;
     }
 
     public String getNo() {
@@ -44,7 +55,7 @@ public class Account implements Serializable {
         return amt;
     }
 
-    public void setAmt(int amt) {
+    public void setAmt(Long amt) {
         this.amt = amt;
     }
 
