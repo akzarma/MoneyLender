@@ -26,10 +26,12 @@ public class CustomerDailyInfoAdapter extends RecyclerView.Adapter<CustomerDaily
 
     private HashMap<String, CustomerAmount> account_amount_map;
     private List<CustomerAmount> customerAmountList;
+    private Context context;
 
 
-    public CustomerDailyInfoAdapter(HashMap<String, CustomerAmount> dataset) {
+    public CustomerDailyInfoAdapter(HashMap<String, CustomerAmount> dataset, Context context) {
         this.account_amount_map = dataset;
+        this.context = context;
         this.customerAmountList = new ArrayList<>(dataset.values());
         Collections.sort(this.customerAmountList, new Comparator<CustomerAmount>() {
             @Override
@@ -62,6 +64,7 @@ public class CustomerDailyInfoAdapter extends RecyclerView.Adapter<CustomerDaily
     public void onBindViewHolder(@NonNull CustomerDailyInfoAdapter.CustomerHolder holder, int position) {
         CustomerAmount customerAmount = customerAmountList.get(position);
         Log.d("customer_daily", customerAmount.toString());
+        final String logged_agent = MainActivity.getData("user_id", context);
         holder.agent_id.setText(customerAmount.getCustomer().getAccounts1().get(0).getNo());
         holder.agent_name.setText(customerAmount.getCustomer().getName());
         holder.total_collection.setText(String.valueOf(customerAmount.getAmount_collected()));
@@ -69,7 +72,7 @@ public class CustomerDailyInfoAdapter extends RecyclerView.Adapter<CustomerDaily
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatabaseReference date_amount_db_ref = database.getReference("agentCollect");
+                DatabaseReference date_amount_db_ref = database.getReference("agentCollect").child(logged_agent);
             }
         });
 
