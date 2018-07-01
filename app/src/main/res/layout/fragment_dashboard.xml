@@ -19,7 +19,7 @@
         android:paddingHorizontal="14dp"
         android:src="@drawable/ic_date_range_black_24dp"
         android:text="..."
-
+android:textColor="#fff"
         android:textSize="16sp"
         tools:targetApi="o" />
 
@@ -41,17 +41,17 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/gradient_card_total"
                 android:paddingTop="8dp">
 
                 <TextView
                     android:id="@+id/todays_collection_dashboard"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+
                     android:layout_centerHorizontal="true"
                     android:text="Daily Basis Account"
                     android:textAllCaps="false"
-                    android:textColor="#ffffff"
+                    android:textColor="#000"
                     android:textSize="14sp" />
 
                 <TextView
@@ -63,7 +63,7 @@
                     android:layout_marginLeft="8dp"
                     android:paddingTop="30dp"
                     android:text="..."
-                    android:textColor="#ffffff"
+                    android:textColor="#000"
                     android:textSize="25dp" />
             </RelativeLayout>
 
@@ -79,7 +79,6 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/gradient_card_total"
                 android:paddingTop="8dp">
 
                 <TextView
@@ -89,7 +88,7 @@
                     android:layout_centerHorizontal="true"
                     android:text="Monthly basis Account"
                     android:textAllCaps="false"
-                    android:textColor="#ffffff"
+                    android:textColor="#000"
                     android:textSize="14sp" />
 
                 <TextView
@@ -102,7 +101,7 @@
                     android:layout_marginLeft="8dp"
                     android:paddingTop="30dp"
                     android:text="..."
-                    android:textColor="#ffffff"
+                    android:textColor="#000"
                     android:textSize="25dp" />
             </RelativeLayout>
 
@@ -129,7 +128,6 @@
                 android:id="@+id/totat_collection_card_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/gradient_card_blue"
                 android:paddingTop="8dp">
 
                 <TextView
@@ -139,7 +137,7 @@
                     android:layout_centerHorizontal="true"
                     android:text="Today's Total Collection"
                     android:textAllCaps="false"
-                    android:textColor="#ffffff"
+                    android:textColor="#000"
                     android:textSize="14sp" />
 
                 <TextView
@@ -151,7 +149,7 @@
                     android:layout_marginLeft="8dp"
                     android:paddingTop="30dp"
                     android:text="..."
-                    android:textColor="#ffffff"
+                    android:textColor="#000"
                     android:textSize="36dp" />
             </RelativeLayout>
 
@@ -174,6 +172,8 @@
         android:id="@+id/select_range_text"
         android:layout_below="@id/line"
         android:layout_width="wrap_content"
+        android:textColor="#fff"
+        android:fontFamily="@font/futura_book_font"
         android:layout_height="wrap_content"
         android:text="Select Range"/>
 
@@ -186,6 +186,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="#fff"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:text="From" />
@@ -201,12 +202,13 @@
             android:paddingHorizontal="14dp"
             android:src="@drawable/ic_date_range_black_24dp"
             android:text="..."
-
+            android:textColor="#fff"
             android:textSize="16sp"
             tools:targetApi="o" />
 
         <TextView
             android:layout_width="wrap_content"
+            android:textColor="#fff"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
@@ -223,7 +225,7 @@
             android:paddingHorizontal="14dp"
             android:src="@drawable/ic_date_range_black_24dp"
             android:text="..."
-
+            android:textColor="#fff"
             android:textSize="16sp"
             tools:targetApi="o" />
 

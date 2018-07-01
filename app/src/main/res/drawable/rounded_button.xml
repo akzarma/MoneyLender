@@ -5,7 +5,7 @@
     <stroke
         android:drawable="@android:color/transparent"
         android:width="1dp"
-        android:color="#cc0a64ff" >
+        android:color="#fff" >
     </stroke>
 
 
