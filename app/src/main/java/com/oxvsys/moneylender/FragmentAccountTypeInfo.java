@@ -77,7 +77,7 @@ public class FragmentAccountTypeInfo extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_account_type_info, container, false);
@@ -163,7 +163,7 @@ public class FragmentAccountTypeInfo extends Fragment {
                                         }
                                     }
 
-                                    mAdapter = new CustomerDailyInfoAdapter(daily_customer_amount_map, getContext());
+                                    mAdapter = new CustomerDailyInfoAdapter(daily_customer_amount_map,sel_calendar, getContext(), getFragmentManager());
                                     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
                                     recycler.setLayoutManager(mLayoutManager);
                                     recycler.setItemAnimator(new DefaultItemAnimator());

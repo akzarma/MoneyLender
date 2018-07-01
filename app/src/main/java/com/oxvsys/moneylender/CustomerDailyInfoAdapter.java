@@ -2,7 +2,11 @@ package com.oxvsys.moneylender;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,7 +15,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.android.gms.common.util.NumberUtils;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,23 +34,28 @@ public class CustomerDailyInfoAdapter extends RecyclerView.Adapter<CustomerDaily
     private HashMap<String, CustomerAmount> account_amount_map;
     private List<CustomerAmount> customerAmountList;
     private Context context;
+    private Calendar sel_calendar;
+    private FragmentManager fragmentManager;
 
 
-    public CustomerDailyInfoAdapter(HashMap<String, CustomerAmount> dataset, Context context) {
+    public CustomerDailyInfoAdapter(HashMap<String, CustomerAmount> dataset, Calendar sel_calendar, Context context, FragmentManager fragmentManager) {
         this.account_amount_map = dataset;
         this.context = context;
+        this.sel_calendar = sel_calendar;
+        this.fragmentManager = fragmentManager;
+
         this.customerAmountList = new ArrayList<>(dataset.values());
         Collections.sort(this.customerAmountList, new Comparator<CustomerAmount>() {
             @Override
             public int compare(CustomerAmount o1, CustomerAmount o2) {
-                if(NumberUtils.isNumeric(o1.getCustomer().getAccounts1().get(0).getNo()) &&
-                        NumberUtils.isNumeric(o2.getCustomer().getAccounts1().get(0).getNo())){
+                if (NumberUtils.isNumeric(o1.getCustomer().getAccounts1().get(0).getNo()) &&
+                        NumberUtils.isNumeric(o2.getCustomer().getAccounts1().get(0).getNo())) {
                     Long o1_account_no = Long.parseLong(o1.getCustomer().getAccounts1().get(0).getNo());
                     Long o2_account_no = Long.parseLong(o2.getCustomer().getAccounts1().get(0).getNo());
-                    if(o1_account_no >= o2_account_no){
+                    if (o1_account_no >= o2_account_no) {
                         return 1;
-                    }else return 0;
-                }else return 0;
+                    } else return 0;
+                } else return 0;
 
 
             }
@@ -61,18 +73,53 @@ public class CustomerDailyInfoAdapter extends RecyclerView.Adapter<CustomerDaily
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CustomerDailyInfoAdapter.CustomerHolder holder, int position) {
-        CustomerAmount customerAmount = customerAmountList.get(position);
+    public void onBindViewHolder(@NonNull final CustomerDailyInfoAdapter.CustomerHolder holder, int position) {
+        final CustomerAmount customerAmount = customerAmountList.get(position);
+
+
         Log.d("customer_daily", customerAmount.toString());
         final String logged_agent = MainActivity.getData("user_id", context);
         holder.agent_id.setText(customerAmount.getCustomer().getAccounts1().get(0).getNo());
         holder.agent_name.setText(customerAmount.getCustomer().getName());
         holder.total_collection.setText(String.valueOf(customerAmount.getAmount_collected()));
+
+
         final List<DateAmount> dateAmountList = new ArrayList<>();
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final Calendar o_date = customerAmount.getCustomer().getAccounts1().get(0).getO_date();
+                final Calendar c_date = customerAmount.getCustomer().getAccounts1().get(0).getC_date();
                 DatabaseReference date_amount_db_ref = database.getReference("agentCollect").child(logged_agent);
+                date_amount_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot date : dataSnapshot.getChildren()) {
+                            Calendar curr_date = MainActivity.StringDateToCal(date.getKey());
+                            if ((curr_date.after(o_date) && curr_date.before(c_date)) ||
+                                    (curr_date.equals(o_date) || curr_date.equals(c_date))) {
+                                DateAmount dateAmount = new DateAmount();
+                                dateAmount.setDate(date.getKey());
+                                Long curr_amount = ((HashMap<String, Long>) date.getValue())
+                                        .get(customerAmount.getCustomer().getAccounts1().get(0).getNo());
+                                dateAmount.setAmount(curr_amount);
+                                dateAmountList.add(dateAmount);
+                            }
+                        }
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        FragmentDateAmount fragmentDateAmount = FragmentDateAmount.newInstance(dateAmountList, customerAmount);
+                        fragmentTransaction.replace(R.id.fragment_container, fragmentDateAmount).addToBackStack(null).
+                                commit();
+                    }
+
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+
             }
         });
 

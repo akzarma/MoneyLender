@@ -129,8 +129,8 @@ public class FragmentSelectAccount extends Fragment {
 
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                FragmentCollectDaily fragmentCollectDaily = FragmentCollectDaily.newInstance(account_selected);
-                fragmentTransaction.replace(R.id.fragment_container, fragmentCollectDaily).addToBackStack(null).commit();
+                FragmentCollect fragmentCollect = FragmentCollect.newInstance(account_selected);
+                fragmentTransaction.replace(R.id.fragment_container, fragmentCollect).addToBackStack(null).commit();
                 accountList.clear();
             }
         });

@@ -1,6 +1,8 @@
 package com.oxvsys.moneylender;
 
-public class CustomerAmount implements Cloneable{
+import java.io.Serializable;
+
+public class CustomerAmount implements Cloneable, Serializable {
     public Customer getCustomer() {
         return customer;
     }

@@ -64,7 +64,7 @@ public class FragmentCustomerDailyInfo extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_customer_daily_info, container, false);
 
@@ -148,7 +148,7 @@ public class FragmentCustomerDailyInfo extends Fragment {
 //                                Log.d("customer_daily", "onDataChange: " + accounts.get("3").toString());
                             }
 
-                            mAdapter = new CustomerDailyInfoAdapter(customer_amount_map, getContext());
+                            mAdapter = new CustomerDailyInfoAdapter(customer_amount_map,sel_calendar, getContext(), getFragmentManager());
                             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
                             recyclerView.setLayoutManager(mLayoutManager);
                             recyclerView.setItemAnimator(new DefaultItemAnimator());

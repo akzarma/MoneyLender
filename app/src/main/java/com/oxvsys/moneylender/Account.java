@@ -5,25 +5,29 @@ import java.util.Calendar;
 import java.util.HashMap;
 
 public class Account implements Serializable {
-        private String no;
-        private Long amt;
-        private Long deposited = 0L;
-        private Calendar o_date;
-        private Calendar c_date;
-        private int roi;
-        private String type; //    "0" or  "1"
+    private String no;
+    private Long amt;
+    private Long deposited = 0L;
+    private Calendar o_date;
+    private Calendar c_date;
+    private int roi;
+    private String type; //    "0" or  "1"
 
     public Account(Object value) {
         HashMap<String, Object> value1 = (HashMap<String, Object>) value;
         this.amt = Long.parseLong(value1.get("amt").toString());
-        if (!value1.get("o_date").equals(""))
+        if (!value1.get("o_date").equals("")) {
             this.setO_date(value1.get("o_date").toString());
-        if (!value1.get("c_date").equals(""))
-            this.setO_date(value1.get("c_date").toString());
+            MainActivity.CaltoStringDate(this.o_date);
+        }
+        if (!value1.get("c_date").equals("")) {
+            this.setC_date(value1.get("c_date").toString());
+            MainActivity.CaltoStringDate(this.c_date);
+        }
 
-        if (value1.get("roi") !=null)
+        if (value1.get("roi") != null)
             this.roi = Integer.parseInt(value1.get("roi").toString());
-        if (value1.get("deposited")!=null)
+        if (value1.get("deposited") != null)
             this.deposited = Long.parseLong(value1.get("deposited").toString());
 
         this.type = value1.get("type").toString();
@@ -63,17 +67,8 @@ public class Account implements Serializable {
         return o_date;
     }
 
-    public void setO_date(String  o_date) {
-        String[] date = o_date.split("-");
-        Calendar selected_cal = Calendar.getInstance();
-        selected_cal.set(Integer.parseInt(date[2]),
-                Integer.parseInt(date[1])-1,
-                Integer.parseInt(date[0]));
-        selected_cal.set(Calendar.HOUR_OF_DAY, 0);
-        selected_cal.set(Calendar.MINUTE, 0);
-        selected_cal.set(Calendar.SECOND, 0);
-        selected_cal.set(Calendar.MILLISECOND, 0);
-        this.o_date = selected_cal;
+    public void setO_date(String o_date) {
+        this.o_date = MainActivity.StringDateToCal(o_date);
     }
 
     public Calendar getC_date() {
@@ -81,16 +76,7 @@ public class Account implements Serializable {
     }
 
     public void setC_date(String c_date) {
-        String[] date = c_date.split("-");
-        Calendar selected_cal = Calendar.getInstance();
-        selected_cal.set(Integer.parseInt(date[2]),
-                Integer.parseInt(date[1])-1,
-                Integer.parseInt(date[0]));
-        selected_cal.set(Calendar.HOUR_OF_DAY, 0);
-        selected_cal.set(Calendar.MINUTE, 0);
-        selected_cal.set(Calendar.SECOND, 0);
-        selected_cal.set(Calendar.MILLISECOND, 0);
-        this.c_date = selected_cal;
+        this.c_date = MainActivity.StringDateToCal(c_date);
     }
 
     public int getRoi() {
