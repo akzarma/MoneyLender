@@ -53,7 +53,7 @@ public class LoginActivity extends AppCompatActivity {
                                 for (DataSnapshot user : dataSnapshot.getChildren()) {
                                     String pwd = ((HashMap<String, Object>) user.getValue()).get("pwd").toString();
                                     String type = ((HashMap<String, Object>) user.getValue()).get("type").toString();
-                                    if (password_view.getText().toString().equals(pwd)) {
+                                    if (password_view.getText().toString().equals(pwd) && mobile_view.getText().toString().equals(user.getKey())) {
                                         Log.d(TAG, "onDataChange: " + "success");
                                         saveData("user_id",user.getKey(),getApplicationContext());
                                         saveData("user_type", type, getApplicationContext());

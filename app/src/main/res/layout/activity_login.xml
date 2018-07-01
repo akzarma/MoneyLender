@@ -7,32 +7,53 @@
     android:layout_height="match_parent"
     tools:context=".LoginActivity">
 
+    <TextView
+        android:layout_marginTop="48dp"
+        android:layout_width="wrap_content"
+        android:textSize="24sp"
+        android:layout_centerHorizontal="true"
+        android:layout_height="wrap_content"
+        android:text="Haripriya Money Lenders"/>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_centerVertical="true"
         android:layout_height="wrap_content">
 
-        <EditText
-            android:id="@+id/login_mobile"
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
+            android:id="@+id/login_mobile_til"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/login_mobile"
+                android:layout_width="match_parent"
 
-            android:inputType="text"
-            android:layout_height="wrap_content"
-            android:hint="Mobile Number" />
+                android:inputType="text"
+                android:layout_height="wrap_content"
+                android:hint="Mobile Number" />
+        </android.support.design.widget.TextInputLayout>
 
 
-        <EditText
-            android:id="@+id/login_password"
+
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/login_mobile"
-            android:hint="Password" />
+            android:layout_below="@id/login_mobile_til"
+            android:id="@+id/login_password_til"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/login_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/login_mobile"
+                android:hint="Password" />
+        </android.support.design.widget.TextInputLayout>
+
 
         <Button
             android:id="@+id/login_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/login_password"
+            android:layout_below="@id/login_password_til"
             android:layout_centerHorizontal="true"
             android:text="Login"
             android:textAllCaps="false" />
