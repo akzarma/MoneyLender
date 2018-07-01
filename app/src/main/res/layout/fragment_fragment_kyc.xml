@@ -2,16 +2,16 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:padding="16dp"
     android:layout_height="wrap_content"
+    android:padding="16dp"
     tools:context=".FragmentKYC">
 
     <!-- TODO: Update blank fragment layout -->
 
 
     <ScrollView
-        android:layout_width="match_parent"
         android:id="@+id/scroll_view_kyc"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
@@ -22,74 +22,114 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/name_field"
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/kyc_full_name_til"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/name_field"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:fontFamily="@font/roboto_regular"
+                    android:hint="Full Name"
+                    android:inputType="textPersonName" />
+            </android.support.design.widget.TextInputLayout>
+
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/kyc_aadhar_til"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="Full Name"
-                android:inputType="textPersonName" />
+                android:layout_below="@id/kyc_full_name_til">
 
-            <EditText
-                android:id="@+id/aadhar_field"
+                <EditText
+                    android:id="@+id/aadhar_field"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="Aadhaar ID"
+                    android:fontFamily="@font/roboto_regular"
+                    android:inputType="number" />
+            </android.support.design.widget.TextInputLayout>
+
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/kyc_occupation_til"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/name_field"
-                android:ems="10"
-                android:hint="AADHAR ID"
-                android:inputType="textPersonName" />
+                android:layout_below="@id/kyc_aadhar_til">
 
-            <EditText
-                android:id="@+id/occupation_field"
+                <EditText
+                    android:id="@+id/occupation_field"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="Occupation"
+                    android:fontFamily="@font/roboto_regular"
+                    android:inputType="textPersonName" />
+            </android.support.design.widget.TextInputLayout>
+
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/kyc_mobile_til"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/dob_field"
-                android:layout_below="@id/aadhar_field"
-                android:ems="10"
-                android:hint="Occupation"
-                android:inputType="textPersonName" />
+                android:layout_below="@id/kyc_occupation_til"
+                android:layout_height="wrap_content">
 
-            <EditText
-                android:id="@+id/mobile_field"
+                <EditText
+                    android:id="@+id/mobile_field"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:fontFamily="@font/roboto_regular"
+                    android:hint="Mobile No."
+                    android:inputType="phone" />
+            </android.support.design.widget.TextInputLayout>
+
+
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/occupation_field"
-                android:layout_alignStart="@+id/name_field"
-                android:ems="10"
-                android:hint="Mobile No."
-                android:inputType="phone" />
+                android:id="@+id/kyc_dob_til"
+                android:layout_below="@id/kyc_mobile_til"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/dob_field"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:fontFamily="@font/roboto_regular"
+                    android:hint="DOB"
+                    android:focusable="false"
+                    android:inputType="date" />
+            </android.support.design.widget.TextInputLayout>
 
 
-
-            <EditText
-                android:id="@+id/dob_field"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/mobile_field"
-                android:ems="10"
-                android:hint="DOB"
-                android:inputType="date" />
+                android:id="@+id/kyc_address_til"
+                android:layout_below="@id/kyc_dob_til"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/address_field"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Full Address"
+                    android:inputType="textMultiLine" />
+            </android.support.design.widget.TextInputLayout>
 
-            <EditText
-                android:id="@+id/address_field"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/dob_field"
-                android:layout_alignEnd="@+id/name_field"
-                android:hint="Full Address"
-                android:inputType="textMultiLine" />
+
             <Button
+                android:layout_marginTop="8dp"
+                android:background="@drawable/rounded_button"
                 android:id="@+id/deposit_button"
                 android:layout_width="wrap_content"
+                android:fontFamily="@font/roboto_regular"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/address_field"
-                android:text="Save"/>
-
+                android:layout_below="@id/kyc_address_til"
+                android:text="Save" />
         </RelativeLayout>
-
     </ScrollView>
-
-
-
-
 </RelativeLayout>

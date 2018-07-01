@@ -1,6 +1,7 @@
 package com.oxvsys.moneylender;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
@@ -170,6 +171,17 @@ public class MainActivity extends AppCompatActivity
             FragmentCustomerDailyInfo far = FragmentCustomerDailyInfo.newInstance(calendar);
             fragmentTransaction.replace(R.id.fragment_container, far).addToBackStack(null).
                     commit();
+        }else if(id == R.id.nav_logout){
+            SharedPreferences preferences = PreferenceManager.
+                    getDefaultSharedPreferences(getApplicationContext());
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.clear();
+            editor.putString("logged_out", "true");
+            editor.apply();
+
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

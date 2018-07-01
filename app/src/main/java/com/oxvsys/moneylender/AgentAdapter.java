@@ -19,7 +19,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.oxvsys.moneylender.LoginActivity.database;
+import static com.oxvsys.moneylender.HomeActivity.database;
 
 public class AgentAdapter extends RecyclerView.Adapter<AgentAdapter.AgentHolder> {
 

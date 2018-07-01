@@ -24,9 +24,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import static com.oxvsys.moneylender.LoginActivity.database;
+import static com.oxvsys.moneylender.HomeActivity.database;
 
 
 /**

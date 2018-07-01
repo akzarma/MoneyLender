@@ -13,18 +13,18 @@ import android.widget.Toast;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 
+import static com.oxvsys.moneylender.HomeActivity.database;
 import static com.oxvsys.moneylender.MainActivity.getData;
 import static com.oxvsys.moneylender.MainActivity.saveData;
 
 public class LoginActivity extends AppCompatActivity {
 
     String TAG = "LoginActivity";
-    static FirebaseDatabase database = FirebaseDatabase.getInstance();
+
 
 
     boolean isInvalid, userDoesNotExist, networkError = false;
@@ -33,7 +33,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        database.setPersistenceEnabled(true);
+
         Log.d(TAG, "onCreate: " + "login started");
 
         if(getData("user_id",getApplicationContext()).equals("ERROR")){

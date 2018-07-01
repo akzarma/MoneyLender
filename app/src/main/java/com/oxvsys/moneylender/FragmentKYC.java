@@ -1,23 +1,27 @@
 package com.oxvsys.moneylender;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.oxvsys.moneylender.LoginActivity.database;
+import static com.oxvsys.moneylender.HomeActivity.database;
 
 
 /**
@@ -33,6 +37,8 @@ public class FragmentKYC extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    TextInputLayout name_til , aadhar_til , occupation_til , mobile_til , dob_til , address_til;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -84,15 +90,80 @@ public class FragmentKYC extends Fragment {
         final EditText mobile_field = view.findViewById(R.id.mobile_field);
         final EditText dob_field = view.findViewById(R.id.dob_field);
         final EditText address_field = view.findViewById(R.id.address_field);
+
+        name_til = view.findViewById(R.id.kyc_full_name_til);
+        aadhar_til = view.findViewById(R.id.kyc_aadhar_til);
+        occupation_til = view.findViewById(R.id.kyc_occupation_til);
+        mobile_til = view.findViewById(R.id.kyc_mobile_til);
+        dob_til = view.findViewById(R.id.kyc_dob_til);
+        address_til = view.findViewById(R.id.kyc_address_til);
+
+        dob_field.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar mcurrentDate = Calendar.getInstance();
+                int mYear = mcurrentDate.get(Calendar.YEAR);
+                int mMonth = mcurrentDate.get(Calendar.MONTH);
+                int mDay = mcurrentDate.get(Calendar.DAY_OF_MONTH);
+
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                    DatePickerDialog mDatePicker = new DatePickerDialog(
+                            getActivity(), new DatePickerDialog.OnDateSetListener() {
+                        public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
+                            // TODO Auto-generated method stub
+                            int month = selectedmonth + 1;
+                            String date_gen = selectedday + "-" + month + "-" + selectedyear;
+                            dob_field.setText(date_gen);
+                        }
+                    }, mYear, mMonth, mDay);
+                    mDatePicker.setTitle("Select DOB");
+                    mDatePicker.show();
+                }
+
+                ;
+            }
+        });
+
         Button save_button = view.findViewById(R.id.deposit_button);
         save_button.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
+
+                if(name_field.getText().toString().isEmpty()){
+                    name_til.setError("Name is required.");
+                    return;
+                }else name_til.setErrorEnabled(false);
+                if(aadhar_field.getText().toString().isEmpty()){
+                    aadhar_til.setError("Aadhar is required.");
+                    return;
+                }else aadhar_til.setErrorEnabled(false);
+                if (aadhar_field.getText().toString().length() != 12){
+                    aadhar_til.setError("Invalid Aadhaar ID");
+                }else aadhar_til.setErrorEnabled(false);
+                if(occupation_field.getText().toString().isEmpty()){
+                    occupation_til.setError("Occupation is required.");
+                    return;
+                }else occupation_til.setErrorEnabled(false);
+                if(mobile_field.getText().toString().isEmpty()){
+                    mobile_til.setError("Mobile is required.");
+                    return;
+                }else mobile_til.setErrorEnabled(false);
+                if(dob_field.getText().toString().isEmpty()){
+                    dob_til.setError("DOB is required.");
+                    return;
+                }else dob_til.setErrorEnabled(false);
+                if(address_field.getText().toString().isEmpty()){
+                    address_til.setError("Address is required.");
+                    return;
+                }else address_til.setErrorEnabled(false);
+
+
                 DatabaseReference customers = database.getReference("customers");
                 String key = customers.push().getKey();
                 Map<String, Object> id = new HashMap<>();
                 Map<String, String> attrs = new HashMap<>();
+
                 attrs.put("name", name_field.getText().toString());
                 attrs.put("aadhar", aadhar_field.getText().toString());
                 attrs.put("occupation", occupation_field.getText().toString());
@@ -138,6 +209,9 @@ public class FragmentKYC extends Fragment {
         });
 
         return view;
+    }
+
+    private void validateForm() {
     }
 
     // TODO: Rename method, update argument and hook method into UI event

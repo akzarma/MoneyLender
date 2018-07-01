@@ -27,7 +27,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import static com.oxvsys.moneylender.LoginActivity.database;
+import static com.oxvsys.moneylender.HomeActivity.database;
 
 
 /**
