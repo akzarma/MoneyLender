@@ -148,7 +148,7 @@ public class FragmentCustomerDailyInfo extends Fragment {
 //                                Log.d("customer_daily", "onDataChange: " + accounts.get("3").toString());
                             }
 
-                            mAdapter = new CustomerDailyInfoAdapter(customer_amount_map);
+                            mAdapter = new CustomerDailyInfoAdapter(customer_amount_map, getContext());
                             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
                             recyclerView.setLayoutManager(mLayoutManager);
                             recyclerView.setItemAnimator(new DefaultItemAnimator());
