@@ -24,6 +24,8 @@ import android.widget.TextView;
 
 import java.util.Calendar;
 
+import static com.oxvsys.moneylender.HomeActivity.database;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, FragmentKYC.OnFragmentInteractionListener {
 
