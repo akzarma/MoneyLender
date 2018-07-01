@@ -19,6 +19,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import java.util.Calendar;
 
@@ -45,19 +47,40 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        View hView = navigationView.getHeaderView(0);
+        TextView nav_user = hView.findViewById(R.id.nav_header_username);
+        TextView info_user = hView.findViewById(R.id.nav_header_info);
+
+        nav_user.setText(getData("user_id" , getApplicationContext()));
+        info_user.setText("");
+
         BottomNavigationView navigation = findViewById(R.id.bottom_nav_view);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+        setupFirstFragment();
 
+
+    }
+
+    private void setupFirstFragment() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        if (getSupportActionBar() != null)
-            getSupportActionBar().setTitle("Home");
         Calendar calendar = Calendar.getInstance();
-        FragmentDashboard fragmentDashboard = FragmentDashboard.newInstance(calendar);
-        fragmentTransaction.replace(R.id.fragment_container, fragmentDashboard).addToBackStack(null).
-                commit();
-
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setTitle("Dashboard");
+        String logged_in = getData("user_type" , getApplicationContext());
+        if(logged_in.equals("admin")){
+            FragmentDashboard fragmentDashboard = FragmentDashboard.newInstance(calendar);
+            fragmentTransaction.replace(R.id.fragment_container, fragmentDashboard).
+                    addToBackStack(null).
+                    commit();
+        }else {
+            FragmentDashboardSpecific fragmentDashboardSpecific =
+                    FragmentDashboardSpecific.newInstance(calendar);
+            fragmentTransaction.replace(R.id.fragment_container,
+                    fragmentDashboardSpecific).addToBackStack(null).
+                    commit();
+        }
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -72,12 +95,7 @@ public class MainActivity extends AppCompatActivity
             Calendar calendar = Calendar.getInstance();
             switch (item.getItemId()) {
                 case R.id.bottom_nav_home:
-                    toolbar.setTitle("Home");
-                    if (getSupportActionBar() != null)
-                        getSupportActionBar().setTitle("Dashboard");
-                    FragmentDashboard fragmentDashboard = FragmentDashboard.newInstance(calendar);
-                    fragmentTransaction.replace(R.id.fragment_container, fragmentDashboard).addToBackStack(null).
-                            commit();
+                    setupFirstFragment();
                     return true;
                 case R.id.bottom_nav_daily_basis:
                     toolbar.setTitle("Daily Basis Accounts");
@@ -159,13 +177,6 @@ public class MainActivity extends AppCompatActivity
                 getSupportActionBar().setTitle("Monthly Loan Grant");
             FragmentSelectCustomer fragmentSelectCustomer = new FragmentSelectCustomer();
             fragmentTransaction.replace(R.id.fragment_container, fragmentSelectCustomer).addToBackStack(null).
-                    commit();
-        } else if (id == R.id.nav_dashboard) {
-            if (getSupportActionBar() != null)
-                getSupportActionBar().setTitle("Dashboard");
-            Calendar calendar = Calendar.getInstance();
-            FragmentDashboard fragmentDashboard = FragmentDashboard.newInstance(calendar);
-            fragmentTransaction.replace(R.id.fragment_container, fragmentDashboard).addToBackStack(null).
                     commit();
         } else if (id == R.id.nav_send) {
             if (getSupportActionBar() != null)

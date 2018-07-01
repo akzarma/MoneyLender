@@ -21,24 +21,27 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import org.joda.time.DateTimeComparator;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import static com.oxvsys.moneylender.HomeActivity.database;
+import static com.oxvsys.moneylender.MainActivity.getData;
 
-
-public class FragmentDashboard extends Fragment {
+public class FragmentDashboardSpecific extends Fragment {
+    // TODO: Rename parameter arguments, choose names that match
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private static final String ARG_PARAM3 = "param3";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
-    Bundle date_bundle;
     Button date_button, from_date_button, to_date_button;
     Long total_daily_amount = 0L;
     Long total_monthly_amount_till_today = 0L;
@@ -49,14 +52,16 @@ public class FragmentDashboard extends Fragment {
     RelativeLayout totat_collection_card_layout;
     Calendar sel_calendar, from_calendar;
 
+
     private OnFragmentInteractionListener mListener;
 
-    public FragmentDashboard() {
+    public FragmentDashboardSpecific() {
         // Required empty public constructor
     }
 
-    public static FragmentDashboard newInstance(Calendar sel_cal) {
-        FragmentDashboard fragment = new FragmentDashboard();
+
+    public static FragmentDashboardSpecific newInstance(Calendar sel_cal) {
+        FragmentDashboardSpecific fragment = new FragmentDashboardSpecific();
         Bundle args = new Bundle();
         args.putSerializable(ARG_PARAM1, sel_cal);
         fragment.setArguments(args);
@@ -66,6 +71,8 @@ public class FragmentDashboard extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
     }
 
     @Override
@@ -91,6 +98,10 @@ public class FragmentDashboard extends Fragment {
 
         date_button.setText(sel_date);
 
+        final String logged_in = getData("user_id", getContext());
+
+        DateTimeComparator d = DateTimeComparator.getDateOnlyInstance();
+        int comp = d.compare(sel_calendar , sel_calendar);
 
         DatabaseReference ref = database.getReference("agentCollect");
         ref.addValueEventListener(new ValueEventListener() {
@@ -98,19 +109,16 @@ public class FragmentDashboard extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 final List<AccountAmountCollect> accountAmountCollectList = new ArrayList<>();
                 for (DataSnapshot agents : dataSnapshot.getChildren()) {
-                    List<AgentCollect> agentCollectList = new ArrayList<>();
-                    for (DataSnapshot date : agents.getChildren()) {
-                        if (date.getKey().equals(sel_date)) {
-
-                            for (DataSnapshot account : date.getChildren()) {
-                                Account account_temp = new Account();
-                                account_temp.setNo(account.getKey());
-                                accountAmountCollectList.add(new AccountAmountCollect(account_temp,
-                                        Long.parseLong(account.getValue().toString())));
-
-
-//                                total_daily_amount += Long.parseLong(account.getValue().toString());
-//                                Log.d("------", "onDataChange: " + total_daily_amount);
+                    if (Objects.requireNonNull(agents.getKey()).equals(logged_in)) {
+//                        List<AgentCollect> agentCollectList = new ArrayList<>();
+                        for (DataSnapshot date : agents.getChildren()) {
+                            if (Objects.requireNonNull(date.getKey()).equals(sel_date)) {
+                                for (DataSnapshot account : date.getChildren()) {
+                                    Account account_temp = new Account();
+                                    account_temp.setNo(account.getKey());
+                                    accountAmountCollectList.add(new AccountAmountCollect(account_temp,
+                                            Long.parseLong(Objects.requireNonNull(account.getValue()).toString())));
+                                }
                             }
                         }
                     }
@@ -308,8 +316,8 @@ public class FragmentDashboard extends Fragment {
         mListener = null;
     }
 
+
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 }
