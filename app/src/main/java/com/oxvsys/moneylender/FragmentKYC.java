@@ -77,6 +77,8 @@ public class FragmentKYC extends Fragment {
         }
     }
 
+    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -124,6 +126,8 @@ public class FragmentKYC extends Fragment {
             }
         });
 
+
+
         Button save_button = view.findViewById(R.id.deposit_button);
         save_button.setOnClickListener(new View.OnClickListener() {
 
@@ -133,30 +137,47 @@ public class FragmentKYC extends Fragment {
                 if(name_field.getText().toString().isEmpty()){
                     name_til.setError("Name is required.");
                     return;
-                }else name_til.setErrorEnabled(false);
-                if(aadhar_field.getText().toString().isEmpty()){
+                }
+                else if(aadhar_field.getText().toString().isEmpty()){
+                    name_til.setErrorEnabled(false);
                     aadhar_til.setError("Aadhar is required.");
                     return;
-                }else aadhar_til.setErrorEnabled(false);
-                if (aadhar_field.getText().toString().length() != 12){
+                }
+//                else aadhar_til.setErrorEnabled(false);
+                else if (aadhar_field.getText().toString().length() != 12){
+                    aadhar_til.setErrorEnabled(false);
+
                     aadhar_til.setError("Invalid Aadhaar ID");
-                }else aadhar_til.setErrorEnabled(false);
-                if(occupation_field.getText().toString().isEmpty()){
+                }
+//                else aadhar_til.setErrorEnabled(false);
+                else if(occupation_field.getText().toString().isEmpty()){
+                    aadhar_til.setErrorEnabled(false);
+
                     occupation_til.setError("Occupation is required.");
                     return;
-                }else occupation_til.setErrorEnabled(false);
-                if(mobile_field.getText().toString().isEmpty()){
+                }
+//                else occupation_til.setErrorEnabled(false);
+                else if(mobile_field.getText().toString().isEmpty()){
+                    occupation_til.setErrorEnabled(false);
+
                     mobile_til.setError("Mobile is required.");
                     return;
-                }else mobile_til.setErrorEnabled(false);
-                if(dob_field.getText().toString().isEmpty()){
+                }
+//                else mobile_til.setErrorEnabled(false);
+                else if(dob_field.getText().toString().isEmpty()){
+                    mobile_til.setErrorEnabled(false);
+
                     dob_til.setError("DOB is required.");
                     return;
-                }else dob_til.setErrorEnabled(false);
-                if(address_field.getText().toString().isEmpty()){
+                }
+//                else dob_til.setErrorEnabled(false);
+                else if(address_field.getText().toString().isEmpty()){
+                    dob_til.setErrorEnabled(false);
+
                     address_til.setError("Address is required.");
                     return;
-                }else address_til.setErrorEnabled(false);
+                }
+//                else address_til.setErrorEnabled(false);
 
 
                 DatabaseReference customers = database.getReference("customers");
