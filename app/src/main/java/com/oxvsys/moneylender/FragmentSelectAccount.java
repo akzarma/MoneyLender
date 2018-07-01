@@ -26,6 +26,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import static com.oxvsys.moneylender.HomeActivity.database;
+import static com.oxvsys.moneylender.MainActivity.getData;
 
 
 /**
@@ -84,7 +85,7 @@ public class FragmentSelectAccount extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_select_account, container, false);
 
-        String logged_agent = "agent_0";  //to be changed to dynamic logged in user
+        final String logged_agent = getData("user_id",getContext());
 
         DatabaseReference agent_account_db_ref = database.getReference("agentAccount").child(logged_agent);
         spinner = view.findViewById(R.id.account_spinner);

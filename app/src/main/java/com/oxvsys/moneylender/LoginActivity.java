@@ -53,6 +53,7 @@ public class LoginActivity extends AppCompatActivity {
                                 for (DataSnapshot user : dataSnapshot.getChildren()) {
                                     String pwd = ((HashMap<String, Object>) user.getValue()).get("pwd").toString();
                                     String type = ((HashMap<String, Object>) user.getValue()).get("type").toString();
+
                                     if (password_view.getText().toString().equals(pwd)) {
                                         Log.d(TAG, "onDataChange: " + "success");
                                         saveData("user_id",user.getKey(),getApplicationContext());
@@ -61,6 +62,7 @@ public class LoginActivity extends AppCompatActivity {
                                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                         startActivity(intent);
                                         finish();
+                                        return;
 
                                     } else {
                                         Log.d(TAG, "onDataChange: " + "failure");
