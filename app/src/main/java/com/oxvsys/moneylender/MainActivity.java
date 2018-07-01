@@ -46,6 +46,17 @@ public class MainActivity extends AppCompatActivity
 
         BottomNavigationView navigation = findViewById(R.id.bottom_nav_view);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setTitle("Home");
+        Calendar calendar = Calendar.getInstance();
+        FragmentDashboard fragmentDashboard = FragmentDashboard.newInstance(calendar);
+        fragmentTransaction.replace(R.id.fragment_container, fragmentDashboard).addToBackStack(null).
+                commit();
+
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
