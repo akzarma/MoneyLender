@@ -104,7 +104,8 @@ public class FragmentDateRangeReport extends Fragment {
 
                         Calendar date_cal = StringDateToCal(date.getKey());
                         String date_str = CaltoStringDate(date_cal);
-                        if(date_cal.after(from_cal) && date_cal.before(to_cal)){
+                        if((date_cal.after(from_cal) && date_cal.before(to_cal)) ||
+                                (date_cal.equals(from_cal) || date_cal.equals(to_cal))){
                             for(DataSnapshot account:date.getChildren()){
                                 DateAmount dateAmount = new DateAmount();
                                 dateAmount.setAmount(Long.parseLong(account.getValue().toString()));

@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public static String CaltoStringDate(Calendar cal){
-        return cal.get(Calendar.DAY_OF_MONTH)+"-"+ cal.get(Calendar.MONTH) +1 +"-"+ cal.get(Calendar.YEAR);
+        return cal.get(Calendar.DAY_OF_MONTH)+"-"+ (cal.get(Calendar.MONTH)+1) +"-"+ cal.get(Calendar.YEAR);
     }
     public static Calendar StringDateToCal(String date){
         String[] date1 = date.split("-");

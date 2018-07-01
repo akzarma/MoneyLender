@@ -7,11 +7,41 @@
     tools:context=".FragmentCollectDaily">
 
     <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/customer_name_field"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/customer_id_field"
+        android:layout_below="@id/customer_name_field"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/customer_loan_amount_field"
+        android:layout_below="@id/customer_id_field"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/customer_deposited_field"
+        android:layout_below="@id/customer_loan_amount_field"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/customer_account_type_field"
+        android:layout_below="@id/customer_deposited_field"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/customer_mobile_field"
+        android:layout_below="@id/customer_account_type_field"/>
     <EditText
         android:id="@+id/amount_field"
         android:inputType="number"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_below="@id/customer_mobile_field"/>
     <Button
         android:id="@+id/deposit_button"
         android:layout_width="wrap_content"
