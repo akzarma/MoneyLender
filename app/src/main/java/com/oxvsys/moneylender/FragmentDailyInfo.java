@@ -44,8 +44,6 @@ public class FragmentDailyInfo extends Fragment {
     Calendar sel_calendar;
 
 
-
-
     private OnFragmentInteractionListener mListener;
 
     public FragmentDailyInfo() {

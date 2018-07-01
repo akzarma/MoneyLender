@@ -33,14 +33,6 @@ import static com.oxvsys.moneylender.MainActivity.CaltoStringDate;
 import static com.oxvsys.moneylender.MainActivity.getData;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link FragmentAccountTypeInfo.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link FragmentAccountTypeInfo#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class FragmentAccountTypeInfo extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER

@@ -53,20 +53,23 @@ public class LoginActivity extends AppCompatActivity {
                                 for (DataSnapshot user : dataSnapshot.getChildren()) {
                                     String pwd = ((HashMap<String, Object>) user.getValue()).get("pwd").toString();
                                     String type = ((HashMap<String, Object>) user.getValue()).get("type").toString();
-                                    if (password_view.getText().toString().equals(pwd) && mobile_view.getText().toString().equals(user.getKey())) {
-                                        Log.d(TAG, "onDataChange: " + "success");
-                                        saveData("user_id",user.getKey(),getApplicationContext());
-                                        saveData("user_type", type, getApplicationContext());
-                                        Log.d(TAG, "onDataChange: " + pwd + type);
-                                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                        startActivity(intent);
-                                        finish();
-                                        return;
+                                    if(mobile_view.getText().toString().equals(user.getKey())){
+                                        if (password_view.getText().toString().equals(pwd)) {
+                                            Log.d(TAG, "onDataChange: " + "success");
+                                            saveData("user_id",user.getKey(),getApplicationContext());
+                                            saveData("user_type", type, getApplicationContext());
+                                            Log.d(TAG, "onDataChange: " + pwd + type);
+                                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                            startActivity(intent);
+                                            finish();
+                                            return;
 
-                                    } else {
-                                        Log.d(TAG, "onDataChange: " + "failure");
-                                        Toast.makeText(getApplicationContext(), "Invalid Credentials", Toast.LENGTH_SHORT).show();
+                                        }else {
+                                            Log.d(TAG, "onDataChange: " + "failure");
+                                            Toast.makeText(getApplicationContext(), "Invalid Credentials", Toast.LENGTH_SHORT).show();
+                                        }
                                     }
+
                                 }
 //                            Log.d(TAG, "onDataChange: " + dataSnapshot.getValue().toString());
 
