@@ -36,7 +36,7 @@ public class FragmentCustomerDailyInfo extends Fragment {
 
     private RecyclerView recyclerView;
     private CustomerDailyInfoAdapter mAdapter;
-    private TextView currentDay_textView , customer_daily_info_title;
+    private TextView currentDay_textView, customer_daily_info_title;
     Calendar sel_calendar;
     HashMap<String, CustomerAmount> customer_amount_map;
 
@@ -117,30 +117,31 @@ public class FragmentCustomerDailyInfo extends Fragment {
                                 customer = (HashMap<String, Object>) each_customer.getValue();
                                 HashMap<String, Object> accounts = (HashMap<String, Object>) customer.get("accounts");
                                 Log.d("Account for Customer: ", curr_customer.getId());
+                                if (accounts != null) {
+                                    for (Map.Entry<String, Object> account : accounts.entrySet()) {
+                                        if (account_amount_map.containsKey(account.getKey())) {
+                                            Log.d("customer_collect_daily", account.getValue().toString());
+                                            Long amount_collected = Long.parseLong(account_amount_map.get(account.getKey()).toString());
 
-                                for (Map.Entry<String, Object> account : accounts.entrySet()) {
-                                    if (account_amount_map.containsKey(account.getKey())) {
-                                        Log.d("customer_collect_daily", account.getValue().toString());
-                                        Long amount_collected =Long.parseLong(account_amount_map.get(account.getKey()).toString());
+                                            List<Account> accountList = new ArrayList<Account>();
+                                            Account account1 = new Account(account.getValue());
+                                            account1.setNo(account.getKey());
+                                            accountList.add(account1);
+                                            Customer newCustomer = (Customer) curr_customer.clone();
+                                            newCustomer.setAccounts1(accountList);
+                                            CustomerAmount customerAmount = new CustomerAmount();
+                                            customerAmount.setCustomer(newCustomer);
+                                            customerAmount.setAmount_collected(amount_collected);
 
-                                        List<Account> accountList = new ArrayList<Account>();
-                                        Account account1 = new Account(account.getValue());
-                                        account1.setNo(account.getKey());
-                                        accountList.add(account1);
-                                        Customer newCustomer = (Customer)curr_customer.clone();
-                                        newCustomer.setAccounts1(accountList);
-                                        CustomerAmount customerAmount = new CustomerAmount();
-                                        customerAmount.setCustomer(newCustomer);
-                                        customerAmount.setAmount_collected(amount_collected);
+                                            account_amount_map.remove(account.getKey());
 
-                                        account_amount_map.remove(account.getKey());
-
-                                        customer_amount_map.put(account.getKey() , customerAmount);
-                                    }
+                                            customer_amount_map.put(account.getKey(), customerAmount);
+                                        }
 //                                    HashMap<String, Object> accountMap = (HashMap<String, Object>) account.getValue();
 //                                    total_amount += Integer.parseInt(accountMap.get("amt").toString());
 //                                    Log.d("customer_daily_amap", accountMap.get("amt").toString());
 //                                    Log.d("customer_daily", "onDataChange: " + account.getValue());
+                                    }
                                 }
 
 
@@ -159,7 +160,6 @@ public class FragmentCustomerDailyInfo extends Fragment {
 
                         }
                     });
-
 
 
                 }

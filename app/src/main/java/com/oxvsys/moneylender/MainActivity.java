@@ -68,22 +68,32 @@ public class MainActivity extends AppCompatActivity
             Fragment fragment;
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+            Calendar calendar = Calendar.getInstance();
             switch (item.getItemId()) {
                 case R.id.bottom_nav_home:
                     toolbar.setTitle("Home");
-
+                    if (getSupportActionBar() != null)
+                        getSupportActionBar().setTitle("Dashboard");
+                    FragmentDashboard fragmentDashboard = FragmentDashboard.newInstance(calendar);
+                    fragmentTransaction.replace(R.id.fragment_container, fragmentDashboard).addToBackStack(null).
+                            commit();
                     return true;
                 case R.id.bottom_nav_daily_basis:
                     toolbar.setTitle("Daily Basis Accounts");
                     if (getSupportActionBar() != null)
                         getSupportActionBar().setTitle("Customer Daily Report");
-                    Calendar calendar = Calendar.getInstance();
-                    FragmentDailyBasisInfo fragmentDailyBasisInfo = FragmentDailyBasisInfo.newInstance(calendar);
-                    fragmentTransaction.replace(R.id.fragment_container, fragmentDailyBasisInfo).addToBackStack(null).
+                    FragmentAccountTypeInfo fragmentAccountTypeInfo = FragmentAccountTypeInfo.newInstance(calendar, "0");
+                    fragmentTransaction.replace(R.id.fragment_container, fragmentAccountTypeInfo).addToBackStack(null).
                             commit();
                     return true;
                 case R.id.bottom_nav_monthly_basis:
-                    toolbar.setTitle("Monthly");
+                    toolbar.setTitle("Monthly Basis Accounts");
+                    if (getSupportActionBar() != null)
+                        getSupportActionBar().setTitle("Customer Monthly Report");
+                    fragmentAccountTypeInfo = FragmentAccountTypeInfo.newInstance(calendar, "1");
+                    fragmentTransaction.replace(R.id.fragment_container, fragmentAccountTypeInfo).addToBackStack(null).
+                            commit();
                     return true;
             }
             return false;

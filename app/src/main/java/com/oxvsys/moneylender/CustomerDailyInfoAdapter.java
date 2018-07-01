@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.android.gms.common.util.NumberUtils;
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -18,6 +19,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+
+import static com.oxvsys.moneylender.HomeActivity.database;
 
 public class CustomerDailyInfoAdapter extends RecyclerView.Adapter<CustomerDailyInfoAdapter.CustomerHolder> {
 
@@ -62,6 +65,13 @@ public class CustomerDailyInfoAdapter extends RecyclerView.Adapter<CustomerDaily
         holder.agent_id.setText(customerAmount.getCustomer().getAccounts1().get(0).getNo());
         holder.agent_name.setText(customerAmount.getCustomer().getName());
         holder.total_collection.setText(String.valueOf(customerAmount.getAmount_collected()));
+        final List<DateAmount> dateAmountList = new ArrayList<>();
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatabaseReference date_amount_db_ref = database.getReference("agentCollect");
+            }
+        });
 
 //        final AgentCollect agentCollect = agentCollectList.get(position);
 //        List<AccountAmountCollect> accountAmountCollectList = agentCollect.getAccountAmountCollectList();
