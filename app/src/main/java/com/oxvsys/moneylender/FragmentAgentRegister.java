@@ -12,7 +12,7 @@ import android.widget.EditText;
 
 import com.google.firebase.database.DatabaseReference;
 
-import static com.oxvsys.moneylender.LoginActivity.database;
+import static com.oxvsys.moneylender.HomeActivity.database;
 
 
 public class FragmentAgentRegister extends Fragment {

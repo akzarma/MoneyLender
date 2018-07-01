@@ -26,7 +26,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.oxvsys.moneylender.LoginActivity.database;
+import static com.oxvsys.moneylender.HomeActivity.database;
 
 
 public class FragmentDashboard extends Fragment {
@@ -39,7 +39,7 @@ public class FragmentDashboard extends Fragment {
     private String mParam2;
 
     Bundle date_bundle;
-    Button date_button, from_date_button, to_date_button;
+    Button date_button,from_date_button, to_date_button;
     Long total_daily_amount = 0L;
     Long total_monthly_amount_till_today = 0L;
     Long total_collection = 0L;
@@ -75,7 +75,7 @@ public class FragmentDashboard extends Fragment {
         View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
 
-        date_button = (Button) view.findViewById(R.id.dashboard_title_button);
+        date_button =  view.findViewById(R.id.dashboard_select_date);
         from_date_button = view.findViewById(R.id.dashboard_from_button);
         to_date_button = view.findViewById(R.id.dashboard_to_button);
         todays_value = (TextView) view.findViewById(R.id.todays_collection_value_dashboard);

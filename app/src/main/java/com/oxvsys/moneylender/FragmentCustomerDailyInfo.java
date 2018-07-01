@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.oxvsys.moneylender.LoginActivity.database;
+import static com.oxvsys.moneylender.HomeActivity.database;
 
 public class FragmentCustomerDailyInfo extends Fragment {
     private static final String ARG_PARAM1 = "param1";

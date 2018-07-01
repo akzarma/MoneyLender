@@ -15,7 +15,8 @@
         <EditText
             android:id="@+id/login_mobile"
             android:layout_width="match_parent"
-            android:inputType=""
+
+            android:inputType="text"
             android:layout_height="wrap_content"
             android:hint="Mobile Number" />
 
