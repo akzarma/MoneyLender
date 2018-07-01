@@ -18,10 +18,14 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 
+import static com.oxvsys.moneylender.MainActivity.getData;
+import static com.oxvsys.moneylender.MainActivity.saveData;
+
 public class LoginActivity extends AppCompatActivity {
 
     String TAG = "LoginActivity";
     static FirebaseDatabase database = FirebaseDatabase.getInstance();
+
 
     boolean isInvalid, userDoesNotExist, networkError = false;
 
@@ -30,42 +34,53 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         database.setPersistenceEnabled(true);
-        final EditText mobile_view = findViewById(R.id.login_mobile);
-        final EditText password_view = findViewById(R.id.login_password);
-        Button login_button = findViewById(R.id.login_button);
-        login_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DatabaseReference ref = database.getReference("users").child("agents");
-                ref.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.hasChild(mobile_view.getText().toString())) {
-                            String password = ((HashMap<String, String>) dataSnapshot.getValue()).get(mobile_view.getText().toString());
-                            if (password_view.getText().toString().equals(password)) {
-                                Log.d(TAG, "onDataChange: " + "success");
+        Log.d(TAG, "onCreate: " + "login started");
 
-                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                startActivity(intent);
-                                finish();
+        if(getData("user_id",getApplicationContext()).equals("ERROR")){
+            final EditText mobile_view = findViewById(R.id.login_mobile);
+            final EditText password_view = findViewById(R.id.login_password);
+            Button login_button = findViewById(R.id.login_button);
+            login_button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DatabaseReference ref = database.getReference("users");
+                    Log.d(TAG, "onClick: " + "in on click");
+                    ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            Log.d(TAG, "onDataChange: " + dataSnapshot);
+                            if (dataSnapshot.hasChild(mobile_view.getText().toString())) {
+                                for (DataSnapshot user : dataSnapshot.getChildren()) {
+                                    String pwd = ((HashMap<String, Object>) user.getValue()).get("pwd").toString();
+                                    String type = ((HashMap<String, Object>) user.getValue()).get("type").toString();
+                                    if (password_view.getText().toString().equals(pwd)) {
+                                        Log.d(TAG, "onDataChange: " + "success");
+                                        saveData("user_id",user.getKey(),getApplicationContext());
+                                        saveData("user_type", type, getApplicationContext());
+                                        Log.d(TAG, "onDataChange: " + pwd + type);
+                                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                        startActivity(intent);
+                                        finish();
+
+                                    } else {
+                                        Log.d(TAG, "onDataChange: " + "failure");
+                                        Toast.makeText(getApplicationContext(), "Invalid Credentials", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+//                            Log.d(TAG, "onDataChange: " + dataSnapshot.getValue().toString());
+
 
                             } else {
-                                Log.d(TAG, "onDataChange: " + "failure");
-                                Toast.makeText(getApplicationContext(),"Invalid Credentials",Toast.LENGTH_SHORT).show();
+                                Log.d(TAG, "onDataChange: " + "user does not exist");
+                                Toast.makeText(getApplicationContext(), "User does not exist.", Toast.LENGTH_SHORT).show();
                             }
-                        } else {
-                            Log.d(TAG, "onDataChange: " + "user does not exist");
-                            Toast.makeText(getApplicationContext(),"User does not exist.",Toast.LENGTH_SHORT).show();
                         }
-                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        Toast.makeText(getApplicationContext(),"Network Error.",Toast.LENGTH_SHORT).show();
-                    }
-
-
-                });
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            Toast.makeText(getApplicationContext(), "Network Error.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
 
 
 //                if (finishedAdmins && finishedAgents) {
@@ -76,9 +91,9 @@ public class LoginActivity extends AppCompatActivity {
 //                    } else if (networkError) {
 //                        Toast.makeText(getApplicationContext(), "Network Error.", Toast.LENGTH_SHORT).show();
 //                    }
-////                    else {
-////                        Toast.makeText(getApplicationContext(), "There seems to be a problem logging in. Try again.", Toast.LENGTH_LONG).show();
-////                    }
+//                    else {
+//                        Toast.makeText(getApplicationContext(), "There seems to be a problem logging in. Try again.", Toast.LENGTH_LONG).show();
+//                    }
 //
 //                    isInvalid = false;
 //                    userDoesNotExist = false;
@@ -86,8 +101,12 @@ public class LoginActivity extends AppCompatActivity {
 //                    finishedAdmins = false;
 //                    finishedAgents = false;
 //                }
-
-            }
-        });
+                }
+            });
+        }else {
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
 }
