@@ -31,6 +31,7 @@ import java.util.Objects;
 
 import static com.oxvsys.moneylender.HomeActivity.database;
 import static com.oxvsys.moneylender.MainActivity.getData;
+import static com.oxvsys.moneylender.MainActivity.logged_agent;
 
 public class FragmentDashboardSpecific extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -98,10 +99,10 @@ public class FragmentDashboardSpecific extends Fragment {
 
         date_button.setText(sel_date);
 
-        final String logged_in = getData("user_id", getContext());
+//        final String logged_in = getData("user_id", getContext());
 
-        DateTimeComparator d = DateTimeComparator.getDateOnlyInstance();
-        int comp = d.compare(sel_calendar , sel_calendar);
+//        DateTimeComparator d = DateTimeComparator.getDateOnlyInstance();
+//        int comp = d.compare(sel_calendar , sel_calendar);
 
         DatabaseReference ref = database.getReference("agentCollect");
         ref.addValueEventListener(new ValueEventListener() {
@@ -109,7 +110,7 @@ public class FragmentDashboardSpecific extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 final List<AccountAmountCollect> accountAmountCollectList = new ArrayList<>();
                 for (DataSnapshot agents : dataSnapshot.getChildren()) {
-                    if (Objects.requireNonNull(agents.getKey()).equals(logged_in)) {
+                    if (Objects.requireNonNull(agents.getKey()).equals(logged_agent)) {
 //                        List<AgentCollect> agentCollectList = new ArrayList<>();
                         for (DataSnapshot date : agents.getChildren()) {
                             if (Objects.requireNonNull(date.getKey()).equals(sel_date)) {

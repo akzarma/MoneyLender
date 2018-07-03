@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.oxvsys.moneylender.HomeActivity.database;
+import static com.oxvsys.moneylender.MainActivity.logged_agent;
 
 public class CustomerDailyInfoAdapter extends RecyclerView.Adapter<CustomerDailyInfoAdapter.CustomerHolder> {
 
@@ -78,7 +79,7 @@ public class CustomerDailyInfoAdapter extends RecyclerView.Adapter<CustomerDaily
 
 
         Log.d("customer_daily", customerAmount.toString());
-        final String logged_agent = MainActivity.getData("user_id", context);
+//        final String logged_agent = MainActivity.getData("user_id", context);
         holder.agent_id.setText(customerAmount.getCustomer().getAccounts1().get(0).getNo());
         holder.agent_name.setText(customerAmount.getCustomer().getName());
         holder.total_collection.setText(String.valueOf(customerAmount.getAmount_collected()));

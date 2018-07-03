@@ -29,6 +29,7 @@ import java.util.List;
 
 import static com.oxvsys.moneylender.HomeActivity.database;
 import static com.oxvsys.moneylender.MainActivity.getData;
+import static com.oxvsys.moneylender.MainActivity.logged_type;
 
 
 /**
@@ -83,8 +84,8 @@ public class FragmentSelectCustomer extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_select_customer, container, false);
-        final String agent_id = getData("user_id", getContext());
-        final String logged_type = getData("user_type", getContext());
+//        final String agent_id = getData("user_id", getContext());
+//        final String logged_type = getData("user_type", getContext());
 
         final List<Customer> customerList = new ArrayList<>();
         DatabaseReference customers_db_ref = database.getReference("customers");

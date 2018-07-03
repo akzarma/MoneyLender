@@ -27,6 +27,7 @@ import java.util.List;
 
 import static com.oxvsys.moneylender.HomeActivity.database;
 import static com.oxvsys.moneylender.MainActivity.getData;
+import static com.oxvsys.moneylender.MainActivity.logged_agent;
 
 
 /**
@@ -94,7 +95,7 @@ public class FragmentCollect extends Fragment {
         final Button deposit_button = view.findViewById(R.id.deposit_button);
         final Account selected_account = (Account) getArguments().getSerializable(ARG_PARAM1);
 
-        final String logged_agent = "agent_0";  //to be changed to dynamic logged in user
+//        String logged_agent = getData("user_id", getContext());
 
 
         DatabaseReference account_customer_db_ref = database.getReference("agentAccount").child(logged_agent).child(selected_account.getNo());
@@ -102,7 +103,7 @@ public class FragmentCollect extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                DatabaseReference customers_db_ref = database.getReference("customers").child(dataSnapshot.getValue().toString());
+                DatabaseReference customers_db_ref = database.getReference("customers").child(String.valueOf(dataSnapshot.getValue()));
                 customers_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

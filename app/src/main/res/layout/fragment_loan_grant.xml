@@ -33,13 +33,27 @@
         android:inputType="number"/>
 
 
-    <EditText
-        android:id="@+id/file_duration_monthly_grant"
+        <EditText
+            android:id="@+id/file_duration_monthly_grant"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/account_number_monthly_grant"
+            android:hint="Years"
+            android:inputType="number"
+            android:visibility="invisible"/>
+
+
+
+
+
+
+
+    <Spinner
+        android:id="@+id/loan_dauration_days_field"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/account_number_monthly_grant"
-        android:hint="File Duration"
-        android:inputType="number"/>
+        android:layout_below="@+id/account_number_monthly_grant"
+        android:entries="@array/loan_duration_days"/>
 
     <EditText
         android:id="@+id/start_date_monthly_grant"
@@ -91,7 +105,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/account_type_field"
-        android:hint="Rante of Interest"/>
+        android:hint="Rate of Interest"/>
 
     <Button
         android:id="@+id/grant_button_monthly"

@@ -98,28 +98,27 @@ public class FragmentDateRangeReport extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 HashMap<String, DateAmount> calendarDateAmountHashMap = new HashMap<>();
-                for(DataSnapshot agent:dataSnapshot.getChildren()){
-                    for(DataSnapshot date:agent.getChildren()){
+                for(DataSnapshot agent:dataSnapshot.getChildren())
+                    for (DataSnapshot date : agent.getChildren()) {
 
                         Calendar date_cal = StringDateToCal(date.getKey());
                         String date_str = CaltoStringDate(date_cal);
-                        if((date_cal.after(from_cal) && date_cal.before(to_cal)) ||
-                                (date_cal.equals(from_cal) || date_cal.equals(to_cal))){
-                            for(DataSnapshot account:date.getChildren()){
+                        if ((date_cal.after(from_cal) && date_cal.before(to_cal)) ||
+                                (date_cal.equals(from_cal) || date_cal.equals(to_cal))) {
+                            for (DataSnapshot account : date.getChildren()) {
                                 DateAmount dateAmount = new DateAmount();
                                 dateAmount.setAmount(Long.parseLong(account.getValue().toString()));
                                 dateAmount.setDate(date.getKey());
-                                if(calendarDateAmountHashMap.containsKey(date_str)){
+                                if (calendarDateAmountHashMap.containsKey(date_str)) {
                                     Long amount = calendarDateAmountHashMap.get(date_str).getAmount() + dateAmount.getAmount();
                                     dateAmount.setAmount(amount);
                                     calendarDateAmountHashMap.put(date_str, dateAmount);
-                                }else{
+                                } else {
                                     calendarDateAmountHashMap.put(date_str, dateAmount);
                                 }
                             }
                         }
                     }
-                }
                 mAdapter = new DateRangeAdapter(new ArrayList<>(calendarDateAmountHashMap.values()), getContext());
                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
                 recyclerView.setLayoutManager(mLayoutManager);

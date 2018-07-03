@@ -30,10 +30,15 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, FragmentKYC.OnFragmentInteractionListener {
 
     Toolbar toolbar;
+    static String logged_agent;
+    static String logged_type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        logged_agent = getData("user_id", getApplicationContext());
+        logged_type = getData("user_type", getApplicationContext());
 
 
         setContentView(R.layout.activity_main);
@@ -70,8 +75,8 @@ public class MainActivity extends AppCompatActivity
         Calendar calendar = Calendar.getInstance();
         if (getSupportActionBar() != null)
             getSupportActionBar().setTitle("Dashboard");
-        String logged_in = getData("user_type" , getApplicationContext());
-        if(logged_in.equals("admin")){
+//        String logged_in = getData("user_type" , getApplicationContext());
+        if(logged_type.equals("admin")){
             FragmentDashboard fragmentDashboard = FragmentDashboard.newInstance(calendar);
             fragmentTransaction.replace(R.id.fragment_container, fragmentDashboard).
                     addToBackStack(null).
@@ -237,6 +242,7 @@ public class MainActivity extends AppCompatActivity
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
+        CaltoStringDate(cal);
         return cal;
     }
 

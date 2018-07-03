@@ -27,6 +27,7 @@ import java.util.List;
 
 import static com.oxvsys.moneylender.HomeActivity.database;
 import static com.oxvsys.moneylender.MainActivity.getData;
+import static com.oxvsys.moneylender.MainActivity.logged_agent;
 
 
 /**
@@ -42,7 +43,6 @@ public class FragmentSelectAccount extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    List<Account> accountList = new ArrayList<>();
     Account account_selected;
     Spinner spinner;
 
@@ -85,7 +85,8 @@ public class FragmentSelectAccount extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_select_account, container, false);
 
-        final String logged_agent = getData("user_id",getContext());
+//        final String logged_agent = getData("user_id",getContext());
+        final List<Account> accountList = new ArrayList<>();
 
         DatabaseReference agent_account_db_ref = database.getReference("agentAccount").child(logged_agent);
         spinner = view.findViewById(R.id.account_spinner);
