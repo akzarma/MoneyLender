@@ -24,8 +24,6 @@ import android.widget.TextView;
 
 import java.util.Calendar;
 
-import static com.oxvsys.moneylender.HomeActivity.database;
-
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, FragmentKYC.OnFragmentInteractionListener {
 
@@ -53,7 +51,7 @@ public class MainActivity extends AppCompatActivity
         TextView nav_user = hView.findViewById(R.id.nav_header_username);
         TextView info_user = hView.findViewById(R.id.nav_header_info);
 
-        nav_user.setText(getData("user_id" , getApplicationContext()));
+        nav_user.setText(getData("user_id", getApplicationContext()));
         info_user.setText("");
 
         BottomNavigationView navigation = findViewById(R.id.bottom_nav_view);
@@ -70,13 +68,13 @@ public class MainActivity extends AppCompatActivity
         Calendar calendar = Calendar.getInstance();
         if (getSupportActionBar() != null)
             getSupportActionBar().setTitle("Dashboard");
-        String logged_in = getData("user_type" , getApplicationContext());
-        if(logged_in.equals("admin")){
+        String logged_in = getData("user_type", getApplicationContext());
+        if (logged_in.equals("admin")) {
             FragmentDashboard fragmentDashboard = FragmentDashboard.newInstance(calendar);
             fragmentTransaction.replace(R.id.fragment_container, fragmentDashboard).
                     addToBackStack(null).
                     commit();
-        }else {
+        } else {
             FragmentDashboardSpecific fragmentDashboardSpecific =
                     FragmentDashboardSpecific.newInstance(calendar);
             fragmentTransaction.replace(R.id.fragment_container,
@@ -100,18 +98,27 @@ public class MainActivity extends AppCompatActivity
                     setupFirstFragment();
                     return true;
                 case R.id.bottom_nav_daily_basis:
-                    toolbar.setTitle("Daily Basis Accounts");
+//                    toolbar.setTitle("Daily Basis Accounts");
                     if (getSupportActionBar() != null)
                         getSupportActionBar().setTitle("Customer Daily Report");
-                    FragmentAccountTypeInfo fragmentAccountTypeInfo = FragmentAccountTypeInfo.newInstance(calendar, "0");
-                    fragmentTransaction.replace(R.id.fragment_container, fragmentAccountTypeInfo).addToBackStack(null).
-                            commit();
-                    return true;
+                    if (getData("user_type", getApplicationContext()).equals("admin")) {
+                        FragmentCustomerDailyInfo fcdi = FragmentCustomerDailyInfo.newInstance(calendar);
+                        fragmentTransaction.replace(R.id.fragment_container, fcdi).addToBackStack(null).
+                                commit();
+                        return true;
+                    } else {
+                        FragmentAccountTypeInfo fragmentAccountTypeInfo = FragmentAccountTypeInfo.newInstance(calendar, "0");
+                        fragmentTransaction.replace(R.id.fragment_container, fragmentAccountTypeInfo).addToBackStack(null).
+                                commit();
+                        return true;
+                    }
+
+
                 case R.id.bottom_nav_monthly_basis:
                     toolbar.setTitle("Monthly Basis Accounts");
                     if (getSupportActionBar() != null)
                         getSupportActionBar().setTitle("Customer Monthly Report");
-                    fragmentAccountTypeInfo = FragmentAccountTypeInfo.newInstance(calendar, "1");
+                    FragmentAccountTypeInfo fragmentAccountTypeInfo = FragmentAccountTypeInfo.newInstance(calendar, "1");
                     fragmentTransaction.replace(R.id.fragment_container, fragmentAccountTypeInfo).addToBackStack(null).
                             commit();
                     return true;
@@ -145,9 +152,11 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+
+        // Toolbar top-right options
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -194,16 +203,14 @@ public class MainActivity extends AppCompatActivity
             FragmentAgentRegister far = new FragmentAgentRegister();
             fragmentTransaction.replace(R.id.fragment_container, far).addToBackStack(null).
                     commit();
-        }
-
-        else if(id == R.id.nav_customer_daily){
+        } else if (id == R.id.nav_customer_daily) {
             if (getSupportActionBar() != null)
                 getSupportActionBar().setTitle("Customer Daily Report");
             Calendar calendar = Calendar.getInstance();
             FragmentCustomerDailyInfo far = FragmentCustomerDailyInfo.newInstance(calendar);
             fragmentTransaction.replace(R.id.fragment_container, far).addToBackStack(null).
                     commit();
-        }else if(id == R.id.nav_logout){
+        } else if (id == R.id.nav_logout) {
             SharedPreferences preferences = PreferenceManager.
                     getDefaultSharedPreferences(getApplicationContext());
             SharedPreferences.Editor editor = preferences.edit();
@@ -226,13 +233,14 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    public static String CaltoStringDate(Calendar cal){
-        return cal.get(Calendar.DAY_OF_MONTH)+"-"+ (cal.get(Calendar.MONTH)+1) +"-"+ cal.get(Calendar.YEAR);
+    public static String CaltoStringDate(Calendar cal) {
+        return cal.get(Calendar.DAY_OF_MONTH) + "-" + (cal.get(Calendar.MONTH) + 1) + "-" + cal.get(Calendar.YEAR);
     }
-    public static Calendar StringDateToCal(String date){
+
+    public static Calendar StringDateToCal(String date) {
         String[] date1 = date.split("-");
         Calendar cal = Calendar.getInstance();
-        cal.set(Integer.parseInt(date1[2]), Integer.parseInt(date1[1])-1, Integer.parseInt(date1[0]));
+        cal.set(Integer.parseInt(date1[2]), Integer.parseInt(date1[1]) - 1, Integer.parseInt(date1[0]));
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:id="@+id/kyc_relative_layout"
     android:padding="16dp"
     tools:context=".FragmentKYC">
 
@@ -33,6 +34,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
+
                     android:fontFamily="@font/roboto_regular"
                     android:hint="Full Name"
                     android:inputType="textPersonName" />

@@ -102,6 +102,26 @@ public class FragmentCustomerDailyInfo extends Fragment {
                     customer_amount_map = new HashMap<>();
 
 
+                    DatabaseReference accounts = database.getReference("accounts");
+                    accounts.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot each_account : dataSnapshot.getChildren()){
+
+                                HashMap<String , Object> account = new HashMap<>();
+                                account.put(each_account.getKey(),each_account.getValue());
+                                String customer_id = account.get("customer").toString();
+
+
+
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
 //                    for(AgentCollect agentCollect : )
                     final DatabaseReference customerAccount = database.getReference("customers");
                     customerAccount.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -147,7 +167,6 @@ public class FragmentCustomerDailyInfo extends Fragment {
 
 //                                Log.d("customer_daily", "onDataChange: " + accounts.get("3").toString());
                             }
-
                             mAdapter = new CustomerDailyInfoAdapter(customer_amount_map,sel_calendar, getContext(), getFragmentManager());
                             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
                             recyclerView.setLayoutManager(mLayoutManager);
@@ -177,7 +196,6 @@ public class FragmentCustomerDailyInfo extends Fragment {
     }
 
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
@@ -199,7 +217,6 @@ public class FragmentCustomerDailyInfo extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 }

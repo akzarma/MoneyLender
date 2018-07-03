@@ -69,7 +69,7 @@
             app:cardCornerRadius="10dp">
 
             <RelativeLayout
-                android:background="@drawable/gradient_card"
+                android:background="@color/colorPrimary"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:paddingTop="8dp">
@@ -112,7 +112,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/gradient_card"
+                android:background="@color/colorPrimary"
                 android:paddingTop="8dp">
 
                 <TextView
@@ -165,7 +165,7 @@
             <RelativeLayout
                 android:id="@+id/totat_collection_card_layout"
                 android:layout_width="match_parent"
-                android:background="@drawable/gradient_card"
+                android:background="@color/colorPrimary"
                 android:layout_height="match_parent"
                 android:paddingTop="8dp">
 

@@ -25,11 +25,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import static com.oxvsys.moneylender.HomeActivity.database;
 
 
 public class FragmentDashboard extends Fragment {
+
+    //Admin Dashboard
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final String ARG_PARAM3 = "param3";
@@ -52,7 +56,7 @@ public class FragmentDashboard extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     public FragmentDashboard() {
-        // Required empty public constructor
+
     }
 
     public static FragmentDashboard newInstance(Calendar sel_cal) {
@@ -82,7 +86,7 @@ public class FragmentDashboard extends Fragment {
         view_monthly_value_till_today = (TextView) view.findViewById(R.id.monthly_collection_value_dashboard);
         total_collection_value_dashboard = view.findViewById(R.id.total_collection_value_dashboard);
         totat_collection_card_layout = view.findViewById(R.id.totat_collection_card_layout);
-        sel_calendar = (Calendar) getArguments().getSerializable(ARG_PARAM1);
+        sel_calendar = (Calendar) Objects.requireNonNull(getArguments()).getSerializable(ARG_PARAM1);
 
         int month = sel_calendar.get(Calendar.MONTH) + 1;
         final String sel_date = sel_calendar.get(Calendar.DAY_OF_MONTH) + "-" +

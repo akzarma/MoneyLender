@@ -1,12 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#4162F1</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#4162F1</color>
+    <!--<color name="colorPrimary">#4162F1</color>-->
+    <!--<color name="colorPrimaryDark">#303F9F</color>-->
+    <!--<color name="colorAccent">#4162F1</color>-->
+
     <color name="current_card_color">#7986cb</color>
     <color name="main_text_color_blue">#263238</color>
 
 
     <color name="dark_gray">#7c7c7c</color>
+
+    <!--<color name="colorPrimary">#ff9800</color>-->
+    <!--<color name="colorAccent">#ffc947</color>-->
+    <!--<color name="colorPrimaryDark">#c66900</color>-->
+    <!--<color name="primaryTextColor">#000000</color>-->
+
+
+    <color name="colorPrimary">#2196f3</color>
+    <color name="colorAccent">#6ec6ff</color>
+    <color name="colorPrimaryDark">#0069c0</color>
+
 
 </resources>

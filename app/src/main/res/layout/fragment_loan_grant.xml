@@ -2,102 +2,128 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_margin="16dp"
     android:layout_height="match_parent"
+    android:layout_margin="16dp"
     tools:context=".FragmentLoanGrant">
 
     <!-- TODO: Update blank fragment layout -->
+
+    <TextView
+        android:id="@+id/account_number_prefix_field"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="--- - "
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/account_number_monthly_grant"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/account_number_prefix_field"
+        android:hint="Account No (Optional)"
+        android:inputType="number" />
 
     <EditText
         android:id="@+id/amount_monthly_grant"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/account_number_prefix_field"
         android:hint="Amount"
-        android:inputType="number"/>
-    <TextView
-        android:id="@+id/account_number_prefix_field"
-        android:hint="--- - "
-        android:layout_marginTop="10dp"
-        android:layout_below="@id/amount_monthly_grant"
-        android:textSize="18sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:inputType="number" />
 
-    <EditText
-        android:id="@+id/account_number_monthly_grant"
+
+    <TextView
+        android:id="@+id/select_type"
+        android:layout_width="wrap_content"
         android:layout_below="@id/amount_monthly_grant"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto_regular"
+        android:text="Select Type"
+        android:textAllCaps="true" />
+
+    <Spinner
+        android:id="@+id/account_type_field"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/account_number_prefix_field"
-        android:hint="Account No (Optional)"
-        android:inputType="number"/>
+        android:layout_below="@+id/select_type"
+        android:entries="@array/account_type_items" />
 
+
+    <Spinner
+        android:id="@+id/loan_grant_daily_payment_options_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/account_type_field"></Spinner>
 
     <EditText
         android:id="@+id/file_duration_monthly_grant"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/account_number_monthly_grant"
+        android:layout_below="@id/loan_grant_daily_payment_options_spinner"
         android:hint="File Duration"
-        android:inputType="number"/>
+        android:inputType="number" />
 
     <EditText
         android:id="@+id/start_date_monthly_grant"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="File Opening date"
+        android:layout_below="@id/file_duration_monthly_grant"
         android:focusable="false"
+        android:hint="File Opening date"
         android:inputType="date"
-        android:text="10-06-2018"
-        android:layout_below="@id/file_duration_monthly_grant"/>
+        android:text="10-06-2018" />
 
     <EditText
         android:id="@+id/end_date_monthly_grant"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="File Closing date"
+        android:layout_below="@id/start_date_monthly_grant"
         android:focusable="false"
-        android:text="10-06-2019"
+        android:hint="File Closing date"
         android:inputType="date"
-        android:layout_below="@id/start_date_monthly_grant"/>
+        android:text="10-06-2019" />
 
     <EditText
         android:id="@+id/additional_info_monthly_grant"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/end_date_monthly_grant"
-        android:hint="Additional information"/>
+        android:hint="Additional information" />
 
 
+    <TextView
+        android:id="@+id/select_agent_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/additional_info_monthly_grant"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/roboto_regular"
+        android:text="Select Agent"
+        android:textAllCaps="true" />
 
     <Spinner
         android:id="@+id/agent_spinner"
-        android:layout_below="@+id/additional_info_monthly_grant"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-
-    <Spinner
-        android:id="@+id/account_type_field"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/agent_spinner"
-        android:entries="@array/account_type_items"/>
+        android:layout_below="@+id/select_agent_label"
+        android:layout_marginTop="8dp" />
 
 
     <EditText
         android:id="@+id/rate_of_interest_grant"
-        android:visibility="invisible"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/account_type_field"
-        android:hint="Rante of Interest"/>
+        android:hint="Rante of Interest"
+        android:visibility="invisible" />
 
     <Button
         android:id="@+id/grant_button_monthly"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/rate_of_interest_grant"
-        android:text="Grant Loan"/>
+        android:layout_below="@id/agent_spinner"
+        android:layout_marginTop="8dp"
+        android:text="Grant Loan" />
 
 </RelativeLayout>
