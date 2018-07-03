@@ -8,43 +8,61 @@
 
     <!-- TODO: Update blank fragment layout -->
 
+
     <TextView
         android:id="@+id/account_number_prefix_field"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="14dp"
         android:hint="--- - "
         android:textSize="18sp" />
 
-    <EditText
-        android:id="@+id/account_number_monthly_grant"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/account_number_prefix_field"
-        android:hint="Account No (Optional)"
-        android:inputType="number" />
 
-    <EditText
-        android:id="@+id/amount_monthly_grant"
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/loan_grant_account_til"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="8dp"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/account_number_prefix_field">
+
+        <EditText
+            android:id="@+id/account_number_monthly_grant"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Account No (Optional)"
+            android:inputType="number" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/loan_grant_amount_til"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/account_number_prefix_field"
-        android:hint="Amount"
-        android:inputType="number" />
+        android:layout_below="@id/loan_grant_account_til">
+
+        <EditText
+            android:id="@+id/amount_monthly_grant"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Amount"
+            android:inputType="number" />
+    </android.support.design.widget.TextInputLayout>
 
 
     <TextView
         android:id="@+id/select_type"
         android:layout_width="wrap_content"
-        android:layout_below="@id/amount_monthly_grant"
         android:layout_height="wrap_content"
+        android:layout_below="@id/loan_grant_amount_til"
         android:fontFamily="@font/roboto_regular"
+        android:layout_margin="4dp"
         android:text="Select Type"
         android:textAllCaps="true" />
+
 
     <Spinner
         android:id="@+id/account_type_field"
         android:layout_width="match_parent"
+
         android:layout_height="wrap_content"
         android:layout_below="@+id/select_type"
         android:entries="@array/account_type_items" />
@@ -54,50 +72,80 @@
         android:id="@+id/loan_grant_daily_payment_options_spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/account_type_field"></Spinner>
 
-    <EditText
-        android:id="@+id/file_duration_monthly_grant"
+        android:layout_below="@id/account_type_field" />
+
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/loan_grant_duration_til"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/loan_grant_daily_payment_options_spinner"
-        android:hint="File Duration"
-        android:inputType="number" />
+        android:layout_below="@id/loan_grant_daily_payment_options_spinner">
 
-    <EditText
-        android:id="@+id/start_date_monthly_grant"
+        <EditText
+            android:id="@+id/file_duration_monthly_grant"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="File Duration"
+            android:inputType="number" />
+    </android.support.design.widget.TextInputLayout>
+
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/loan_grant_opening_til"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/file_duration_monthly_grant"
-        android:focusable="false"
-        android:hint="File Opening date"
-        android:inputType="date"
-        android:text="10-06-2018" />
+        android:layout_below="@id/loan_grant_duration_til">
 
-    <EditText
-        android:id="@+id/end_date_monthly_grant"
+        <EditText
+            android:id="@+id/start_date_monthly_grant"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:hint="File Opening date"
+            android:inputType="date"
+            android:text="10-06-2018" />
+    </android.support.design.widget.TextInputLayout>
+
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/loan_grant_closing_til"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/start_date_monthly_grant"
-        android:focusable="false"
-        android:hint="File Closing date"
-        android:inputType="date"
-        android:text="10-06-2019" />
+        android:layout_below="@id/loan_grant_opening_til">
 
-    <EditText
-        android:id="@+id/additional_info_monthly_grant"
+        <EditText
+            android:id="@+id/end_date_monthly_grant"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:hint="File Closing date"
+            android:inputType="date"
+            android:text="10-06-2019" />
+    </android.support.design.widget.TextInputLayout>
+
+
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/end_date_monthly_grant"
-        android:hint="Additional information" />
+        android:layout_below="@id/loan_grant_closing_til"
+        android:id="@+id/loan_grant_additional_til"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/additional_info_monthly_grant"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Additional information" />
+    </android.support.design.widget.TextInputLayout>
 
 
     <TextView
+
         android:id="@+id/select_agent_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/additional_info_monthly_grant"
-        android:layout_marginTop="8dp"
+        android:layout_below="@id/loan_grant_additional_til"
+        android:layout_margin="4dp"
         android:fontFamily="@font/roboto_regular"
         android:text="Select Agent"
         android:textAllCaps="true" />
@@ -107,22 +155,37 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/select_agent_label"
-        android:layout_marginTop="8dp" />
+        android:layout_marginTop="16dp" />
 
 
-    <EditText
-        android:id="@+id/rate_of_interest_grant"
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/account_type_field"
-        android:hint="Rante of Interest"
-        android:visibility="invisible" />
+        android:id="@+id/loan_grant_roi_til"
+        android:layout_below="@id/agent_spinner"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/rate_of_interest_grant"
+            android:layout_width="match_parent"
+            android:fontFamily="@font/roboto_regular"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/account_type_field"
+            android:hint="Rate of Interest"
+            android:visibility="invisible" />
+    </android.support.design.widget.TextInputLayout>
+
 
     <Button
         android:id="@+id/grant_button_monthly"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/agent_spinner"
+        android:layout_below="@id/loan_grant_roi_til"
+        android:textColor="#fff"
+        android:paddingLeft="8dp"
+        android:fontFamily="@font/roboto_bold"
+        android:layout_alignParentEnd="true"
+        android:paddingRight="8dp"
+        android:background="@drawable/material_button"
         android:layout_marginTop="8dp"
         android:text="Grant Loan" />
 
