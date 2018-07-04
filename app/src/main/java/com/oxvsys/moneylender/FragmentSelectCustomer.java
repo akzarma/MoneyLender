@@ -29,7 +29,6 @@ import java.util.Comparator;
 import java.util.List;
 
 import static com.oxvsys.moneylender.HomeActivity.database;
-import static com.oxvsys.moneylender.MainActivity.getData;
 import static com.oxvsys.moneylender.MainActivity.logged_type;
 
 
@@ -87,6 +86,7 @@ public class FragmentSelectCustomer extends Fragment {
         // Inflate the layout for this fragment
         fields_loaded = 0;
         View view = inflater.inflate(R.layout.fragment_select_customer, container, false);
+
 //        final String agent_id = getData("user_id", getContext());
 //        final String logged_type = getData("user_type", getContext());
 
@@ -95,16 +95,17 @@ public class FragmentSelectCustomer extends Fragment {
         spinner = view.findViewById(R.id.customer_spinner);
         spinner.setAdapter(null);
 
-        final Button next_button = view.findViewById(R.id.customer_next_button);
-        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+//        final Button next_button = view.findViewById(R.id.customer_next_button);
+        final FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_chevron_right_black_24dp));
+        fab.setVisibility(View.INVISIBLE);
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//            }
+//        });
 
 //        Button next_button = view.findViewById(R.id.customer_next_button);
         if (logged_type.equals("admin")) {
@@ -133,7 +134,7 @@ public class FragmentSelectCustomer extends Fragment {
                     spinner.setAdapter(spinnerAdapter);
                     fields_loaded+=1;
                     if(fields_loaded==1){
-                        next_button.setVisibility(View.VISIBLE);
+                        fab.setVisibility(View.VISIBLE);
                     }
                 }
 

@@ -100,6 +100,7 @@ public class FragmentKYC extends Fragment {
 
         FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_save_black_24dp));
+        fab.setVisibility(View.VISIBLE);
 
         name_til = view.findViewById(R.id.kyc_full_name_til);
         aadhar_til = view.findViewById(R.id.kyc_aadhar_til);

@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -17,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -101,7 +99,7 @@ public class FragmentLoanGrant extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_loan_grant, container, false);
 
-        final Button save_button = view.findViewById(R.id.grant_button_monthly);
+//        final Button save_button = view.findViewById(R.id.grant_button_monthly);
         final EditText account_no = view.findViewById(R.id.account_number_monthly_grant);
         final EditText edit_amount = view.findViewById(R.id.amount_monthly_grant);
         final EditText edit_o_date = view.findViewById(R.id.start_date_monthly_grant);
@@ -117,9 +115,9 @@ public class FragmentLoanGrant extends Fragment {
         final TextInputLayout loan_grant_duration_til = view.findViewById(R.id.loan_grant_duration_til);
         final EditText months_field = view.findViewById(R.id.file_duration_monthly_grant);
 
-        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        final FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_chevron_right_black_24dp));
-
+        fab.setVisibility(View.INVISIBLE);
         final Customer selected_customer = (Customer) getArguments().getSerializable(ARG_PARAM1);
 
         edit_o_date.setOnClickListener(new View.OnClickListener() {
@@ -181,7 +179,7 @@ public class FragmentLoanGrant extends Fragment {
                 lastAccountNo = dataSnapshot.getValue(Long.class);
                 fields_loaded+=1;
                 if(fields_loaded==2){
-                    save_button.setVisibility(View.VISIBLE);
+                    fab.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -217,7 +215,7 @@ public class FragmentLoanGrant extends Fragment {
                 spinner.setAdapter(spinnerAdapter);
                 fields_loaded+=1;
                 if(fields_loaded==2){
-                    save_button.setVisibility(View.VISIBLE);
+                    fab.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -281,7 +279,7 @@ public class FragmentLoanGrant extends Fragment {
                 agent_selected = agentList.get(0);
             }
         });
-        save_button.setOnClickListener(new View.OnClickListener()
+        fab.setOnClickListener(new View.OnClickListener()
 
         {
 

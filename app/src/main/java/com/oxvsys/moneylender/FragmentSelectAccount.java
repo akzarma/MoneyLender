@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.Spinner;
 
 import com.google.firebase.database.DataSnapshot;
@@ -75,9 +74,9 @@ public class FragmentSelectAccount extends Fragment {
 
 //        final String logged_agent = getData("user_id",getContext());
         final List<Account> accountList = new ArrayList<>();
-        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        final FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_chevron_right_black_24dp));
-
+        fab.setVisibility(View.INVISIBLE);
 //        final String logged_agent = getData("user_id", getContext());
 
         DatabaseReference agent_account_db_ref = database.getReference("agentAccount").child(logged_agent);
@@ -85,7 +84,7 @@ public class FragmentSelectAccount extends Fragment {
         spinner.setAdapter(null);
 
 
-        final Button next_button = view.findViewById(R.id.next_button);
+//        final Button next_button = view.findViewById(R.id.next_button);
         agent_account_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -156,7 +155,7 @@ public class FragmentSelectAccount extends Fragment {
                 spinner.setAdapter(spinnerAdapter);
                 fields_loaded+=1;
                 if(fields_loaded==1 && !spinner_account_name.isEmpty()){
-                    next_button.setVisibility(View.VISIBLE);
+                    fab.setVisibility(View.VISIBLE);
                 }
             }
 
