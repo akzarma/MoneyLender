@@ -32,16 +32,17 @@
     <!--android:background="@drawable/material_button"/>-->
 
     <Button
-        android:layout_marginTop="48dp"
-        android:layout_below="@id/account_spinner"
         android:id="@+id/next_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/account_spinner"
         android:layout_alignParentEnd="true"
-        android:fontFamily="@font/roboto_bold"
+        android:layout_marginTop="48dp"
         android:background="@drawable/material_button"
+        android:fontFamily="@font/roboto_bold"
         android:text="Next"
-        android:textColor="#fff" />
+        android:textColor="#fff"
+        android:visibility="invisible" />
 
 
 </RelativeLayout>

@@ -214,7 +214,7 @@ public class FragmentCollect extends Fragment {
                                 deposited += amount_recieved;
 
                                 DatabaseReference agent = database.getReference("agentCollect");
-                                agent.child(agent_id).child(String.valueOf(curr_cal.get(Calendar.DAY_OF_MONTH)) + "-" +
+                                agent.child(logged_agent).child(String.valueOf(curr_cal.get(Calendar.DAY_OF_MONTH)) + "-" +
                                         String.valueOf(curr_cal.get(Calendar.MONTH) + 1) + "-" +
                                         String.valueOf(curr_cal.get(Calendar.YEAR))).child(selected_account.getNo()).setValue(amount_recieved).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override

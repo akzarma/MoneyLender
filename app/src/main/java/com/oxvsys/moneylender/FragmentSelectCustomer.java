@@ -47,6 +47,7 @@ public class FragmentSelectCustomer extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     Spinner spinner;
     Customer customer_selected = new Customer();
+    int fields_loaded = 0;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -83,6 +84,7 @@ public class FragmentSelectCustomer extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        fields_loaded = 0;
         View view = inflater.inflate(R.layout.fragment_select_customer, container, false);
 //        final String agent_id = getData("user_id", getContext());
 //        final String logged_type = getData("user_type", getContext());
@@ -92,7 +94,7 @@ public class FragmentSelectCustomer extends Fragment {
         spinner = view.findViewById(R.id.customer_spinner);
         spinner.setAdapter(null);
 
-        Button next_button = view.findViewById(R.id.customer_next_button);
+        final Button next_button = view.findViewById(R.id.customer_next_button);
         if (logged_type.equals("admin")) {
             customers_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
                 @RequiresApi(api = Build.VERSION_CODES.N)
@@ -117,6 +119,10 @@ public class FragmentSelectCustomer extends Fragment {
                     ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, customers);
                     spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spinner.setAdapter(spinnerAdapter);
+                    fields_loaded+=1;
+                    if(fields_loaded==1){
+                        next_button.setVisibility(View.VISIBLE);
+                    }
                 }
 
 

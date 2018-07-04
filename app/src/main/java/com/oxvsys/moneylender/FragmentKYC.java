@@ -42,6 +42,7 @@ public class FragmentKYC extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     TextInputLayout name_til , aadhar_til , occupation_til , mobile_til , dob_til , address_til;
+    Long lastCustomerId = -1L;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
