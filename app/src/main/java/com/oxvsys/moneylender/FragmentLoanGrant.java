@@ -114,6 +114,7 @@ public class FragmentLoanGrant extends Fragment {
         final Spinner payment_duration_spinner = view.findViewById(R.id.loan_grant_daily_payment_options_spinner);
         final TextInputLayout loan_grant_duration_til = view.findViewById(R.id.loan_grant_duration_til);
         final EditText months_field = view.findViewById(R.id.file_duration_monthly_grant);
+        final EditText lf_number_field = view.findViewById(R.id.lf_number_field);
 
         final Customer selected_customer = (Customer) getArguments().getSerializable(ARG_PARAM1);
 
@@ -316,6 +317,7 @@ public class FragmentLoanGrant extends Fragment {
                 String amount = edit_amount.getText().toString();
                 String roi = edit_roi.getText().toString();
                 String info = additional_info_monthly_grant.getText().toString();
+                String lf_number = lf_number_field.getText().toString();
 
                 DatabaseReference customers = database.getReference("customers").child(selected_customer.getId()).child("accounts");
 
@@ -334,6 +336,7 @@ public class FragmentLoanGrant extends Fragment {
                     account_number_details.put("duration", selected_days);
                 }
                 account_number_details.put("type", account_type_selected);
+                account_number_details.put("lf_no", lf_number);
 
                 Map<String, Object> map = new HashMap<>();
                 map.put(final_account_no, account_number_details);

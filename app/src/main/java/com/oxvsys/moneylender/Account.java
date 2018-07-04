@@ -12,6 +12,32 @@ public class Account implements Serializable {
     private Calendar c_date;
     private int roi;
     private String type; //    "0" or  "1"
+    private Long duration;
+    private String lf_no;
+
+    public void setO_date(Calendar o_date) {
+        this.o_date = o_date;
+    }
+
+    public void setC_date(Calendar c_date) {
+        this.c_date = c_date;
+    }
+
+    public Long getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Long duration) {
+        this.duration = duration;
+    }
+
+    public String getLf_no() {
+        return lf_no;
+    }
+
+    public void setLf_no(String lf_no) {
+        this.lf_no = lf_no;
+    }
 
     public Account(Object value) {
         HashMap<String, Object> value1 = (HashMap<String, Object>) value;
@@ -31,6 +57,12 @@ public class Account implements Serializable {
             this.deposited = Long.parseLong(value1.get("deposited").toString());
 
         this.type = value1.get("type").toString();
+        if(value1.get("duration")!=null)
+            this.duration = Long.parseLong(value1.get("duration").toString());
+        if(value1.get("lf_no")!=null)
+            this.lf_no = value1.get("lf_no").toString();
+
+
 
 
     }
