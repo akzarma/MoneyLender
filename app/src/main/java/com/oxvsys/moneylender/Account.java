@@ -6,7 +6,8 @@ import java.util.HashMap;
 
 public class Account implements Serializable {
     private String no;
-    private Long amt;
+    private Long disb_amt;
+    private Long file_amt;
     private Long deposited = 0L;
     private Calendar o_date;
     private Calendar c_date;
@@ -14,6 +15,14 @@ public class Account implements Serializable {
     private String type; //    "0" or  "1"
     private Long duration;
     private String lf_no;
+
+    public Long getFile_amt() {
+        return file_amt;
+    }
+
+    public void setFile_amt(Long file_amt) {
+        this.file_amt = file_amt;
+    }
 
     public void setO_date(Calendar o_date) {
         this.o_date = o_date;
@@ -41,7 +50,7 @@ public class Account implements Serializable {
 
     public Account(Object value) {
         HashMap<String, Object> value1 = (HashMap<String, Object>) value;
-        this.amt = Long.parseLong(value1.get("amt").toString());
+        this.disb_amt = Long.parseLong(value1.get("disb_amt").toString());
         if (!value1.get("o_date").equals("")) {
             this.setO_date(value1.get("o_date").toString());
             MainActivity.CaltoStringDate(this.o_date);
@@ -61,6 +70,9 @@ public class Account implements Serializable {
             this.duration = Long.parseLong(value1.get("duration").toString());
         if(value1.get("lf_no")!=null)
             this.lf_no = value1.get("lf_no").toString();
+        if(value1.get("file_amt")!=null)
+            this.file_amt = Long.parseLong(value1.get("file_amt").toString());
+
 
 
 
@@ -87,12 +99,12 @@ public class Account implements Serializable {
         this.no = no;
     }
 
-    public long getAmt() {
-        return amt;
+    public long getDisb_amt() {
+        return disb_amt;
     }
 
-    public void setAmt(Long amt) {
-        this.amt = amt;
+    public void setDisb_amt(Long disb_amt) {
+        this.disb_amt = disb_amt;
     }
 
     public Calendar getO_date() {

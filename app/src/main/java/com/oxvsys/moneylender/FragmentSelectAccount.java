@@ -135,12 +135,21 @@ public class FragmentSelectAccount extends Fragment {
                             if (account_map != null) {
                                 for (Map.Entry<String, Object> account : account_map.entrySet()) {
                                     if (account_customer_map.containsKey(account.getKey())) {
-                                        spinner_account_name.add(account.getKey() + " " +
-                                                ((HashMap<String, Object>) customer_map.
-                                                        get(single_customer.getKey())).get("name"));
+                                        spinner_account_name.add(((HashMap<String, Object>) customer_map.
+                                                get(single_customer.getKey())).get("name") + " (A/C: " +
+                                                account.getKey() + ")");
                                     }
                                 }
                             }
+                        }
+
+                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, spinner_account_name);
+                        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        spinner.setAdapter(spinnerAdapter);
+
+                        fields_loaded += 1;
+                        if (fields_loaded == 1 && !spinner_account_name.isEmpty()) {
+                            fab.setVisibility(View.VISIBLE);
                         }
                     }
 
@@ -150,13 +159,7 @@ public class FragmentSelectAccount extends Fragment {
                     }
                 });
 
-                ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, spinner_account_name);
-                spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spinner.setAdapter(spinnerAdapter);
-                fields_loaded+=1;
-                if(fields_loaded==1 && !spinner_account_name.isEmpty()){
-                    fab.setVisibility(View.VISIBLE);
-                }
+
             }
 
 

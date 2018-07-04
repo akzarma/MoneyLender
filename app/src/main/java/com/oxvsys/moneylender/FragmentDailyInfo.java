@@ -134,12 +134,12 @@ public class FragmentDailyInfo extends Fragment {
 //        agent1.setName("Anish");
 //
 //        Account account = new Account();
-//        account.setAmt(1000);
+//        account.setDisb_amt(1000);
 //        account.setNo("230");
 //        account.setType("daily");
 //
 //        Account account1 = new Account();
-//        account1.setAmt(2000);
+//        account1.setDisb_amt(2000);
 //        account1.setNo("231");
 //        account1.setType("daily");
 //

@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,7 +30,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.oxvsys.moneylender.HomeActivity.database;
-import static com.oxvsys.moneylender.MainActivity.getData;
 import static com.oxvsys.moneylender.MainActivity.logged_agent;
 
 public class FragmentCollect extends Fragment {
@@ -36,6 +37,7 @@ public class FragmentCollect extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     Customer selected_customer;
     Long deposited = 0L;
+    int fields_loaded = 0;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -82,11 +84,12 @@ public class FragmentCollect extends Fragment {
         final TextView customer_deposited_field = view.findViewById(R.id.customer_deposited_field);
         final TextView customer_account_type_field = view.findViewById(R.id.customer_account_type_field);
         final TextView customer_mobile_field = view.findViewById(R.id.customer_mobile_field);
-        final Button deposit_button = view.findViewById(R.id.deposit_button);
+//        final Button deposit_button = view.findViewById(R.id.deposit_button);
         final Account selected_account = (Account) getArguments().getSerializable(ARG_PARAM1);
 
-        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        final FloatingActionButton fab = getActivity().findViewById(R.id.fab);
         fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_chevron_right_black_24dp));
+        fab.setVisibility(View.INVISIBLE);
 
 //        final String logged_agent = getData("user_id", getContext());
 //        String logged_agent = getData("user_id", getContext());
@@ -113,7 +116,7 @@ public class FragmentCollect extends Fragment {
                         accountList.add(account);
                         selected_customer.setAccounts1(accountList);
 
-                        customer_loan_amount_field.setText(String.valueOf(account.getAmt()));
+                        customer_loan_amount_field.setText(String.valueOf(account.getDisb_amt()));
                         customer_deposited_field.setText(String.valueOf(account.getDeposited()));
                         if (account.getType().equals("0"))
                             customer_account_type_field.setText("Daily basis");
@@ -127,6 +130,10 @@ public class FragmentCollect extends Fragment {
 //                                selected_customer.setAccounts1(accountList);
                         customer_name_field.setText(selected_customer.getName());
                         customer_id_field.setText(selected_customer.getId());
+                        fields_loaded += 1;
+                        if (fields_loaded == 1) {
+                            fab.setVisibility(View.VISIBLE);
+                        }
                     }
 
                     @Override
@@ -143,13 +150,8 @@ public class FragmentCollect extends Fragment {
         });
 
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-            }
-        });
-        deposit_button.setOnClickListener(new View.OnClickListener() {
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (amount_field.getText().toString().length() == 0) {
@@ -238,6 +240,12 @@ public class FragmentCollect extends Fragment {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 Log.d("deposited new money: ", "Account: " + selected_account.getNo());
+
+                                                FragmentManager fragmentManager = getFragmentManager();
+                                                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                                FragmentAccountTypeInfo fragmentAccountTypeInfo = FragmentAccountTypeInfo.newInstance(Calendar.getInstance(), "0");
+                                                fragmentTransaction.replace(R.id.fragment_container, fragmentAccountTypeInfo).addToBackStack(null).
+                                                        commit();
                                             }
                                         });
                                     }

@@ -103,6 +103,7 @@ public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragme
 
         View view = inflater.inflate(R.layout.fragment_loan_grant, container, false);
 
+//        final Button save_button = view.findViewById(R.id.grant_button_monthly);
         final EditText account_no = view.findViewById(R.id.account_number_monthly_grant);
         final EditText disb_amount_field = view.findViewById(R.id.disbursement_amount_field);
         final EditText file_amount_field = view.findViewById(R.id.file_amount_field);
@@ -130,7 +131,49 @@ public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragme
         file_amount_field.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
+                Long file_amount = 0L;
+                Long disb_amount = 0L;
+                if (file_amount_field.getText().toString().length() != 0)
+                    file_amount = Long.parseLong(file_amount_field.getText().toString());
+                if (disb_amount_field.getText().toString().length() != 0)
+                    disb_amount = Long.parseLong(disb_amount_field.getText().toString());
+                if ((disb_amount - file_amount) >= 0) {
+                    file_amount_field.setText(String.valueOf(disb_amount - file_amount));
+                }
+                return false;
+            }
+        });
+        discount_amount_field.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+//                if(discount_amount_field.getText().toString().length()!=0 && disb_amount_field.getText().toString().length()!=0) {
+//                Long file_amount = Long.parseLong(file_amount_field.getText().toString());
+                Long discount_amount = 0L;
+                Long disb_amount = 0L;
+                if (discount_amount_field.getText().toString().length() != 0)
+                    discount_amount = Long.parseLong(discount_amount_field.getText().toString());
+                if (disb_amount_field.getText().toString().length() != 0)
+                    disb_amount = Long.parseLong(disb_amount_field.getText().toString());
+                if ((disb_amount - discount_amount) >= 0) {
+                    file_amount_field.setText(String.valueOf(disb_amount - discount_amount));
+                }
+//                }
+                return false;
+            }
+        });
 
+        disb_amount_field.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                Long discount_amount = 0L;
+                Long disb_amount = 0L;
+                if (discount_amount_field.getText().toString().length() != 0)
+                    discount_amount = Long.parseLong(discount_amount_field.getText().toString());
+                if (disb_amount_field.getText().toString().length() != 0)
+                    disb_amount = Long.parseLong(disb_amount_field.getText().toString());
+                if ((disb_amount - discount_amount) >= 0) {
+                    file_amount_field.setText(String.valueOf(disb_amount - discount_amount));
+                }
                 return false;
             }
         });
@@ -305,14 +348,14 @@ public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragme
                 grant_info.put("Account" , "9890");
                 setUpDialog(grant_info);
 
-
-
                 if (disb_amount_field.getText().toString().length() == 0) {
-                    disb_amount_field.setError("Amount is required!");
+                    disb_amount_field.setError("Disbursement Amount is required!");
                     return;
                 } else if (file_duration_field.getText().toString().length() == 0) {
-                    file_duration_field.setError("Duration is required!");
-                    return;
+                    if (account_type_selected.equals("1")) {
+                        file_duration_field.setError("Duration is required!");
+                        return;
+                    }
                 } else if (edit_o_date.getText().toString().length() == 0) {
                     edit_o_date.setError("Opening date is required!");
                     return;
@@ -343,6 +386,10 @@ public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragme
                 String roi = edit_roi.getText().toString();
                 String info = additional_info_monthly_grant.getText().toString();
                 String lf_number = lf_number_field.getText().toString();
+                String file_amount = "0";
+                if(file_amount_field.getText().toString().length()!=0){
+                    file_amount = file_amount_field.getText().toString();
+                }
 
                 DatabaseReference customers = database.getReference("customers").child(selected_customer.getId()).child("accounts");
 
@@ -350,10 +397,11 @@ public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragme
 
 //                account_number_details.put("no", final_account_no);
 //                account_number_details.put("customer", selected_customer.getId());
-                account_number_details.put("amt", amount);
+                account_number_details.put("disb_amt", amount);
                 account_number_details.put("o_date", o_date);
                 account_number_details.put("c_date", c_date);
                 account_number_details.put("info", info);
+                account_number_details.put("file_amt", file_amount);
                 if (account_type_selected.equals("1")) {
                     account_number_details.put("roi", roi);
                     account_number_details.put("duration", months_field.getText().toString());

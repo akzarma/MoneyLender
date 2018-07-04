@@ -5,8 +5,10 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -94,6 +96,10 @@ public class FragmentAccountTypeInfo extends Fragment {
         sel_calendar = (Calendar) getArguments().getSerializable(ARG_PARAM1);
         final String cal_str = CaltoStringDate(sel_calendar);
         date_button.setText(cal_str);
+        final FloatingActionButton fab = getActivity().findViewById(R.id.fab);
+        fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_chevron_right_black_24dp));
+        fab.setVisibility(View.INVISIBLE);
+
 
 //        List<CustomerAmount> customerAmountList = new ArrayList<>();
         final HashMap<String, AccountAmountCollect> cust_account_amount = new HashMap<>();

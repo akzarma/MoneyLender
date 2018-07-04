@@ -42,11 +42,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/customer_mobile_field"/>
-    <Button
-        android:id="@+id/deposit_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/amount_field"
-        android:text="Collect"/>
+    <!--<Button-->
+        <!--android:id="@+id/deposit_button"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@id/amount_field"-->
+        <!--android:text="Collect"/>-->
 
 </RelativeLayout>
