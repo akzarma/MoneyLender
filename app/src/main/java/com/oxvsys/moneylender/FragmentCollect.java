@@ -4,7 +4,9 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -82,7 +84,10 @@ public class FragmentCollect extends Fragment {
         final Button deposit_button = view.findViewById(R.id.deposit_button);
         final Account selected_account = (Account) getArguments().getSerializable(ARG_PARAM1);
 
-        final String logged_agent = getData("user_id",getContext());
+        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_chevron_right_black_24dp));
+
+        final String logged_agent = getData("user_id", getContext());
 
 
         DatabaseReference account_customer_db_ref = database.getReference("agentAccount").child(logged_agent).child(selected_account.getNo());
@@ -136,6 +141,12 @@ public class FragmentCollect extends Fragment {
         });
 
 
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
         deposit_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

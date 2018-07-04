@@ -123,15 +123,15 @@
             </android.support.design.widget.TextInputLayout>
 
 
-            <Button
-                android:layout_marginTop="8dp"
-                android:background="@drawable/rounded_button"
-                android:id="@+id/deposit_button"
-                android:layout_width="wrap_content"
-                android:fontFamily="@font/roboto_regular"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/kyc_address_til"
-                android:text="Save" />
+            <!--<Button-->
+                <!--android:layout_marginTop="8dp"-->
+                <!--android:background="@drawable/rounded_button"-->
+                <!--android:id="@+id/deposit_button"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:fontFamily="@font/roboto_regular"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_below="@id/kyc_address_til"-->
+                <!--android:text="Save" />-->
         </RelativeLayout>
     </ScrollView>
 </RelativeLayout>

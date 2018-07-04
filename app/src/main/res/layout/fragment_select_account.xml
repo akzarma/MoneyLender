@@ -13,11 +13,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/roboto_regular"
-        android:text="Select Account"
+        android:text="Select Customer"
         android:textAllCaps="true" />
 
     <Spinner
-
+        android:layout_marginTop="16dp"
         android:id="@+id/account_spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -25,23 +25,19 @@
 
     </Spinner>
 
-    <!--<ImageButton-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:src="@drawable/ic_chevron_right_black_24dp"-->
-    <!--android:background="@drawable/material_button"/>-->
+    <!--<Button-->
+        <!--android:layout_marginTop="48dp"-->
+        <!--android:layout_below="@id/account_spinner"-->
+        <!--android:id="@+id/next_button"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentEnd="true"-->
+        <!--android:fontFamily="@font/roboto_bold"-->
+        <!--android:background="@drawable/material_button"-->
+        <!--android:text="Next"-->
+        <!--android:textColor="#fff" />-->
 
-    <Button
-        android:layout_marginTop="48dp"
-        android:layout_below="@id/account_spinner"
-        android:id="@+id/next_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:fontFamily="@font/roboto_bold"
-        android:background="@drawable/material_button"
-        android:text="Next"
-        android:textColor="#fff" />
+
 
 
 </RelativeLayout>

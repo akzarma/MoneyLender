@@ -5,14 +5,15 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 
@@ -69,32 +70,41 @@ public class FragmentAgentRegister extends Fragment {
         final EditText aadhar = view.findViewById(R.id.agent_register_aadhar);
         final EditText address_view = view.findViewById(R.id.agent_register_address);
         final EditText mobile_view = view.findViewById(R.id.agent_register_mobile);
-        Button register_button = view.findViewById(R.id.agent_register_button);
+//        Button register_button = view.findViewById(R.id.agent_register_button);
 
         final RelativeLayout rl = view.findViewById(R.id.agent_register_relative_layout);
 
-        register_button.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_save_black_24dp));
+
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 if(name_view.getText().toString().equals("")){
                     name_til.setError("Name required.");
+                    return;
                 }
 
                 if (aadhar.getText().toString().equals("")){
                     name_til.setErrorEnabled(false);
                     aadhaar_til.setError("Aadhaar required.");
+                    return;
                 }
 
                 if (address_view.getText().toString().equals("")){
                     aadhaar_til.setErrorEnabled(false);
                     address_til.setError("Address required.");
+                    return;
                 }
 
                 if (mobile_view.getText().toString().equals("")){
                     address_til.setErrorEnabled(false);
                     mobile_til.setError("Mobile required.");
-                }else mobile_til.setErrorEnabled(false);
+                    return;
+                }else {
+                    mobile_til.setErrorEnabled(false);
+                }
 
                 String unique_agent_id = "agent_" + mobile_view.getText().toString();
 
