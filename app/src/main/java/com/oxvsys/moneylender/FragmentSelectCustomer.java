@@ -127,7 +127,7 @@ public class FragmentSelectCustomer extends Fragment {
                     });
                     List<String> customers = new ArrayList<>();
                     for (Customer each : customerList) {
-                        customers.add(each.getId() + " - " + each.getName().split(" ")[0]);
+                        customers.add(each.getName().split(" ")[0] + " ("+each.getId() +")");
                     }
                     ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, customers);
                     spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

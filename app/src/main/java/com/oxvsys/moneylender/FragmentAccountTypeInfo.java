@@ -213,7 +213,9 @@ public class FragmentAccountTypeInfo extends Fragment {
                         HashMap<String, Object> agent_object_map = (HashMap<String, Object>) dataSnapshot.getValue();
                         final HashMap<String, AgentAmount> agentAmountHashMap = new HashMap<>();
                         for (Map.Entry<String, Object> each_agent_map : agent_object_map.entrySet()) {
-                            account_amount_map.putAll((HashMap<String, String>) ((HashMap<String, Object>) each_agent_map.getValue()).get(cal_str));
+                            HashMap<String,String> hashMap = (HashMap<String, String>)(((HashMap<String, Object>) each_agent_map.getValue()).get(cal_str));
+                            if(hashMap!=null)
+                                account_amount_map.putAll(hashMap);
                             for (Map.Entry<String, String> each_account_amount_map : account_amount_map.entrySet()) {
                                 Agent agent = new Agent();
                                 agent.setId(each_agent_map.getKey());
