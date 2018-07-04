@@ -20,5 +20,8 @@
     <color name="colorAccent">#6ec6ff</color>
     <color name="colorPrimaryDark">#0069c0</color>
 
+    <color name="colorWhiteText">#fff</color>
+
+
 
 </resources>
