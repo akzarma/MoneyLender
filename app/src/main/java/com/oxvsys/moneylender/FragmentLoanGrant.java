@@ -8,7 +8,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -46,7 +49,7 @@ import static com.oxvsys.moneylender.HomeActivity.database;
  * Use the {@link FragmentLoanGrant#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentLoanGrant extends Fragment {
+public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragment.NoticeDialogListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -120,7 +123,7 @@ public class FragmentLoanGrant extends Fragment {
         final EditText lf_number_field = view.findViewById(R.id.lf_number_field);
 
         final FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_chevron_right_black_24dp));
+        fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_save_black_24dp));
         fab.setVisibility(View.INVISIBLE);
         final Customer selected_customer = (Customer) getArguments().getSerializable(ARG_PARAM1);
 
@@ -339,6 +342,7 @@ public class FragmentLoanGrant extends Fragment {
 
             @Override
             public void onClick(View v) {
+
                 if (disb_amount_field.getText().toString().length() == 0) {
                     disb_amount_field.setError("Disbursement Amount is required!");
                     return;
@@ -367,6 +371,7 @@ public class FragmentLoanGrant extends Fragment {
                     final_account_no = (lastAccountNo + 1) + "-" + account_no.getText().toString();
                 }
 
+
                 DatabaseReference agent_customer = database.getReference("agentAccount");
                 agent_customer.child(agent_selected.getId()).child(final_account_no).setValue(selected_customer.getId());
 
@@ -381,66 +386,50 @@ public class FragmentLoanGrant extends Fragment {
                     file_amount = file_amount_field.getText().toString();
                 }
 
-                DatabaseReference customers = database.getReference("customers").child(selected_customer.getId()).child("accounts");
 
-                Map<String, String> account_number_details = new HashMap<>();
 
-//                account_number_details.put("no", final_account_no);
-//                account_number_details.put("customer", selected_customer.getId());
-                account_number_details.put("disb_amt", amount);
-                account_number_details.put("o_date", o_date);
-                account_number_details.put("c_date", c_date);
-                account_number_details.put("info", info);
-                account_number_details.put("file_amt", file_amount);
-                if (account_type_selected.equals("1")) {
-                    account_number_details.put("roi", roi);
-                    account_number_details.put("duration", months_field.getText().toString());
-                } else if (account_type_selected.equals("0")) {
-                    account_number_details.put("duration", selected_days);
+
+                HashMap<String,String> grant_info = new HashMap<>();
+                grant_info.put("o_date" , o_date);
+                grant_info.put("c_date" , c_date);
+                grant_info.put("amount" , amount);
+                grant_info.put("roi" , roi);
+                grant_info.put("info" , info);
+                grant_info.put("lf_number" , lf_number);
+                grant_info.put("file_amount" , file_amount);
+                grant_info.put("agent" , agent_selected.getName());
+                grant_info.put("account" , final_account_no);
+                grant_info.put("customer" , selected_customer.getName());
+                grant_info.put("customer_id" , selected_customer.getId());
+                grant_info.put("months" , String.valueOf(months_field.getText()));
+                grant_info.put("type" , account_type_selected);
+                grant_info.put("days" , selected_days);
+                if (account_type_selected.equals("0")){
+                    grant_info.put("duration" , selected_days);
+                }else {
+                    grant_info.put("duration" , String.valueOf(months_field.getText()));
                 }
-                account_number_details.put("type", account_type_selected);
-                account_number_details.put("lf_no", lf_number);
-
-                Map<String, Object> map = new HashMap<>();
-                map.put(final_account_no, account_number_details);
-
-                customers.updateChildren(map, new DatabaseReference.CompletionListener() {
-                    @Override
-                    public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-                        Log.d("monthly stuff", "onComplete: " + databaseError);
-                        DatabaseReference lastAccountNo_ref = database.getReference("lastAccountNo");
-                        lastAccountNo_ref.setValue(lastAccountNo + 1);
-
-                        //Update accountType
-                        DatabaseReference account_type_db_ref = database.getReference("accountType");
-                        Map<String, Object> account_type_map = new HashMap<>();
-                        account_type_map.put(final_account_no, account_type_selected);
-                        account_type_db_ref.updateChildren(account_type_map, new DatabaseReference.CompletionListener() {
-                            @Override
-                            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-                                Log.d("accountType query: ", "data updated.");
-
-                            }
-                        });
+                setUpDialog(grant_info);
 
 
-                        //Update accountCustomer
-//                        DatabaseReference account_customer_db_ref = database.getReference("accountCustomer");
-//                        Map<String, Object> account_customer_map = new HashMap<>();
-//                        account_type_map.put(final_account_no, selected_customer.getId());
-//                        account_customer_db_ref.updateChildren(account_customer_map, new DatabaseReference.CompletionListener() {
-//                            @Override
-//                            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-//                                Log.d("accountCustomer query: ", "data updated.");
-//                            }
-//                        });
-                    }
-                });
 
 
             }
         });
         return view;
+    }
+
+    private void setUpDialog(HashMap<String , String> grant_info) {
+        assert getFragmentManager() != null;
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+        GrantLoanDialogFragment dialogFragment = GrantLoanDialogFragment.newInstance(grant_info);
+        dialogFragment.setTargetFragment(this,0);
+        dialogFragment.show(ft, "dialog");
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -462,6 +451,78 @@ public class FragmentLoanGrant extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+
+
+    @Override
+    public void onDialogPositiveClick(final HashMap<String  ,String> grant_info) {
+//        Toast.makeText(getContext() , "from host fragment" , Toast.LENGTH_LONG).show();
+        DatabaseReference customers = database.getReference("customers").child(grant_info.get("customer_id")).child("accounts");
+
+        Map<String, String> account_number_details = new HashMap<>();
+
+//                account_number_details.put("no", final_account_no);
+//                account_number_details.put("customer", selected_customer.getId());
+        account_number_details.put("disb_amt", grant_info.get("amount"));
+        account_number_details.put("o_date", grant_info.get("o_date"));
+        account_number_details.put("c_date", grant_info.get("c_date"));
+        account_number_details.put("info", grant_info.get("info"));
+        account_number_details.put("file_amt", grant_info.get("file_amount"));
+        if (account_type_selected.equals("1")) {
+            account_number_details.put("roi", grant_info.get("roi"));
+            account_number_details.put("duration", grant_info.get("months"));
+        } else if (account_type_selected.equals("0")) {
+            account_number_details.put("duration", selected_days);
+        }
+        account_number_details.put("type", account_type_selected);
+        account_number_details.put("lf_no", grant_info.get("lf_number"));
+
+        Map<String, Object> map = new HashMap<>();
+        map.put(grant_info.get("account"), account_number_details);
+
+        customers.updateChildren(map, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                Log.d("monthly stuff", "onComplete: " + databaseError);
+                DatabaseReference lastAccountNo_ref = database.getReference("lastAccountNo");
+                lastAccountNo_ref.setValue(lastAccountNo + 1);
+
+                //Update accountType
+                DatabaseReference account_type_db_ref = database.getReference("accountType");
+                Map<String, Object> account_type_map = new HashMap<>();
+                account_type_map.put(grant_info.get("account"), account_type_selected);
+                account_type_db_ref.updateChildren(account_type_map, new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                        Log.d("accountType query: ", "data updated.");
+
+                        FragmentManager fragmentManager = getFragmentManager();
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        FragmentSelectCustomer fragmentSelectCustomer = new FragmentSelectCustomer();
+                        fragmentTransaction.replace(R.id.fragment_container, fragmentSelectCustomer).addToBackStack(null).
+                                commit();
+                    }
+                });
+
+
+                //Update accountCustomer
+//                        DatabaseReference account_customer_db_ref = database.getReference("accountCustomer");
+//                        Map<String, Object> account_customer_map = new HashMap<>();
+//                        account_type_map.put(final_account_no, selected_customer.getId());
+//                        account_customer_db_ref.updateChildren(account_customer_map, new DatabaseReference.CompletionListener() {
+//                            @Override
+//                            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+//                                Log.d("accountCustomer query: ", "data updated.");
+//                            }
+//                        });
+            }
+        });
+    }
+
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) {
+
     }
 
     /**
