@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -80,17 +81,20 @@ public class FragmentCollect extends Fragment {
         final TextView customer_deposited_field = view.findViewById(R.id.customer_deposited_field);
         final TextView customer_account_type_field = view.findViewById(R.id.customer_account_type_field);
         final TextView customer_mobile_field = view.findViewById(R.id.customer_mobile_field);
+        final TextView customer_account_field = view.findViewById(R.id.customer_account_field);
+        final TextView loan_duration_field = view.findViewById(R.id.loan_duration_field);
 //        final Button deposit_button = view.findViewById(R.id.deposit_button);
         final Account selected_account = (Account) getArguments().getSerializable(ARG_PARAM1);
 
         final FloatingActionButton fab = getActivity().findViewById(R.id.fab);
         fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_chevron_right_black_24dp));
         fab.setVisibility(View.INVISIBLE);
+        customer_account_field.setText(selected_account.getNo());
 
 //        final String logged_agent = getData("user_id", getContext());
 //        String logged_agent = getData("user_id", getContext());
 
-
+        Account account = new Account();
         DatabaseReference account_customer_db_ref = database.getReference("agentAccount").child(logged_agent).child(selected_account.getNo());
         account_customer_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -114,11 +118,16 @@ public class FragmentCollect extends Fragment {
 
                         customer_loan_amount_field.setText(String.valueOf(account.getDisb_amt()));
                         customer_deposited_field.setText(String.valueOf(account.getDeposited()));
-                        if (account.getType().equals("0"))
+                        if (account.getType().equals("0")) {
                             customer_account_type_field.setText("Daily basis");
-                        else if (account.getType().equals("1"))
-                            customer_account_type_field.setText("Monthly basis");
+                            loan_duration_field.setText(String.valueOf(account.getDuration())+" days");
+                        }
+                        else if (account.getType().equals("1")) {
+                            customer_account_type_field.setText("Monthly basis (" + account.getRoi() + "% interest)");
+                            loan_duration_field.setText(String.valueOf(account.getDuration())+" months");
+                        }
                         customer_mobile_field.setText(selected_customer.getMobile());
+
 
 
 //                                List<Account> accountList = new ArrayList<>();
@@ -150,10 +159,12 @@ public class FragmentCollect extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (amount_field.getText().toString().length() == 0) {
                     amount_field.setError("Amount Money is required!");
                     return;
                 }
+                fab.setVisibility(View.INVISIBLE);
                 final Long amount_recieved = Long.parseLong(String.valueOf(amount_field.getText()));
 
                 //=========================================================================================================
@@ -163,9 +174,7 @@ public class FragmentCollect extends Fragment {
                 curr_cal.set(Calendar.MINUTE, 0);
                 curr_cal.set(Calendar.SECOND, 0);
                 curr_cal.set(Calendar.MILLISECOND, 0);
-                final String curr_date = String.valueOf(curr_cal.get(Calendar.DAY_OF_MONTH)) + "-" +
-                        String.valueOf(curr_cal.get(Calendar.MONTH)) + "-" +
-                        String.valueOf(curr_cal.get(Calendar.YEAR));
+                final String curr_date = MainActivity.CaltoStringDate(curr_cal);
 
 
 //        agent.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -239,7 +248,8 @@ public class FragmentCollect extends Fragment {
 
                                                 FragmentManager fragmentManager = getFragmentManager();
                                                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                                                FragmentAccountTypeInfo fragmentAccountTypeInfo = FragmentAccountTypeInfo.newInstance(Calendar.getInstance(), "0");
+
+                                                FragmentAccountTypeInfo fragmentAccountTypeInfo = FragmentAccountTypeInfo.newInstance(Calendar.getInstance(), selected_customer.getAccounts1().get(0).getType());
                                                 fragmentTransaction.replace(R.id.fragment_container, fragmentAccountTypeInfo).addToBackStack(null).
                                                         commit();
                                             }
@@ -250,6 +260,8 @@ public class FragmentCollect extends Fragment {
 
                             @Override
                             public void onCancelled(@NonNull DatabaseError databaseError) {
+                                fab.setVisibility(View.VISIBLE);
+                                Toast.makeText(getContext(), "Failed to collect money. Try again!", Toast.LENGTH_LONG).show();
 
                             }
                         });
@@ -257,7 +269,8 @@ public class FragmentCollect extends Fragment {
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                        fab.setVisibility(View.VISIBLE);
+                        Toast.makeText(getContext(), "Failed to collect money. Try again!", Toast.LENGTH_LONG).show();
                     }
                 });
 

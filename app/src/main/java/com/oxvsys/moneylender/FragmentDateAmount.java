@@ -10,6 +10,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.io.Serializable;
 import java.util.List;
@@ -68,11 +71,15 @@ public class FragmentDateAmount extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_date_amount_recycler, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.date_amount_recycler);
+        TextView date_amount_heading_field = view.findViewById(R.id.date_amount_heading_field);
         List<DateAmount> dateAmountList = (List<DateAmount>) getArguments().getSerializable(ARG_PARAM1);
         CustomerAmount customerAmount = (CustomerAmount) getArguments().getSerializable(ARG_PARAM2);
 
+        date_amount_heading_field.setText(customerAmount.getCustomer().getName().split(" ")[0] + " (A/C: " +
+                customerAmount.getCustomer().getAccounts1().get(0).getNo()+")");
 
-        mAdapter = new AgentAccountPaymentAdapter(dateAmountList,getContext(),customerAmount);
+
+        mAdapter = new AgentAccountPaymentAdapter(dateAmountList, getContext(), customerAmount);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
