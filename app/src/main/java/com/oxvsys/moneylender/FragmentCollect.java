@@ -73,10 +73,6 @@ public class FragmentCollect extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_collect_daily, container, false);
-        //==================HARD CODED=============================================================================
-//        final String agent_id = getData("user_id",getContext());
-//        Customer selected_customer = new Customer();
-//        selected_customer.setId("A1");
         final EditText amount_field = view.findViewById(R.id.amount_field);
         final TextView customer_name_field = view.findViewById(R.id.customer_name_field);
         final TextView customer_id_field = view.findViewById(R.id.customer_id_field);

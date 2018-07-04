@@ -7,18 +7,45 @@
     tools:context=".FragmentDailyInfo">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:id="@+id/fragment_textV_day"
+    <Button
+        android:id="@+id/date_button"
+        android:layout_width="140dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/rounded_button"
+        android:drawableEnd="@drawable/ic_date_range_black_24dp"
+        android:paddingHorizontal="14dp"
+        android:src="@drawable/ic_date_range_black_24dp"
+        android:text="..."
+        android:textColor="#000000"
+        android:textSize="16sp"
+        tools:targetApi="o" />
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:fontFamily="@font/futura_book_font"
-        android:text="Loading..."
-        android:textAlignment="center"
-        android:textAllCaps="false"
-        android:textColor="@color/main_text_color_blue"
-        android:textSize="24sp"
-        android:typeface="sans" />
+        android:layout_marginTop="8dp">
+
+        <TextView
+            android:id="@+id/customer_daily_account_no"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Agent ID" />
+
+        <TextView
+            android:id="@+id/customer_daily_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_toRightOf="@id/customer_daily_account_no"
+            android:text="Agent Name" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="Total Collection" />
+    </RelativeLayout>
 
     <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/swiperefresh"
