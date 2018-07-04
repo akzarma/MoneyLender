@@ -1,6 +1,8 @@
 package com.oxvsys.moneylender;
 
-public class DateAmount {
+import java.io.Serializable;
+
+public class DateAmount implements Serializable {
     String date;
     Long amount;
 
