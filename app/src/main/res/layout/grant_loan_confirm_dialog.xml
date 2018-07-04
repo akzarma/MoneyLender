@@ -22,12 +22,23 @@
 
 
     <TextView
+        android:id="@+id/grant_loan_account_text"
         android:layout_marginTop="16dp"
         android:layout_below="@id/grant_loan_dialog_title_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/roboto_regular"
+
+        android:fontFamily="@font/roboto_light"
         android:text="Account number : "/>
+
+    <TextView
+        android:layout_marginTop="16dp"
+        android:layout_below="@id/grant_loan_dialog_title_layout"
+        android:layout_toRightOf="@id/grant_loan_account_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto_medium"
+        android:text="..."/>
 
 
 </RelativeLayout>

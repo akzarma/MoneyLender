@@ -101,7 +101,7 @@ public class FragmentLoanGrant extends Fragment {
 
 //        final Button save_button = view.findViewById(R.id.grant_button_monthly);
         final EditText account_no = view.findViewById(R.id.account_number_monthly_grant);
-        final EditText edit_amount = view.findViewById(R.id.amount_monthly_grant);
+        final EditText edit_amount = view.findViewById(R.id.disbursement_amount_field);
         final EditText edit_o_date = view.findViewById(R.id.start_date_monthly_grant);
         final EditText edit_c_date = view.findViewById(R.id.end_date_monthly_grant);
         final EditText edit_roi = view.findViewById(R.id.rate_of_interest_grant);
@@ -311,6 +311,15 @@ public class FragmentLoanGrant extends Fragment {
                 } else {
                     final_account_no = (lastAccountNo + 1) + "-" + account_no.getText().toString();
                 }
+
+//                FragmentTransaction ft = getFragmentManager().beginTransaction();
+//                Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+//                if (prev != null) {
+//                    ft.remove(prev);
+//                }
+//                ft.addToBackStack(null);
+//                GrantLoanDialogFragment dialogFragment = new GrantLoanDialogFragment();
+//                dialogFragment.show(ft, "dialog");
 
                 DatabaseReference agent_customer = database.getReference("agentAccount");
                 agent_customer.child(agent_selected.getId()).child(final_account_no).setValue(selected_customer.getId());
