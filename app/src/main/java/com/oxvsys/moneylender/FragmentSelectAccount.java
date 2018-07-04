@@ -4,9 +4,11 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,8 +30,9 @@ import java.util.List;
 import java.util.Map;
 
 import static com.oxvsys.moneylender.HomeActivity.database;
-//import static com.oxvsys.moneylender.MainActivity.getData;
 import static com.oxvsys.moneylender.MainActivity.logged_agent;
+
+//import static com.oxvsys.moneylender.MainActivity.getData;
 
 public class FragmentSelectAccount extends Fragment {
     private static final String ARG_PARAM1 = "param1";
@@ -72,6 +75,10 @@ public class FragmentSelectAccount extends Fragment {
 
 //        final String logged_agent = getData("user_id",getContext());
         final List<Account> accountList = new ArrayList<>();
+        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_chevron_right_black_24dp));
+
+//        final String logged_agent = getData("user_id", getContext());
 
         DatabaseReference agent_account_db_ref = database.getReference("agentAccount").child(logged_agent);
         spinner = view.findViewById(R.id.account_spinner);
@@ -83,12 +90,12 @@ public class FragmentSelectAccount extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                final HashMap<String , String> account_customer_map = new HashMap<>();
+                final HashMap<String, String> account_customer_map = new HashMap<>();
 
                 for (DataSnapshot account : dataSnapshot.getChildren()) {
                     Account account1 = new Account();
                     account1.setNo(account.getKey());
-                    account_customer_map.put(account.getKey(),account.getValue().toString());
+                    account_customer_map.put(account.getKey(), account.getValue().toString());
                     accountList.add(account1);
                 }
 
@@ -119,18 +126,18 @@ public class FragmentSelectAccount extends Fragment {
                 customers.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for (DataSnapshot single_customer : dataSnapshot.getChildren()){
-                            HashMap<String , Object> customer_map = new HashMap<>();
-                            customer_map.put(single_customer.getKey() , single_customer.getValue());
-                            HashMap<String , Object> account_map = new HashMap<>();
-                            account_map = (HashMap<String, Object>) ((HashMap<String,Object>)
+                        for (DataSnapshot single_customer : dataSnapshot.getChildren()) {
+                            HashMap<String, Object> customer_map = new HashMap<>();
+                            customer_map.put(single_customer.getKey(), single_customer.getValue());
+                            HashMap<String, Object> account_map;
+                            account_map = (HashMap<String, Object>) ((HashMap<String, Object>)
                                     customer_map.get(single_customer.getKey())).get("accounts");
 
-                            if (account_map!=null){
-                                for (Map.Entry<String , Object> account : account_map.entrySet()){
-                                    if (account_customer_map.containsKey(account.getKey())){
+                            if (account_map != null) {
+                                for (Map.Entry<String, Object> account : account_map.entrySet()) {
+                                    if (account_customer_map.containsKey(account.getKey())) {
                                         spinner_account_name.add(account.getKey() + " " +
-                                                ((HashMap<String,Object>)customer_map.
+                                                ((HashMap<String, Object>) customer_map.
                                                         get(single_customer.getKey())).get("name"));
                                     }
                                 }
@@ -160,10 +167,9 @@ public class FragmentSelectAccount extends Fragment {
             }
         });
 
-        next_button.setOnClickListener(new View.OnClickListener() {
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 FragmentCollect fragmentCollect = FragmentCollect.newInstance(account_selected);
@@ -171,6 +177,14 @@ public class FragmentSelectAccount extends Fragment {
                 accountList.clear();
             }
         });
+
+//        next_button.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//
+//            }
+//        });
 
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()

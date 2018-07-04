@@ -6,9 +6,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -115,6 +117,9 @@ public class FragmentLoanGrant extends Fragment {
         final TextInputLayout loan_grant_duration_til = view.findViewById(R.id.loan_grant_duration_til);
         final EditText months_field = view.findViewById(R.id.file_duration_monthly_grant);
         final EditText lf_number_field = view.findViewById(R.id.lf_number_field);
+
+        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_chevron_right_black_24dp));
 
         final Customer selected_customer = (Customer) getArguments().getSerializable(ARG_PARAM1);
 

@@ -4,14 +4,15 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -97,6 +98,9 @@ public class FragmentKYC extends Fragment {
         final EditText dob_field = view.findViewById(R.id.dob_field);
         final EditText address_field = view.findViewById(R.id.address_field);
 
+        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_save_black_24dp));
+
         name_til = view.findViewById(R.id.kyc_full_name_til);
         aadhar_til = view.findViewById(R.id.kyc_aadhar_til);
         occupation_til = view.findViewById(R.id.kyc_occupation_til);
@@ -131,53 +135,47 @@ public class FragmentKYC extends Fragment {
         });
 
 
-
-        Button save_button = view.findViewById(R.id.deposit_button);
-        save_button.setOnClickListener(new View.OnClickListener() {
+//        Button save_button = view.findViewById(R.id.deposit_button);
+        fab.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
 
-                if(name_field.getText().toString().isEmpty()){
+                if (name_field.getText().toString().isEmpty()) {
                     name_til.setError("Name is required.");
                     return;
-                }
-                else if(aadhar_field.getText().toString().isEmpty()){
+                } else if (aadhar_field.getText().toString().isEmpty()) {
                     name_til.setErrorEnabled(false);
                     aadhar_til.setError("Aadhar is required.");
                     return;
                 }
 //                else aadhar_til.setErrorEnabled(false);
-                else if (aadhar_field.getText().toString().length() != 12){
+                else if (aadhar_field.getText().toString().length() != 12) {
                     aadhar_til.setErrorEnabled(false);
-
                     aadhar_til.setError("Invalid Aadhaar ID");
+                    return;
                 }
 //                else aadhar_til.setErrorEnabled(false);
-                else if(occupation_field.getText().toString().isEmpty()){
+                else if (occupation_field.getText().toString().isEmpty()) {
                     aadhar_til.setErrorEnabled(false);
-
                     occupation_til.setError("Occupation is required.");
                     return;
                 }
 //                else occupation_til.setErrorEnabled(false);
-                else if(mobile_field.getText().toString().isEmpty()){
+                else if (mobile_field.getText().toString().isEmpty()) {
                     occupation_til.setErrorEnabled(false);
-
                     mobile_til.setError("Mobile is required.");
                     return;
                 }
 //                else mobile_til.setErrorEnabled(false);
-                else if(dob_field.getText().toString().isEmpty()){
+                else if (dob_field.getText().toString().isEmpty()) {
                     mobile_til.setErrorEnabled(false);
-
                     dob_til.setError("DOB is required.");
                     return;
                 }
 //                else dob_til.setErrorEnabled(false);
-                else if(address_field.getText().toString().isEmpty()){
+                else if (address_field.getText().toString().isEmpty()) {
                     dob_til.setErrorEnabled(false);
-
                     address_til.setError("Address is required.");
                     return;
                 }

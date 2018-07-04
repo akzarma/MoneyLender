@@ -14,13 +14,12 @@
 
     </Spinner>
 
-    <Button
-        android:id="@+id/customer_next_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/customer_spinner"
-        android:visibility="invisible"
-        android:layout_alignParentStart="true"
-        android:text="Next" />
+    <!--<Button-->
+        <!--android:id="@+id/customer_next_button"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@id/customer_spinner"-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--android:text="Next" />-->
 
 </RelativeLayout>
