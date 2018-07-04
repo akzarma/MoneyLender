@@ -11,6 +11,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -101,7 +102,9 @@ public class FragmentLoanGrant extends Fragment {
 
 //        final Button save_button = view.findViewById(R.id.grant_button_monthly);
         final EditText account_no = view.findViewById(R.id.account_number_monthly_grant);
-        final EditText edit_amount = view.findViewById(R.id.amount_monthly_grant);
+        final EditText disb_amount_field = view.findViewById(R.id.disbursement_amount_field);
+        final EditText file_amount_field = view.findViewById(R.id.file_amount_field);
+        final EditText discount_amount_field = view.findViewById(R.id.discount_amount_field);
         final EditText edit_o_date = view.findViewById(R.id.start_date_monthly_grant);
         final EditText edit_c_date = view.findViewById(R.id.end_date_monthly_grant);
         final EditText edit_roi = view.findViewById(R.id.rate_of_interest_grant);
@@ -120,6 +123,16 @@ public class FragmentLoanGrant extends Fragment {
         fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_chevron_right_black_24dp));
         fab.setVisibility(View.INVISIBLE);
         final Customer selected_customer = (Customer) getArguments().getSerializable(ARG_PARAM1);
+
+
+
+        file_amount_field.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+                return false;
+            }
+        });
 
         edit_o_date.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -286,8 +299,8 @@ public class FragmentLoanGrant extends Fragment {
 
             @Override
             public void onClick(View v) {
-                if( edit_amount.getText().toString().length() == 0 ) {
-                    edit_amount.setError("Amount is required!");
+                if( disb_amount_field.getText().toString().length() == 0 ) {
+                    disb_amount_field.setError("Amount is required!");
                     return;
                 }else if( file_duration_field.getText().toString().length() == 0 ) {
                     file_duration_field.setError("Duration is required!");
@@ -317,7 +330,7 @@ public class FragmentLoanGrant extends Fragment {
 
                 String o_date = edit_o_date.getText().toString();
                 String c_date = edit_c_date.getText().toString();
-                String amount = edit_amount.getText().toString();
+                String amount = disb_amount_field.getText().toString();
                 String roi = edit_roi.getText().toString();
                 String info = additional_info_monthly_grant.getText().toString();
                 String lf_number = lf_number_field.getText().toString();
