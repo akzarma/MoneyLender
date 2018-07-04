@@ -4,7 +4,9 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -78,6 +80,10 @@ public class FragmentCustomerDailyInfo extends Fragment {
                 sel_calendar.get(Calendar.YEAR);
 
         customer_daily_info_title.setText(sel_date);
+        final FloatingActionButton fab = getActivity().findViewById(R.id.fab);
+        fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_chevron_right_black_24dp));
+        fab.setVisibility(View.INVISIBLE);
+
         DatabaseReference agentDailyCollects = database.getReference("agentCollect");
 
         agentDailyCollects.addValueEventListener(new ValueEventListener() {

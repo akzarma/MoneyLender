@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity
                 case R.id.bottom_nav_daily_basis:
 //                    toolbar.setTitle("Daily Basis Accounts");
                     if (getSupportActionBar() != null)
-                        getSupportActionBar().setTitle("Customer Daily Report");
+                        getSupportActionBar().setTitle("Daily Basis Payment");
                     if (getData("user_type", getApplicationContext()).equals("admin")) {
                         FragmentCustomerDailyInfo fcdi = FragmentCustomerDailyInfo.newInstance(calendar);
                         fragmentTransaction.replace(R.id.fragment_container, fcdi).addToBackStack(null).
@@ -120,9 +120,9 @@ public class MainActivity extends AppCompatActivity
 
 
                 case R.id.bottom_nav_monthly_basis:
-                    toolbar.setTitle("Monthly Basis Accounts");
+                    toolbar.setTitle("Monthly Basis Payment");
                     if (getSupportActionBar() != null)
-                        getSupportActionBar().setTitle("Customer Monthly Report");
+                        getSupportActionBar().setTitle("Monthly Basis Payment");
                     FragmentAccountTypeInfo fragmentAccountTypeInfo = FragmentAccountTypeInfo.newInstance(calendar, "1");
                     fragmentTransaction.replace(R.id.fragment_container, fragmentAccountTypeInfo).addToBackStack(null).
                             commit();
@@ -183,14 +183,14 @@ public class MainActivity extends AppCompatActivity
                     commit();
         } else if (id == R.id.nav_gallery) {
             if (getSupportActionBar() != null)
-                getSupportActionBar().setTitle("Daily Collect Loan");
+                getSupportActionBar().setTitle("Collect Money");
             FragmentSelectAccount fragmentSelectAccount = new FragmentSelectAccount();
             fragmentTransaction.replace(R.id.fragment_container, fragmentSelectAccount).addToBackStack(null).
                     commit();
 
         } else if (id == R.id.nav_monthly_loan_grant) {
             if (getSupportActionBar() != null)
-                getSupportActionBar().setTitle("Monthly Loan Grant");
+                getSupportActionBar().setTitle("Grant Loan");
             FragmentSelectCustomer fragmentSelectCustomer = new FragmentSelectCustomer();
             fragmentTransaction.replace(R.id.fragment_container, fragmentSelectCustomer).addToBackStack(null).
                     commit();
@@ -210,7 +210,7 @@ public class MainActivity extends AppCompatActivity
                     commit();
         } else if (id == R.id.nav_customer_daily) {
             if (getSupportActionBar() != null)
-                getSupportActionBar().setTitle("Customer Daily Report");
+                getSupportActionBar().setTitle("Customer Report");
             Calendar calendar = Calendar.getInstance();
             FragmentCustomerDailyInfo far = FragmentCustomerDailyInfo.newInstance(calendar);
             fragmentTransaction.replace(R.id.fragment_container, far).addToBackStack(null).

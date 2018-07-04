@@ -125,11 +125,52 @@ public class FragmentLoanGrant extends Fragment {
         final Customer selected_customer = (Customer) getArguments().getSerializable(ARG_PARAM1);
 
 
-
         file_amount_field.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
+                Long file_amount = 0L;
+                Long disb_amount = 0L;
+                if (file_amount_field.getText().toString().length() != 0)
+                    file_amount = Long.parseLong(file_amount_field.getText().toString());
+                if (disb_amount_field.getText().toString().length() != 0)
+                    disb_amount = Long.parseLong(disb_amount_field.getText().toString());
+                if ((disb_amount - file_amount) >= 0) {
+                    file_amount_field.setText(String.valueOf(disb_amount - file_amount));
+                }
+                return false;
+            }
+        });
+        discount_amount_field.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+//                if(discount_amount_field.getText().toString().length()!=0 && disb_amount_field.getText().toString().length()!=0) {
+//                Long file_amount = Long.parseLong(file_amount_field.getText().toString());
+                Long discount_amount = 0L;
+                Long disb_amount = 0L;
+                if (discount_amount_field.getText().toString().length() != 0)
+                    discount_amount = Long.parseLong(discount_amount_field.getText().toString());
+                if (disb_amount_field.getText().toString().length() != 0)
+                    disb_amount = Long.parseLong(disb_amount_field.getText().toString());
+                if ((disb_amount - discount_amount) >= 0) {
+                    file_amount_field.setText(String.valueOf(disb_amount - discount_amount));
+                }
+//                }
+                return false;
+            }
+        });
 
+        disb_amount_field.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                Long discount_amount = 0L;
+                Long disb_amount = 0L;
+                if (discount_amount_field.getText().toString().length() != 0)
+                    discount_amount = Long.parseLong(discount_amount_field.getText().toString());
+                if (disb_amount_field.getText().toString().length() != 0)
+                    disb_amount = Long.parseLong(disb_amount_field.getText().toString());
+                if ((disb_amount - discount_amount) >= 0) {
+                    file_amount_field.setText(String.valueOf(disb_amount - discount_amount));
+                }
                 return false;
             }
         });
@@ -191,8 +232,8 @@ public class FragmentLoanGrant extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 prefix_account_no.setText((dataSnapshot.getValue(Long.class) + 1) + " - ");
                 lastAccountNo = dataSnapshot.getValue(Long.class);
-                fields_loaded+=1;
-                if(fields_loaded==2){
+                fields_loaded += 1;
+                if (fields_loaded == 2) {
                     fab.setVisibility(View.VISIBLE);
                 }
             }
@@ -227,8 +268,8 @@ public class FragmentLoanGrant extends Fragment {
                 ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, agents);
                 spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinner.setAdapter(spinnerAdapter);
-                fields_loaded+=1;
-                if(fields_loaded==2){
+                fields_loaded += 1;
+                if (fields_loaded == 2) {
                     fab.setVisibility(View.VISIBLE);
                 }
             }
@@ -242,9 +283,9 @@ public class FragmentLoanGrant extends Fragment {
         payment_duration_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(position==0){
+                if (position == 0) {
                     selected_days = "100";
-                }else if(position == 1){
+                } else if (position == 1) {
                     selected_days = "200";
                 }
             }
@@ -258,13 +299,12 @@ public class FragmentLoanGrant extends Fragment {
         account_type_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(position==0){
+                if (position == 0) {
                     account_type_selected = "0";  //daily basis
                     loan_grant_roi_til.setVisibility(View.INVISIBLE);
                     loan_grant_duration_til.setVisibility(View.INVISIBLE);
                     payment_duration_spinner.setVisibility(View.VISIBLE);
-                }
-                else if(position == 1){
+                } else if (position == 1) {
                     account_type_selected = "1"; //monthly
                     loan_grant_roi_til.setVisibility(View.VISIBLE);
                     loan_grant_duration_til.setVisibility(View.VISIBLE);
@@ -299,21 +339,23 @@ public class FragmentLoanGrant extends Fragment {
 
             @Override
             public void onClick(View v) {
-                if( disb_amount_field.getText().toString().length() == 0 ) {
-                    disb_amount_field.setError("Amount is required!");
+                if (disb_amount_field.getText().toString().length() == 0) {
+                    disb_amount_field.setError("Disbursement Amount is required!");
                     return;
-                }else if( file_duration_field.getText().toString().length() == 0 ) {
-                    file_duration_field.setError("Duration is required!");
-                    return;
-                }else if( edit_o_date.getText().toString().length() == 0 ) {
+                } else if (file_duration_field.getText().toString().length() == 0) {
+                    if (account_type_selected.equals("1")) {
+                        file_duration_field.setError("Duration is required!");
+                        return;
+                    }
+                } else if (edit_o_date.getText().toString().length() == 0) {
                     edit_o_date.setError("Opening date is required!");
                     return;
-                }else if( edit_c_date.getText().toString().length() == 0 ) {
+                } else if (edit_c_date.getText().toString().length() == 0) {
                     edit_c_date.setError("Closing date is required!");
                     return;
                 }
-                if(account_type_selected.equals("1")){
-                    if(edit_roi.getText().toString().length()==0){
+                if (account_type_selected.equals("1")) {
+                    if (edit_roi.getText().toString().length() == 0) {
                         edit_roi.setError("Rate of interest is required for Monthly basis account!");
                         return;
                     }
@@ -334,6 +376,10 @@ public class FragmentLoanGrant extends Fragment {
                 String roi = edit_roi.getText().toString();
                 String info = additional_info_monthly_grant.getText().toString();
                 String lf_number = lf_number_field.getText().toString();
+                String file_amount = "0";
+                if(file_amount_field.getText().toString().length()!=0){
+                    file_amount = file_amount_field.getText().toString();
+                }
 
                 DatabaseReference customers = database.getReference("customers").child(selected_customer.getId()).child("accounts");
 
@@ -341,14 +387,15 @@ public class FragmentLoanGrant extends Fragment {
 
 //                account_number_details.put("no", final_account_no);
 //                account_number_details.put("customer", selected_customer.getId());
-                account_number_details.put("amt", amount);
+                account_number_details.put("disb_amt", amount);
                 account_number_details.put("o_date", o_date);
                 account_number_details.put("c_date", c_date);
                 account_number_details.put("info", info);
-                if(account_type_selected.equals("1")) {
+                account_number_details.put("file_amt", file_amount);
+                if (account_type_selected.equals("1")) {
                     account_number_details.put("roi", roi);
                     account_number_details.put("duration", months_field.getText().toString());
-                }else if(account_type_selected.equals("0")){
+                } else if (account_type_selected.equals("0")) {
                     account_number_details.put("duration", selected_days);
                 }
                 account_number_details.put("type", account_type_selected);
@@ -389,7 +436,6 @@ public class FragmentLoanGrant extends Fragment {
 //                        });
                     }
                 });
-
 
 
             }
