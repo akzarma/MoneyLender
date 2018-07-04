@@ -7,7 +7,6 @@
     tools:context=".FragmentSelectCustomer">
 
     <!-- TODO: Update blank fragment layout -->
-
     <Spinner
         android:id="@+id/customer_spinner"
         android:layout_width="match_parent"

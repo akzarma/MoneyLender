@@ -39,6 +39,7 @@ public class FragmentSelectAccount extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     Account account_selected;
     Spinner spinner;
+    int fields_loaded = 0;
     List<String> customer_ids = new ArrayList<>();
 
     // TODO: Rename and change types of parameters
@@ -69,6 +70,7 @@ public class FragmentSelectAccount extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        fields_loaded = 0;
         View view = inflater.inflate(R.layout.fragment_select_account, container, false);
 
 //        final String logged_agent = getData("user_id",getContext());
@@ -83,7 +85,7 @@ public class FragmentSelectAccount extends Fragment {
         spinner.setAdapter(null);
 
 
-        Button next_button = view.findViewById(R.id.next_button);
+        final Button next_button = view.findViewById(R.id.next_button);
         agent_account_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -152,6 +154,10 @@ public class FragmentSelectAccount extends Fragment {
                 ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, spinner_account_name);
                 spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinner.setAdapter(spinnerAdapter);
+                fields_loaded+=1;
+                if(fields_loaded==1 && !spinner_account_name.isEmpty()){
+                    next_button.setVisibility(View.VISIBLE);
+                }
             }
 
 

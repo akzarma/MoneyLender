@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -61,6 +63,8 @@ public class FragmentLoanGrant extends Fragment {
     Spinner spinner;
     Long lastAccountNo;
     String account_type_selected;
+    String selected_days;
+    int fields_loaded = 0;
 
     private OnFragmentInteractionListener mListener;
 
@@ -93,10 +97,11 @@ public class FragmentLoanGrant extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        fields_loaded = 0;
 
         View view = inflater.inflate(R.layout.fragment_loan_grant, container, false);
 
-        Button save_button = view.findViewById(R.id.grant_button_monthly);
+        final Button save_button = view.findViewById(R.id.grant_button_monthly);
         final EditText account_no = view.findViewById(R.id.account_number_monthly_grant);
         final EditText edit_amount = view.findViewById(R.id.amount_monthly_grant);
         final EditText edit_o_date = view.findViewById(R.id.start_date_monthly_grant);
@@ -107,6 +112,10 @@ public class FragmentLoanGrant extends Fragment {
         Spinner account_type_spinner = view.findViewById(R.id.account_type_field);
         final EditText file_duration_field = view.findViewById(R.id.file_duration_monthly_grant);
         final EditText additional_info_monthly_grant = view.findViewById(R.id.additional_info_monthly_grant);
+        final TextInputLayout loan_grant_roi_til = view.findViewById(R.id.loan_grant_roi_til);
+        final Spinner payment_duration_spinner = view.findViewById(R.id.loan_grant_daily_payment_options_spinner);
+        final TextInputLayout loan_grant_duration_til = view.findViewById(R.id.loan_grant_duration_til);
+        final EditText months_field = view.findViewById(R.id.file_duration_monthly_grant);
 
         FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_chevron_right_black_24dp));
@@ -165,11 +174,15 @@ public class FragmentLoanGrant extends Fragment {
         });
 
         DatabaseReference myref = database.getReference("lastAccountNo");
-        myref.addListenerForSingleValueEvent(new ValueEventListener() {
+        myref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 prefix_account_no.setText((dataSnapshot.getValue(Long.class) + 1) + " - ");
                 lastAccountNo = dataSnapshot.getValue(Long.class);
+                fields_loaded+=1;
+                if(fields_loaded==2){
+                    save_button.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -202,10 +215,30 @@ public class FragmentLoanGrant extends Fragment {
                 ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, agents);
                 spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinner.setAdapter(spinnerAdapter);
+                fields_loaded+=1;
+                if(fields_loaded==2){
+                    save_button.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        payment_duration_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(position==0){
+                    selected_days = "100";
+                }else if(position == 1){
+                    selected_days = "200";
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });
@@ -215,11 +248,15 @@ public class FragmentLoanGrant extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(position==0){
                     account_type_selected = "0";  //daily basis
-                    edit_roi.setVisibility(View.INVISIBLE);
+                    loan_grant_roi_til.setVisibility(View.INVISIBLE);
+                    loan_grant_duration_til.setVisibility(View.INVISIBLE);
+                    payment_duration_spinner.setVisibility(View.VISIBLE);
                 }
                 else if(position == 1){
                     account_type_selected = "1"; //monthly
-                    edit_roi.setVisibility(View.VISIBLE);
+                    loan_grant_roi_til.setVisibility(View.VISIBLE);
+                    loan_grant_duration_til.setVisibility(View.VISIBLE);
+                    payment_duration_spinner.setVisibility(View.INVISIBLE);
                 }
             }
 
@@ -297,6 +334,9 @@ public class FragmentLoanGrant extends Fragment {
                 account_number_details.put("info", info);
                 if(account_type_selected.equals("1")) {
                     account_number_details.put("roi", roi);
+                    account_number_details.put("duration", months_field.getText().toString());
+                }else if(account_type_selected.equals("0")){
+                    account_number_details.put("duration", selected_days);
                 }
                 account_number_details.put("type", account_type_selected);
 

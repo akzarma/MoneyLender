@@ -25,17 +25,11 @@
 
     </Spinner>
 
-    <!--<Button-->
-        <!--android:layout_marginTop="48dp"-->
-        <!--android:layout_below="@id/account_spinner"-->
-        <!--android:id="@+id/next_button"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentEnd="true"-->
-        <!--android:fontFamily="@font/roboto_bold"-->
-        <!--android:background="@drawable/material_button"-->
-        <!--android:text="Next"-->
-        <!--android:textColor="#fff" />-->
+    <!--<ImageButton-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:src="@drawable/ic_chevron_right_black_24dp"-->
+    <!--android:background="@drawable/material_button"/>-->
 
 
 

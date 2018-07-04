@@ -21,8 +21,8 @@
     <android.support.design.widget.TextInputLayout
         android:id="@+id/loan_grant_account_til"
         android:layout_width="match_parent"
-        android:layout_marginLeft="8dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
         android:layout_toEndOf="@id/account_number_prefix_field">
 
         <EditText
@@ -30,14 +30,28 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Account No (Optional)"
+            android:inputType="text" />
+    </android.support.design.widget.TextInputLayout>
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/lf_number_til"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/loan_grant_account_til">
+
+        <EditText
+            android:id="@+id/lf_number_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="LF No"
             android:inputType="number" />
     </android.support.design.widget.TextInputLayout>
+
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/loan_grant_amount_til"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/loan_grant_account_til">
+        android:layout_below="@id/lf_number_til">
 
         <EditText
             android:id="@+id/amount_monthly_grant"
@@ -48,13 +62,15 @@
     </android.support.design.widget.TextInputLayout>
 
 
+
+
     <TextView
         android:id="@+id/select_type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/loan_grant_amount_til"
-        android:fontFamily="@font/roboto_regular"
         android:layout_margin="4dp"
+        android:fontFamily="@font/roboto_regular"
         android:text="Select Type"
         android:textAllCaps="true" />
 
@@ -71,21 +87,23 @@
         android:id="@+id/loan_grant_daily_payment_options_spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-        android:layout_below="@id/account_type_field" />
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/account_type_field"
+        android:entries="@array/loan_duration_days" />
 
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/loan_grant_duration_til"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/loan_grant_daily_payment_options_spinner">
+        android:layout_below="@id/account_type_field"
+        android:visibility="invisible">
 
         <EditText
             android:id="@+id/file_duration_monthly_grant"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="File Duration"
+            android:hint="Months"
             android:inputType="number" />
     </android.support.design.widget.TextInputLayout>
 
@@ -125,10 +143,10 @@
 
 
     <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_below="@id/loan_grant_closing_til"
         android:id="@+id/loan_grant_additional_til"
-        android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/loan_grant_closing_til">
 
         <EditText
             android:id="@+id/additional_info_monthly_grant"
@@ -158,19 +176,19 @@
 
 
     <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
         android:id="@+id/loan_grant_roi_til"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@id/agent_spinner"
-        android:layout_height="wrap_content">
+        android:visibility="invisible">
 
         <EditText
             android:id="@+id/rate_of_interest_grant"
             android:layout_width="match_parent"
-            android:fontFamily="@font/roboto_regular"
             android:layout_height="wrap_content"
             android:layout_below="@id/account_type_field"
-            android:hint="Rate of Interest"
-            android:visibility="invisible" />
+            android:fontFamily="@font/roboto_regular"
+            android:hint="Rate of Interest" />
     </android.support.design.widget.TextInputLayout>
 
 
@@ -179,13 +197,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/loan_grant_roi_til"
-        android:textColor="#fff"
-        android:paddingLeft="8dp"
-        android:fontFamily="@font/roboto_bold"
         android:layout_alignParentEnd="true"
-        android:paddingRight="8dp"
-        android:background="@drawable/material_button"
         android:layout_marginTop="8dp"
-        android:text="Grant Loan" />
+        android:background="@drawable/material_button"
+        android:fontFamily="@font/roboto_bold"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:text="Grant Loan"
+        android:visibility="invisible"
+        android:textColor="#fff" />
 
 </RelativeLayout>
