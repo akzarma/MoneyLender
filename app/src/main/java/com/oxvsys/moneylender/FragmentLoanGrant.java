@@ -8,9 +8,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +23,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -45,7 +49,7 @@ import static com.oxvsys.moneylender.HomeActivity.database;
  * Use the {@link FragmentLoanGrant#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentLoanGrant extends Fragment {
+public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragment.NoticeDialogListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -99,7 +103,6 @@ public class FragmentLoanGrant extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_loan_grant, container, false);
 
-//        final Button save_button = view.findViewById(R.id.grant_button_monthly);
         final EditText account_no = view.findViewById(R.id.account_number_monthly_grant);
         final EditText disb_amount_field = view.findViewById(R.id.disbursement_amount_field);
         final EditText file_amount_field = view.findViewById(R.id.file_amount_field);
@@ -122,7 +125,6 @@ public class FragmentLoanGrant extends Fragment {
         fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_chevron_right_black_24dp));
         fab.setVisibility(View.INVISIBLE);
         final Customer selected_customer = (Customer) getArguments().getSerializable(ARG_PARAM1);
-
 
 
         file_amount_field.setOnKeyListener(new View.OnKeyListener() {
@@ -190,8 +192,8 @@ public class FragmentLoanGrant extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 prefix_account_no.setText((dataSnapshot.getValue(Long.class) + 1) + " - ");
                 lastAccountNo = dataSnapshot.getValue(Long.class);
-                fields_loaded+=1;
-                if(fields_loaded==2){
+                fields_loaded += 1;
+                if (fields_loaded == 2) {
                     fab.setVisibility(View.VISIBLE);
                 }
             }
@@ -226,8 +228,8 @@ public class FragmentLoanGrant extends Fragment {
                 ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, agents);
                 spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinner.setAdapter(spinnerAdapter);
-                fields_loaded+=1;
-                if(fields_loaded==2){
+                fields_loaded += 1;
+                if (fields_loaded == 2) {
                     fab.setVisibility(View.VISIBLE);
                 }
             }
@@ -241,9 +243,9 @@ public class FragmentLoanGrant extends Fragment {
         payment_duration_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(position==0){
+                if (position == 0) {
                     selected_days = "100";
-                }else if(position == 1){
+                } else if (position == 1) {
                     selected_days = "200";
                 }
             }
@@ -257,13 +259,12 @@ public class FragmentLoanGrant extends Fragment {
         account_type_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(position==0){
+                if (position == 0) {
                     account_type_selected = "0";  //daily basis
                     loan_grant_roi_til.setVisibility(View.INVISIBLE);
                     loan_grant_duration_til.setVisibility(View.INVISIBLE);
                     payment_duration_spinner.setVisibility(View.VISIBLE);
-                }
-                else if(position == 1){
+                } else if (position == 1) {
                     account_type_selected = "1"; //monthly
                     loan_grant_roi_til.setVisibility(View.VISIBLE);
                     loan_grant_duration_til.setVisibility(View.VISIBLE);
@@ -298,21 +299,29 @@ public class FragmentLoanGrant extends Fragment {
 
             @Override
             public void onClick(View v) {
-                if( disb_amount_field.getText().toString().length() == 0 ) {
+
+                HashMap<String,String> grant_info = new HashMap<>();
+//                grant_info.put("")
+                grant_info.put("Account" , "9890");
+                setUpDialog(grant_info);
+
+
+
+                if (disb_amount_field.getText().toString().length() == 0) {
                     disb_amount_field.setError("Amount is required!");
                     return;
-                }else if( file_duration_field.getText().toString().length() == 0 ) {
+                } else if (file_duration_field.getText().toString().length() == 0) {
                     file_duration_field.setError("Duration is required!");
                     return;
-                }else if( edit_o_date.getText().toString().length() == 0 ) {
+                } else if (edit_o_date.getText().toString().length() == 0) {
                     edit_o_date.setError("Opening date is required!");
                     return;
-                }else if( edit_c_date.getText().toString().length() == 0 ) {
+                } else if (edit_c_date.getText().toString().length() == 0) {
                     edit_c_date.setError("Closing date is required!");
                     return;
                 }
-                if(account_type_selected.equals("1")){
-                    if(edit_roi.getText().toString().length()==0){
+                if (account_type_selected.equals("1")) {
+                    if (edit_roi.getText().toString().length() == 0) {
                         edit_roi.setError("Rate of interest is required for Monthly basis account!");
                         return;
                     }
@@ -324,14 +333,6 @@ public class FragmentLoanGrant extends Fragment {
                     final_account_no = (lastAccountNo + 1) + "-" + account_no.getText().toString();
                 }
 
-//                FragmentTransaction ft = getFragmentManager().beginTransaction();
-//                Fragment prev = getFragmentManager().findFragmentByTag("dialog");
-//                if (prev != null) {
-//                    ft.remove(prev);
-//                }
-//                ft.addToBackStack(null);
-//                GrantLoanDialogFragment dialogFragment = new GrantLoanDialogFragment();
-//                dialogFragment.show(ft, "dialog");
 
                 DatabaseReference agent_customer = database.getReference("agentAccount");
                 agent_customer.child(agent_selected.getId()).child(final_account_no).setValue(selected_customer.getId());
@@ -353,10 +354,10 @@ public class FragmentLoanGrant extends Fragment {
                 account_number_details.put("o_date", o_date);
                 account_number_details.put("c_date", c_date);
                 account_number_details.put("info", info);
-                if(account_type_selected.equals("1")) {
+                if (account_type_selected.equals("1")) {
                     account_number_details.put("roi", roi);
                     account_number_details.put("duration", months_field.getText().toString());
-                }else if(account_type_selected.equals("0")){
+                } else if (account_type_selected.equals("0")) {
                     account_number_details.put("duration", selected_days);
                 }
                 account_number_details.put("type", account_type_selected);
@@ -399,10 +400,22 @@ public class FragmentLoanGrant extends Fragment {
                 });
 
 
-
             }
         });
         return view;
+    }
+
+    private void setUpDialog(HashMap<String , String> grant_info) {
+        assert getFragmentManager() != null;
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+        GrantLoanDialogFragment dialogFragment = GrantLoanDialogFragment.newInstance(grant_info);
+        dialogFragment.setTargetFragment(this,0);
+        dialogFragment.show(ft, "dialog");
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -424,6 +437,18 @@ public class FragmentLoanGrant extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+
+
+    @Override
+    public void onDialogPositiveClick() {
+        Toast.makeText(getContext() , "from host fragment" , Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) {
+
     }
 
     /**
