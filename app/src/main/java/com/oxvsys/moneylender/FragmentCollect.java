@@ -29,23 +29,11 @@ import static com.oxvsys.moneylender.HomeActivity.database;
 import static com.oxvsys.moneylender.MainActivity.getData;
 import static com.oxvsys.moneylender.MainActivity.logged_agent;
 
-
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link FragmentCollect.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link FragmentCollect#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class FragmentCollect extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     Customer selected_customer;
     Long deposited = 0L;
-
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -82,7 +70,7 @@ public class FragmentCollect extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_collect_daily, container, false);
         //==================HARD CODED=============================================================================
-        final String agent_id = getData("user_id",getContext());
+//        final String agent_id = getData("user_id",getContext());
 //        Customer selected_customer = new Customer();
 //        selected_customer.setId("A1");
         final EditText amount_field = view.findViewById(R.id.amount_field);
@@ -212,7 +200,7 @@ public class FragmentCollect extends Fragment {
                         }
 
 
-                        DatabaseReference agent_collect_date_db_ref = database.getReference("agentCollect").child(agent_id)
+                        DatabaseReference agent_collect_date_db_ref = database.getReference("agentCollect").child(logged_agent)
                                 .child(String.valueOf(curr_cal.get(Calendar.DAY_OF_MONTH)) + "-" +
                                         String.valueOf(curr_cal.get(Calendar.MONTH) + 1) + "-" +
                                         String.valueOf(curr_cal.get(Calendar.YEAR)));

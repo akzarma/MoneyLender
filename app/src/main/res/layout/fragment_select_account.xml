@@ -2,25 +2,45 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:padding="16dp"
     android:layout_height="match_parent"
+    android:padding="16dp"
     tools:context=".FragmentSelectAccount">
 
     <!-- TODO: Update blank fragment layout -->
+
+    <TextView
+        android:id="@+id/select_account_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto_regular"
+        android:text="Select Account"
+        android:textAllCaps="true" />
+
     <Spinner
+
         android:id="@+id/account_spinner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@id/select_account_title">
 
     </Spinner>
 
+    <!--<ImageButton-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:src="@drawable/ic_chevron_right_black_24dp"-->
+    <!--android:background="@drawable/material_button"/>-->
+
     <Button
+        android:layout_marginTop="48dp"
+        android:layout_below="@id/account_spinner"
         android:id="@+id/next_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/account_spinner"
-        android:layout_alignParentStart="true"
-        android:text="Next" />
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/material_button"
+        android:text="Next"
+        android:textColor="#fff" />
 
 
 </RelativeLayout>
