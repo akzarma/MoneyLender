@@ -74,6 +74,7 @@ public class FragmentSelectAccount extends Fragment {
 
 //        final String logged_agent = getData("user_id",getContext());
         final List<Account> accountList = new ArrayList<>();
+        final List<Account> spinner_accountList = new ArrayList<>();
         final FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_chevron_right_black_24dp));
         fab.setVisibility(View.INVISIBLE);
@@ -98,12 +99,12 @@ public class FragmentSelectAccount extends Fragment {
                     accountList.add(account1);
                 }
 
-                Collections.sort(accountList, new Comparator<Account>() {
-                    @Override
-                    public int compare(Account o1, Account o2) {
-                        return o1.getNo().compareTo(o2.getNo());
-                    }
-                });
+//                Collections.sort(accountList, new Comparator<Account>() {
+//                    @Override
+//                    public int compare(Account o1, Account o2) {
+//                        return o1.getNo().compareTo(o2.getNo());
+//                    }
+//                });
 
 //                DatabaseReference accountType = database.getReference("accountType");
 //                accountType.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -138,6 +139,9 @@ public class FragmentSelectAccount extends Fragment {
                                         spinner_account_name.add(((HashMap<String, Object>) customer_map.
                                                 get(single_customer.getKey())).get("name") + " (A/C: " +
                                                 account.getKey() + ")");
+                                        Account account1 = new Account();
+                                        account1.setNo(account.getKey());
+                                        spinner_accountList.add(account1);
                                     }
                                 }
                             }
@@ -194,12 +198,12 @@ public class FragmentSelectAccount extends Fragment {
         {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                account_selected = accountList.get(position);
+                account_selected = spinner_accountList.get(position);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                account_selected = accountList.get(0);
+                account_selected = spinner_accountList.get(0);
             }
         });
         return view;

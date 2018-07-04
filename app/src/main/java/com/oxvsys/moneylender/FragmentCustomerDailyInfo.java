@@ -1,11 +1,13 @@
 package com.oxvsys.moneylender;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +16,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -72,14 +76,12 @@ public class FragmentCustomerDailyInfo extends Fragment {
 
         sel_calendar = (Calendar) getArguments().getSerializable(ARG_PARAM1);
         recyclerView = view.findViewById(R.id.customer_daily_info_recycler);
+        Button date_button = view.findViewById(R.id.date_button);
+//        customer_daily_info_title = view.findViewById(R.id.customer_daily_info_title);
+        final  String sel_date = MainActivity.CaltoStringDate(sel_calendar);
+        date_button.setText(sel_date);
 
-        customer_daily_info_title = view.findViewById(R.id.customer_daily_info_title);
-        int month = sel_calendar.get(Calendar.MONTH) + 1;
-        final String sel_date = sel_calendar.get(Calendar.DAY_OF_MONTH) + "-" +
-                month + "-" +
-                sel_calendar.get(Calendar.YEAR);
-
-        customer_daily_info_title.setText(sel_date);
+//        customer_daily_info_title.setText(sel_date);
         final FloatingActionButton fab = getActivity().findViewById(R.id.fab);
         fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_chevron_right_black_24dp));
         fab.setVisibility(View.INVISIBLE);
@@ -198,6 +200,33 @@ public class FragmentCustomerDailyInfo extends Fragment {
             }
         });
 
+
+        date_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int mYear = sel_calendar.get(Calendar.YEAR);
+                int mMonth = sel_calendar.get(Calendar.MONTH);
+                int mDay = sel_calendar.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog mDatePicker = new DatePickerDialog(
+                        getActivity(), new DatePickerDialog.OnDateSetListener() {
+                    public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
+                        Calendar selected_cal = Calendar.getInstance();
+                        selected_cal.set(selectedyear, selectedmonth, selectedday);
+                        selected_cal.set(Calendar.HOUR_OF_DAY, 0);
+                        selected_cal.set(Calendar.MINUTE, 0);
+                        selected_cal.set(Calendar.SECOND, 0);
+                        selected_cal.set(Calendar.MILLISECOND, 0);
+                        FragmentTransaction ft = getFragmentManager().beginTransaction();
+                        FragmentCustomerDailyInfo fd = FragmentCustomerDailyInfo.newInstance(selected_cal);
+                        ft.replace(R.id.fragment_container, fd).addToBackStack(null).
+                                commit();
+                    }
+                }, mYear, mMonth, mDay);
+                mDatePicker.setTitle("Select date");
+                mDatePicker.show();
+            }
+        });
         return view;
     }
 
