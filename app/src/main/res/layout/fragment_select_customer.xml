@@ -7,9 +7,17 @@
     tools:context=".FragmentSelectCustomer">
 
     <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:id="@+id/select_account_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto_regular"
+        android:text="Select Customer (Customer ID)"
+        android:textAllCaps="true" />
     <Spinner
         android:id="@+id/customer_spinner"
         android:layout_width="match_parent"
+        android:layout_below="@id/select_account_title"
         android:layout_height="wrap_content">
 
     </Spinner>
