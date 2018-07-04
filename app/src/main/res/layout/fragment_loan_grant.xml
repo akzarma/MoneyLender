@@ -62,7 +62,6 @@
     <Spinner
         android:id="@+id/account_type_field"
         android:layout_width="match_parent"
-
         android:layout_height="wrap_content"
         android:layout_below="@+id/select_type"
         android:entries="@array/account_type_items" />

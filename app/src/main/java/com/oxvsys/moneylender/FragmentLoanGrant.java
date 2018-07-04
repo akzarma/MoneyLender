@@ -106,6 +106,7 @@ public class FragmentLoanGrant extends Fragment {
         spinner = view.findViewById(R.id.agent_spinner);
         Spinner account_type_spinner = view.findViewById(R.id.account_type_field);
         final EditText file_duration_field = view.findViewById(R.id.file_duration_monthly_grant);
+        final EditText additional_info_monthly_grant = view.findViewById(R.id.additional_info_monthly_grant);
 
         FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_chevron_right_black_24dp));
@@ -150,7 +151,6 @@ public class FragmentLoanGrant extends Fragment {
                     DatePickerDialog mDatePicker = new DatePickerDialog(
                             getActivity(), new DatePickerDialog.OnDateSetListener() {
                         public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
-                            // TODO Auto-generated method stub
                             int month = selectedmonth + 1;
                             String date_gen = selectedday + "-" + month + "-" + selectedyear;
                             edit_c_date.setText(date_gen);
@@ -283,15 +283,18 @@ public class FragmentLoanGrant extends Fragment {
                 String c_date = edit_c_date.getText().toString();
                 String amount = edit_amount.getText().toString();
                 String roi = edit_roi.getText().toString();
+                String info = additional_info_monthly_grant.getText().toString();
 
                 DatabaseReference customers = database.getReference("customers").child(selected_customer.getId()).child("accounts");
 
                 Map<String, String> account_number_details = new HashMap<>();
 
 //                account_number_details.put("no", final_account_no);
+//                account_number_details.put("customer", selected_customer.getId());
                 account_number_details.put("amt", amount);
                 account_number_details.put("o_date", o_date);
                 account_number_details.put("c_date", c_date);
+                account_number_details.put("info", info);
                 if(account_type_selected.equals("1")) {
                     account_number_details.put("roi", roi);
                 }
@@ -321,15 +324,15 @@ public class FragmentLoanGrant extends Fragment {
 
 
                         //Update accountCustomer
-                        DatabaseReference account_customer_db_ref = database.getReference("accountCustomer");
-                        Map<String, Object> account_customer_map = new HashMap<>();
-                        account_type_map.put(final_account_no, selected_customer.getId());
-                        account_customer_db_ref.updateChildren(account_customer_map, new DatabaseReference.CompletionListener() {
-                            @Override
-                            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-                                Log.d("accountCustomer query: ", "data updated.");
-                            }
-                        });
+//                        DatabaseReference account_customer_db_ref = database.getReference("accountCustomer");
+//                        Map<String, Object> account_customer_map = new HashMap<>();
+//                        account_type_map.put(final_account_no, selected_customer.getId());
+//                        account_customer_db_ref.updateChildren(account_customer_map, new DatabaseReference.CompletionListener() {
+//                            @Override
+//                            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+//                                Log.d("accountCustomer query: ", "data updated.");
+//                            }
+//                        });
                     }
                 });
 

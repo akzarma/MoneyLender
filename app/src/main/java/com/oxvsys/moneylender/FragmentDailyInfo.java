@@ -98,13 +98,13 @@ public class FragmentDailyInfo extends Fragment {
                             List<AccountAmountCollect> accountAmountCollectList = new ArrayList<>();
                             for (DataSnapshot each_account : date.getChildren()) {
                                 Account account = new Account();
-                                account.setType("daily");
+                                account.setType("");
                                 account.setNo(each_account.getKey());
 
                                 accountAmountCollectList.add(new AccountAmountCollect(account,
                                         Long.parseLong(each_account.getValue().toString())));
                             }
-                            agentCollectList.add(new AgentCollect(curr_agent, "daily", sel_calendar, accountAmountCollectList));
+                            agentCollectList.add(new AgentCollect(curr_agent, "", sel_calendar, accountAmountCollectList));
 
                         }
                     }

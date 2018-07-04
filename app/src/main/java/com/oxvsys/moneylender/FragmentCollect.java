@@ -29,6 +29,7 @@ import java.util.List;
 
 import static com.oxvsys.moneylender.HomeActivity.database;
 import static com.oxvsys.moneylender.MainActivity.getData;
+import static com.oxvsys.moneylender.MainActivity.logged_agent;
 
 public class FragmentCollect extends Fragment {
     private static final String ARG_PARAM1 = "param1";
@@ -87,7 +88,8 @@ public class FragmentCollect extends Fragment {
         FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_chevron_right_black_24dp));
 
-        final String logged_agent = getData("user_id", getContext());
+//        final String logged_agent = getData("user_id", getContext());
+//        String logged_agent = getData("user_id", getContext());
 
 
         DatabaseReference account_customer_db_ref = database.getReference("agentAccount").child(logged_agent).child(selected_account.getNo());
@@ -95,7 +97,7 @@ public class FragmentCollect extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                DatabaseReference customers_db_ref = database.getReference("customers").child(dataSnapshot.getValue().toString());
+                DatabaseReference customers_db_ref = database.getReference("customers").child(String.valueOf(dataSnapshot.getValue()));
                 customers_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -224,7 +226,7 @@ public class FragmentCollect extends Fragment {
                                 deposited += amount_recieved;
 
                                 DatabaseReference agent = database.getReference("agentCollect");
-                                agent.child(logged_agent).child(String.valueOf(curr_cal.get(Calendar.DAY_OF_MONTH)) + "-" +
+                                agent.child(agent_id).child(String.valueOf(curr_cal.get(Calendar.DAY_OF_MONTH)) + "-" +
                                         String.valueOf(curr_cal.get(Calendar.MONTH) + 1) + "-" +
                                         String.valueOf(curr_cal.get(Calendar.YEAR))).child(selected_account.getNo()).setValue(amount_recieved).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override

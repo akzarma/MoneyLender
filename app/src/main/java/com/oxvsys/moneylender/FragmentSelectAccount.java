@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 
 import com.google.firebase.database.DataSnapshot;
@@ -29,12 +30,13 @@ import java.util.List;
 import java.util.Map;
 
 import static com.oxvsys.moneylender.HomeActivity.database;
-import static com.oxvsys.moneylender.MainActivity.getData;
+import static com.oxvsys.moneylender.MainActivity.logged_agent;
+
+//import static com.oxvsys.moneylender.MainActivity.getData;
 
 public class FragmentSelectAccount extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    List<Account> accountList = new ArrayList<>();
     Account account_selected;
     Spinner spinner;
     List<String> customer_ids = new ArrayList<>();
@@ -64,22 +66,24 @@ public class FragmentSelectAccount extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_select_account, container, false);
 
+//        final String logged_agent = getData("user_id",getContext());
+        final List<Account> accountList = new ArrayList<>();
         FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_chevron_right_black_24dp));
 
-        final String logged_agent = getData("user_id", getContext());
+//        final String logged_agent = getData("user_id", getContext());
 
         DatabaseReference agent_account_db_ref = database.getReference("agentAccount").child(logged_agent);
         spinner = view.findViewById(R.id.account_spinner);
         spinner.setAdapter(null);
 
 
-//        Button next_button = view.findViewById(R.id.next_button);
+        Button next_button = view.findViewById(R.id.next_button);
         agent_account_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
