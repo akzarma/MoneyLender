@@ -157,6 +157,7 @@ public class FragmentSelectAccount extends Fragment {
                         if(spinner_account_name.isEmpty()){
                             spinner.setVisibility(View.INVISIBLE);
                             no_account_linked.setVisibility(View.VISIBLE);
+                            progressBar.setVisibility(View.INVISIBLE);
                         }else {
                             ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, spinner_account_name);
                             spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -183,7 +184,7 @@ public class FragmentSelectAccount extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                progressBar.setVisibility(View.INVISIBLE);
             }
         });
 

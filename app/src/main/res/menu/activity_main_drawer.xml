@@ -21,10 +21,10 @@
             android:icon="@drawable/ic_person_add_black_24dp"
             android:title="Register Agent" />
 
-        <item
-            android:id="@+id/nav_customer_daily"
-            android:icon="@drawable/daily_96"
-            android:title="Customer Daily Info" />
+        <!--<item-->
+            <!--android:id="@+id/nav_customer_daily"-->
+            <!--android:icon="@drawable/daily_96"-->
+            <!--android:title="Customer Daily Info" />-->
         <!--<item-->
     </group>
 
