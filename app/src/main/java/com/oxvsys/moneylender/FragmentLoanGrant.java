@@ -49,7 +49,7 @@ import static com.oxvsys.moneylender.HomeActivity.database;
  * Use the {@link FragmentLoanGrant#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragment.NoticeDialogListener{
+public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragment.NoticeDialogListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -127,8 +127,23 @@ public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragme
         fab.setVisibility(View.INVISIBLE);
         final Customer selected_customer = (Customer) getArguments().getSerializable(ARG_PARAM1);
 
+        months_field.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (months_field.getText().toString().length() != 0) {
+                    int months = Integer.parseInt(months_field.getText().toString());
+                    Calendar o_cal = MainActivity.StringDateToCal(edit_o_date.getText().toString());
+                    o_cal.add(Calendar.MONTH, months);
+                    edit_c_date.setText(MainActivity.CaltoStringDate(o_cal));
+                }
+                return false;
+            }
+        });
 
-        file_amount_field.setOnKeyListener(new View.OnKeyListener() {
+
+        file_amount_field.setOnKeyListener(new View.OnKeyListener()
+
+        {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 Long file_amount = 0L;
@@ -143,7 +158,9 @@ public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragme
                 return false;
             }
         });
-        discount_amount_field.setOnKeyListener(new View.OnKeyListener() {
+        discount_amount_field.setOnKeyListener(new View.OnKeyListener()
+
+        {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
 //                if(discount_amount_field.getText().toString().length()!=0 && disb_amount_field.getText().toString().length()!=0) {
@@ -162,7 +179,9 @@ public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragme
             }
         });
 
-        disb_amount_field.setOnKeyListener(new View.OnKeyListener() {
+        disb_amount_field.setOnKeyListener(new View.OnKeyListener()
+
+        {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 Long discount_amount = 0L;
@@ -178,7 +197,9 @@ public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragme
             }
         });
 
-        edit_o_date.setOnClickListener(new View.OnClickListener() {
+        edit_o_date.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View v) {
                 Calendar mcurrentDate = Calendar.getInstance();
@@ -194,6 +215,17 @@ public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragme
                             int month = selectedmonth + 1;
                             String date_gen = selectedday + "-" + month + "-" + selectedyear;
                             edit_o_date.setText(date_gen);
+                            Calendar o_cal = MainActivity.StringDateToCal(edit_o_date.getText().toString());
+                            if (account_type_selected.equals("0")) {
+                                o_cal.add(Calendar.DAY_OF_YEAR, Integer.parseInt(selected_days));
+                                edit_c_date.setText(MainActivity.CaltoStringDate(o_cal));
+                            } else if (account_type_selected.equals("1")) {
+                                if (months_field.getText().length() != 0) {
+                                    o_cal.add(Calendar.MONTH, Integer.parseInt(months_field.getText().toString()));
+                                    edit_c_date.setText(MainActivity.CaltoStringDate(o_cal));
+                                }
+                            }
+
                         }
                     }, mYear, mMonth, mDay);
                     mDatePicker.setTitle("Select date");
@@ -204,7 +236,9 @@ public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragme
             }
         });
 
-        edit_c_date.setOnClickListener(new View.OnClickListener() {
+        edit_c_date.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View v) {
                 Calendar mcurrentDate = Calendar.getInstance();
@@ -283,23 +317,36 @@ public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragme
             }
         });
 
-        payment_duration_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        payment_duration_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+
+        {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
                     selected_days = "100";
+                    Calendar o_cal = MainActivity.StringDateToCal(edit_o_date.getText().toString());
+                    o_cal.add(Calendar.DAY_OF_YEAR, 100);
+                    edit_c_date.setText(MainActivity.CaltoStringDate(o_cal));
                 } else if (position == 1) {
                     selected_days = "200";
+                    Calendar o_cal = MainActivity.StringDateToCal(edit_o_date.getText().toString());
+                    o_cal.add(Calendar.DAY_OF_YEAR, 200);
+                    edit_c_date.setText(MainActivity.CaltoStringDate(o_cal));
+
                 }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
+                Calendar o_cal = MainActivity.StringDateToCal(edit_o_date.getText().toString());
+                o_cal.add(Calendar.DAY_OF_YEAR, 100);
+                edit_c_date.setText(MainActivity.CaltoStringDate(o_cal));
             }
         });
 
-        account_type_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        account_type_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+
+        {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
@@ -382,36 +429,32 @@ public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragme
                 String info = additional_info_monthly_grant.getText().toString();
                 String lf_number = lf_number_field.getText().toString();
                 String file_amount = "0";
-                if(file_amount_field.getText().toString().length()!=0){
+                if (file_amount_field.getText().toString().length() != 0) {
                     file_amount = file_amount_field.getText().toString();
                 }
 
 
-
-
-                HashMap<String,String> grant_info = new HashMap<>();
-                grant_info.put("o_date" , o_date);
-                grant_info.put("c_date" , c_date);
-                grant_info.put("amount" , amount);
-                grant_info.put("roi" , roi);
-                grant_info.put("info" , info);
-                grant_info.put("lf_number" , lf_number);
-                grant_info.put("file_amount" , file_amount);
-                grant_info.put("agent" , agent_selected.getName());
-                grant_info.put("account" , final_account_no);
-                grant_info.put("customer" , selected_customer.getName());
-                grant_info.put("customer_id" , selected_customer.getId());
-                grant_info.put("months" , String.valueOf(months_field.getText()));
-                grant_info.put("type" , account_type_selected);
-                grant_info.put("days" , selected_days);
-                if (account_type_selected.equals("0")){
-                    grant_info.put("duration" , selected_days);
-                }else {
-                    grant_info.put("duration" , String.valueOf(months_field.getText()));
+                HashMap<String, String> grant_info = new HashMap<>();
+                grant_info.put("o_date", o_date);
+                grant_info.put("c_date", c_date);
+                grant_info.put("amount", amount);
+                grant_info.put("roi", roi);
+                grant_info.put("info", info);
+                grant_info.put("lf_number", lf_number);
+                grant_info.put("file_amount", file_amount);
+                grant_info.put("agent", agent_selected.getName());
+                grant_info.put("account", final_account_no);
+                grant_info.put("customer", selected_customer.getName());
+                grant_info.put("customer_id", selected_customer.getId());
+                grant_info.put("months", String.valueOf(months_field.getText()));
+                grant_info.put("type", account_type_selected);
+                grant_info.put("days", selected_days);
+                if (account_type_selected.equals("0")) {
+                    grant_info.put("duration", selected_days);
+                } else {
+                    grant_info.put("duration", String.valueOf(months_field.getText()));
                 }
                 setUpDialog(grant_info);
-
-
 
 
             }
@@ -419,7 +462,7 @@ public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragme
         return view;
     }
 
-    private void setUpDialog(HashMap<String , String> grant_info) {
+    private void setUpDialog(HashMap<String, String> grant_info) {
         assert getFragmentManager() != null;
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         Fragment prev = getFragmentManager().findFragmentByTag("dialog");
@@ -428,7 +471,7 @@ public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragme
         }
         ft.addToBackStack(null);
         GrantLoanDialogFragment dialogFragment = GrantLoanDialogFragment.newInstance(grant_info);
-        dialogFragment.setTargetFragment(this,0);
+        dialogFragment.setTargetFragment(this, 0);
         dialogFragment.show(ft, "dialog");
     }
 
@@ -454,9 +497,8 @@ public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragme
     }
 
 
-
     @Override
-    public void onDialogPositiveClick(final HashMap<String  ,String> grant_info) {
+    public void onDialogPositiveClick(final HashMap<String, String> grant_info) {
 //        Toast.makeText(getContext() , "from host fragment" , Toast.LENGTH_LONG).show();
         DatabaseReference customers = database.getReference("customers").child(grant_info.get("customer_id")).child("accounts");
 

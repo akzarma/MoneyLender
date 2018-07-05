@@ -167,12 +167,34 @@
                 android:fontFamily="@font/roboto_medium"
                 android:textColor="@color/colorWhiteText" />
 
+            <TextView
+                android:id="@+id/last_date_key"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/loan_duration_key"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/roboto_light"
+                android:text="Last Date"
+                android:textColor="@color/colorWhiteText" />
+
+            <TextView
+                android:id="@+id/last_date_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/loan_duration_key"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_toEndOf="@id/last_date_key"
+                android:fontFamily="@font/roboto_medium"
+                android:textColor="@color/colorWhiteText" />
+
+
 
             <TextView
                 android:id="@+id/collect_type_key"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/loan_duration_field"
+                android:layout_below="@id/last_date_key"
                 android:layout_marginTop="8dp"
                 android:fontFamily="@font/roboto_light"
                 android:text="Type"
@@ -182,7 +204,7 @@
                 android:id="@+id/customer_account_type_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/loan_duration_field"
+                android:layout_below="@id/last_date_key"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:layout_toEndOf="@id/collect_type_key"

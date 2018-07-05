@@ -80,7 +80,7 @@ public class FragmentCollect extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_collect_daily, container, false);
+        final View view = inflater.inflate(R.layout.fragment_collect_daily, container, false);
         final EditText amount_field = view.findViewById(R.id.amount_field);
         final TextView customer_name_field = view.findViewById(R.id.customer_name_field);
         final TextView customer_id_field = view.findViewById(R.id.customer_id_field);
@@ -92,7 +92,8 @@ public class FragmentCollect extends Fragment {
         final TextView loan_duration_field = view.findViewById(R.id.loan_duration_field);
         final TextView expected_amount_view = view.findViewById(R.id.expected_amount_view);
         final TextView remaining_money_field = view.findViewById(R.id.remaining_money_field);
-        ImageView dialer_view = view.findViewById(R.id.dialer_view);
+        final ImageView dialer_view = view.findViewById(R.id.dialer_view);
+        final TextView last_date_field = view.findViewById(R.id.last_date_field);
 //        final Button deposit_button = view.findViewById(R.id.deposit_button);
         final Account selected_account = (Account) getArguments().getSerializable(ARG_PARAM1);
 
@@ -105,6 +106,17 @@ public class FragmentCollect extends Fragment {
 //        String logged_agent = getData("user_id", getContext());
 
 //        Account account = new Account();
+
+        final Calendar curr_cal = Calendar.getInstance();
+        curr_cal.set(Calendar.HOUR_OF_DAY, 0);
+        curr_cal.set(Calendar.MINUTE, 0);
+        curr_cal.set(Calendar.SECOND, 0);
+        curr_cal.set(Calendar.MILLISECOND, 0);
+        final String curr_date = MainActivity.CaltoStringDate(curr_cal);
+
+
+//
+
         DatabaseReference account_customer_db_ref = database.getReference("agentAccount").child(logged_agent).child(selected_account.getNo());
         account_customer_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -130,13 +142,27 @@ public class FragmentCollect extends Fragment {
                         Long deposited = account.getDeposited();
                         Long amt_left = file_amt - deposited;
 
-                        customer_loan_amount_field.setText(String.valueOf(account.getFile_amt()));
-                        customer_deposited_field.setText(String.valueOf(account.getDeposited()));
+
+                        customer_loan_amount_field.setText("₹ " + String.valueOf(account.getFile_amt()));
+                        customer_deposited_field.setText("₹ " + String.valueOf(account.getDeposited()));
                         if (account.getType().equals("0")) {
                             customer_account_type_field.setText("Daily basis");
                             loan_duration_field.setText(String.valueOf(account.getDuration()) + " days");
-                            expected_amount_view.setText(String.valueOf(amt_left / account.getDuration()));
                             remaining_money_field.setText(String.valueOf(amt_left));
+                            Calendar today_cal = Calendar.getInstance();
+                            today_cal.set(Calendar.HOUR_OF_DAY, 0);
+                            today_cal.set(Calendar.MINUTE, 0);
+                            today_cal.set(Calendar.SECOND, 0);
+                            today_cal.set(Calendar.MILLISECOND, 0);
+                            Calendar c_date_cal = Calendar.getInstance();
+                            c_date_cal.setTimeInMillis(account.getC_date().getTimeInMillis());
+
+                            Long days_diff = TimeUnit.MILLISECONDS.toDays(c_date_cal.getTimeInMillis() - today_cal.getTimeInMillis());
+
+
+                            expected_amount_view.setText("Expected Amount   ₹ " +String.valueOf(amt_left / days_diff));
+                            last_date_field.setText(String.valueOf(MainActivity.CaltoStringDate(account.getC_date())) + " (" + days_diff + " days left)");
+
                         } else if (account.getType().equals("1")) {
                             customer_account_type_field.setText("Monthly basis (" + account.getRoi() + "% annual interest)");
                             loan_duration_field.setText(String.valueOf(account.getDuration()) + " months");
@@ -156,18 +182,23 @@ public class FragmentCollect extends Fragment {
                                 o_date_cal.setTimeInMillis(account.getO_date().getTimeInMillis());
 
                                 Long days_diff = TimeUnit.MILLISECONDS.toDays(today_cal.getTimeInMillis() - o_date_cal.getTimeInMillis());
+
+
                                 months_passed = Integer.parseInt(String.valueOf(days_diff / 30).split("\\.")[0]);
 
 
                                 int months_left = (int) (months_duration - months_passed);
-                                int rcmnd_amt = (int) (amt_left * (int) Math.pow( (1 + roi_per_month_100), Double.parseDouble(String.valueOf(months_left))));
+                                int rcmnd_amt = (int) ((double) amt_left * (double) Math.pow((1 + roi_per_month_100), Double.parseDouble(String.valueOf(months_left))));
 
                                 int curr_month_expected_amount = rcmnd_amt / months_left;
-                                remaining_money_field.setText(String.valueOf(amt_left) + " excl. interest");
+                                remaining_money_field.setText("₹ " + String.valueOf(amt_left) + " excl. interest");
                                 expected_amount_view.setText("Expected Amount   ₹ " + String.valueOf(curr_month_expected_amount));
-                            } else{
+                                last_date_field.setText(String.valueOf(MainActivity.CaltoStringDate(account.getC_date())) + " (" + months_left + " months left)");
+                            } else {
+                                fab.setVisibility(View.INVISIBLE);
+                                amount_field.setVisibility(View.INVISIBLE);
                                 remaining_money_field.setText("0");
-                                expected_amount_view.setText("0");
+                                expected_amount_view.setText("₹ 0");
                             }
                         }
                         customer_mobile_field.setText(selected_customer.getMobile());
@@ -183,6 +214,26 @@ public class FragmentCollect extends Fragment {
                             fab.setVisibility(View.VISIBLE);
                         }
                         file_amt = account.getFile_amt();
+
+                        if (account.getType().equals("0")) {
+                            DatabaseReference agent_collect_date_db_ref = database.getReference("agentCollect").child(logged_agent)
+                                    .child(curr_date);
+                            agent_collect_date_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.hasChild(selected_account.getNo())) {
+                                        amount_field.setText(String.valueOf(((HashMap<String, String>) dataSnapshot.getValue()).get(selected_account.getNo())));
+                                        fab.setVisibility(View.INVISIBLE);
+                                        amount_field.setEnabled(false);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
                     }
 
                     @Override
@@ -221,13 +272,6 @@ public class FragmentCollect extends Fragment {
 
                 //=========================================================================================================
 
-                final Calendar curr_cal = Calendar.getInstance();
-                curr_cal.set(Calendar.HOUR_OF_DAY, 0);
-                curr_cal.set(Calendar.MINUTE, 0);
-                curr_cal.set(Calendar.SECOND, 0);
-                curr_cal.set(Calendar.MILLISECOND, 0);
-                final String curr_date = MainActivity.CaltoStringDate(curr_cal);
-
 
 //        agent.addListenerForSingleValueEvent(new ValueEventListener() {
 //            @Override
@@ -256,78 +300,60 @@ public class FragmentCollect extends Fragment {
 //        });
 
 
-                DatabaseReference account_deposited_db_ref = database.getReference("customers")
-                        .child(selected_customer.getId()).child("accounts")
-                        .child(selected_customer.getAccounts1().get(0).getNo())
-                        .child("deposited");
-                account_deposited_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                DatabaseReference agent_collect_date_db_ref = database.getReference("agentCollect").child(logged_agent)
+                        .child(String.valueOf(curr_cal.get(Calendar.DAY_OF_MONTH)) + "-" +
+                                String.valueOf(curr_cal.get(Calendar.MONTH) + 1) + "-" +
+                                String.valueOf(curr_cal.get(Calendar.YEAR)));
+                agent_collect_date_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        Object get_value = dataSnapshot.getValue();
-                        if (get_value != null) {
-                            deposited = Long.parseLong(dataSnapshot.getValue().toString());
-                        } else {
-                            deposited = 0L;
+                        if (dataSnapshot.hasChild(selected_account.getNo())) {
+                            amount_field.setText(((HashMap<String, String>) dataSnapshot.getValue()).get(selected_account.getNo()));
+                            amount_field.setEnabled(false);
+                            return;
+//                                    Long prev_money = ((HashMap<String, Long>) dataSnapshot.getValue()).get(selected_account.getNo());
+//                                    deposited -= prev_money;
                         }
+//                                deposited += amount_recieved;
+                        else {
+                            DatabaseReference agent = database.getReference("agentCollect");
+                            agent.child(logged_agent).child(String.valueOf(curr_cal.get(Calendar.DAY_OF_MONTH)) + "-" +
+                                    String.valueOf(curr_cal.get(Calendar.MONTH) + 1) + "-" +
+                                    String.valueOf(curr_cal.get(Calendar.YEAR))).child(selected_account.getNo()).setValue(amount_recieved).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    database.getReference("customers")
+                                            .child(selected_customer.getId()).child("accounts")
+                                            .child(selected_customer.getAccounts1().get(0).getNo())
+                                            .child("deposited").setValue(Long.parseLong(amount_field.getText().toString()))
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    Log.d("deposited new money: ", "Account: " + selected_account.getNo());
 
+                                                    FragmentManager fragmentManager = getFragmentManager();
+                                                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-                        DatabaseReference agent_collect_date_db_ref = database.getReference("agentCollect").child(logged_agent)
-                                .child(String.valueOf(curr_cal.get(Calendar.DAY_OF_MONTH)) + "-" +
-                                        String.valueOf(curr_cal.get(Calendar.MONTH) + 1) + "-" +
-                                        String.valueOf(curr_cal.get(Calendar.YEAR)));
-                        agent_collect_date_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                if (dataSnapshot.hasChild(selected_account.getNo())) {
-                                    Long prev_money = ((HashMap<String, Long>) dataSnapshot.getValue()).get(selected_account.getNo());
-                                    deposited -= prev_money;
+                                                    FragmentAccountTypeInfo fragmentAccountTypeInfo = FragmentAccountTypeInfo.newInstance(Calendar.getInstance(), selected_customer.getAccounts1().get(0).getType());
+                                                    fragmentTransaction.replace(R.id.fragment_container, fragmentAccountTypeInfo).addToBackStack(null).
+                                                            commit();
+                                                }
+                                            });
                                 }
-                                deposited += amount_recieved;
-
-                                DatabaseReference agent = database.getReference("agentCollect");
-                                agent.child(logged_agent).child(String.valueOf(curr_cal.get(Calendar.DAY_OF_MONTH)) + "-" +
-                                        String.valueOf(curr_cal.get(Calendar.MONTH) + 1) + "-" +
-                                        String.valueOf(curr_cal.get(Calendar.YEAR))).child(selected_account.getNo()).setValue(amount_recieved).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        database.getReference("customers")
-                                                .child(selected_customer.getId()).child("accounts")
-                                                .child(selected_customer.getAccounts1().get(0).getNo())
-                                                .child("deposited").setValue(deposited).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                Log.d("deposited new money: ", "Account: " + selected_account.getNo());
-
-                                                FragmentManager fragmentManager = getFragmentManager();
-                                                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-                                                FragmentAccountTypeInfo fragmentAccountTypeInfo = FragmentAccountTypeInfo.newInstance(Calendar.getInstance(), selected_customer.getAccounts1().get(0).getType());
-                                                fragmentTransaction.replace(R.id.fragment_container, fragmentAccountTypeInfo).addToBackStack(null).
-                                                        commit();
-                                            }
-                                        });
-                                    }
-                                });
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-                                fab.setVisibility(View.VISIBLE);
-                                Toast.makeText(getContext(), "Failed to collect money. Try again!", Toast.LENGTH_LONG).show();
-
-                            }
-                        });
+                            });
+                        }
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
                         fab.setVisibility(View.VISIBLE);
                         Toast.makeText(getContext(), "Failed to collect money. Try again!", Toast.LENGTH_LONG).show();
+
                     }
                 });
-
-
             }
+
+
         });
 
 
