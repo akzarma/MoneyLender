@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -101,8 +102,19 @@ public class FragmentDashboardSpecific extends Fragment {
 
         date_button.setText(sel_date);
         final FloatingActionButton fab = getActivity().findViewById(R.id.fab);
-        fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_chevron_right_black_24dp));
-        fab.setVisibility(View.INVISIBLE);
+        fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.get_cash_96));
+//        fab.setVisibility(View.INVISIBLE);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                FragmentSelectAccount fragmentSelectAccount = new FragmentSelectAccount();
+                fragmentTransaction.replace(R.id.fragment_container, fragmentSelectAccount).addToBackStack(null).
+                        commit();
+            }
+        });
+
 
 
 //        final String logged_in = getData("user_id", getContext());

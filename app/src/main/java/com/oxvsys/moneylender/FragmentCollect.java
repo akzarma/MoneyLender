@@ -163,7 +163,7 @@ public class FragmentCollect extends Fragment {
                             Long days_diff = TimeUnit.MILLISECONDS.toDays(c_date_cal.getTimeInMillis() - today_cal.getTimeInMillis());
 
 
-                            expected_amount_view.setText("Expected Amount   ₹ " +String.valueOf(amt_left / days_diff));
+                            expected_amount_view.setText("Expected Amount   ₹ " + String.valueOf(amt_left / days_diff));
                             last_date_field.setText(String.valueOf(MainActivity.CaltoStringDate(account.getC_date())) + " (" + days_diff + " days left)");
 
                         } else if (account.getType().equals("1")) {
@@ -274,91 +274,71 @@ public class FragmentCollect extends Fragment {
                 fab.setVisibility(View.INVISIBLE);
                 final Long amount_recieved = Long.parseLong(String.valueOf(amount_field.getText()));
 
-                //=========================================================================================================
 
-
-//        agent.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                if(dataSnapshot.hasChild(agent_id)){
-//                    for(DataSnapshot dates:dataSnapshot.getChildren()){
-//
-//                    }
-//                }else{
-//                    HashMap<String, Object> agent_id_key_value = new HashMap<>();
-//                    HashMap<String, Object> date_key_value = new HashMap<>();
-//                    HashMap<String, Integer> account_key_value = new HashMap<>();
-//                    account_key_value.put(selected_account.getNo(), amount_recieved);
-//                    date_key_value.put(curr_date, account_key_value);
-//                    agent_id_key_value.put(agent_id, date_key_value);
-//                    agent.setValue(agent_id_key_value)
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-
-
-//        });
-
-
-                DatabaseReference agent_collect_date_db_ref = database.getReference("agentCollect").child(logged_agent)
-                        .child(String.valueOf(curr_cal.get(Calendar.DAY_OF_MONTH)) + "-" +
-                                String.valueOf(curr_cal.get(Calendar.MONTH) + 1) + "-" +
-                                String.valueOf(curr_cal.get(Calendar.YEAR)));
-                agent_collect_date_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                DatabaseReference account_deposited_db_ref = database.getReference("customers")
+                        .child(selected_customer.getId()).child("accounts")
+                        .child(selected_customer.getAccounts1().get(0).getNo())
+                        .child("deposited");
+                account_deposited_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.hasChild(selected_account.getNo())) {
-                            amount_field.setText(((HashMap<String, String>) dataSnapshot.getValue()).get(selected_account.getNo()));
-                            amount_field.setEnabled(false);
-                            return;
-//                                    Long prev_money = ((HashMap<String, Long>) dataSnapshot.getValue()).get(selected_account.getNo());
-//                                    deposited -= prev_money;
+                        Object get_value = dataSnapshot.getValue();
+                        if (get_value != null) {
+                            deposited = Long.parseLong(dataSnapshot.getValue().toString());
+                        } else {
+                            deposited = 0L;
                         }
-//                                deposited += amount_recieved;
-                        else {
-                            DatabaseReference agent = database.getReference("agentCollect");
-                            agent.child(logged_agent).child(String.valueOf(curr_cal.get(Calendar.DAY_OF_MONTH)) + "-" +
-                                    String.valueOf(curr_cal.get(Calendar.MONTH) + 1) + "-" +
-                                    String.valueOf(curr_cal.get(Calendar.YEAR))).child(selected_account.getNo()).setValue(amount_recieved).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    database.getReference("customers")
-                                            .child(selected_customer.getId()).child("accounts")
-                                            .child(selected_customer.getAccounts1().get(0).getNo())
-                                            .child("deposited").setValue(Long.parseLong(amount_field.getText().toString()))
-                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    Log.d("deposited new money: ", "Account: " + selected_account.getNo());
 
-                                                    FragmentManager fragmentManager = getFragmentManager();
-                                                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-                                                    FragmentAccountTypeInfo fragmentAccountTypeInfo = FragmentAccountTypeInfo.newInstance(Calendar.getInstance(), selected_customer.getAccounts1().get(0).getType());
-                                                    fragmentTransaction.replace(R.id.fragment_container, fragmentAccountTypeInfo).addToBackStack(null).
-                                                            commit();
-                                                }
-                                            });
-                                }
-                            });
-                        }
+                        DatabaseReference agent_collect_date_db_ref = database.getReference("agentCollect").child(logged_agent)
+                                .child(curr_date);
+                        agent_collect_date_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                deposited += amount_recieved;
+
+                                DatabaseReference agent = database.getReference("agentCollect");
+                                agent.child(logged_agent).child(curr_date).child(selected_account.getNo()).setValue(amount_recieved).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        database.getReference("customers")
+                                                .child(selected_customer.getId()).child("accounts")
+                                                .child(selected_customer.getAccounts1().get(0).getNo())
+                                                .child("deposited").setValue(deposited).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                Log.d("deposited new money: ", "Account: " + selected_account.getNo());
+
+                                                FragmentManager fragmentManager = getFragmentManager();
+                                                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+                                                FragmentAccountTypeInfo fragmentAccountTypeInfo = FragmentAccountTypeInfo.newInstance(Calendar.getInstance(), selected_customer.getAccounts1().get(0).getType());
+                                                fragmentTransaction.replace(R.id.fragment_container, fragmentAccountTypeInfo).addToBackStack(null).
+                                                        commit();
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                fab.setVisibility(View.VISIBLE);
+                                Toast.makeText(getContext(), "Failed to collect money. Try again!", Toast.LENGTH_LONG).show();
+
+                            }
+                        });
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
                         fab.setVisibility(View.VISIBLE);
-                        progressBar.setVisibility(View.INVISIBLE);
                         Toast.makeText(getContext(), "Failed to collect money. Try again!", Toast.LENGTH_LONG).show();
-
                     }
                 });
+
+
             }
-
-
         });
 
 

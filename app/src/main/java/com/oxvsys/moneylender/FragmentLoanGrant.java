@@ -133,7 +133,7 @@ public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragme
                 if (months_field.getText().toString().length() != 0) {
                     int months = Integer.parseInt(months_field.getText().toString());
                     Calendar o_cal = MainActivity.StringDateToCal(edit_o_date.getText().toString());
-                    o_cal.add(Calendar.MONTH, months);
+                    o_cal.add(Calendar.DAY_OF_YEAR, 30*months);
                     edit_c_date.setText(MainActivity.CaltoStringDate(o_cal));
                 }
                 return false;
@@ -221,7 +221,7 @@ public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragme
                                 edit_c_date.setText(MainActivity.CaltoStringDate(o_cal));
                             } else if (account_type_selected.equals("1")) {
                                 if (months_field.getText().length() != 0) {
-                                    o_cal.add(Calendar.MONTH, Integer.parseInt(months_field.getText().toString()));
+                                    o_cal.add(Calendar.DAY_OF_YEAR, 30*Integer.parseInt(months_field.getText().toString()));
                                     edit_c_date.setText(MainActivity.CaltoStringDate(o_cal));
                                 }
                             }

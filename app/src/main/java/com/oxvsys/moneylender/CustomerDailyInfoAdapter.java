@@ -103,8 +103,12 @@ public class CustomerDailyInfoAdapter extends RecyclerView.Adapter<CustomerDaily
                                 dateAmount.setDate(date.getKey());
                                 Long curr_amount = ((HashMap<String, Long>) date.getValue())
                                         .get(customerAmount.getCustomer().getAccounts1().get(0).getNo());
-                                dateAmount.setAmount(curr_amount);
-                                dateAmountList.add(dateAmount);
+
+                                if (curr_amount != null) {
+                                    dateAmount.setAmount(curr_amount);
+                                    dateAmountList.add(dateAmount);
+
+                                }
                             }
                         }
                         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
