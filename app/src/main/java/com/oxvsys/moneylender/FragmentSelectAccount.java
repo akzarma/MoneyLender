@@ -14,7 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -22,8 +24,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,6 +75,12 @@ public class FragmentSelectAccount extends Fragment {
 //        final String logged_agent = getData("user_id",getContext());
         final List<Account> accountList = new ArrayList<>();
         final List<Account> spinner_accountList = new ArrayList<>();
+        final TextView no_account_linked = view.findViewById(R.id.no_account_linked);
+        no_account_linked.setVisibility(View.INVISIBLE);
+
+        final ProgressBar progressBar = view.findViewById(R.id.select_account_progress);
+        progressBar.setVisibility(View.VISIBLE);
+
         final FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_chevron_right_black_24dp));
         fab.setVisibility(View.INVISIBLE);
@@ -126,6 +132,7 @@ public class FragmentSelectAccount extends Fragment {
                 customers.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        progressBar.setVisibility(View.VISIBLE);
                         for (DataSnapshot single_customer : dataSnapshot.getChildren()) {
                             HashMap<String, Object> customer_map = new HashMap<>();
                             customer_map.put(single_customer.getKey(), single_customer.getValue());
@@ -147,19 +154,27 @@ public class FragmentSelectAccount extends Fragment {
                             }
                         }
 
-                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, spinner_account_name);
-                        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        spinner.setAdapter(spinnerAdapter);
+                        if(spinner_account_name.isEmpty()){
+                            spinner.setVisibility(View.INVISIBLE);
+                            no_account_linked.setVisibility(View.VISIBLE);
+                            progressBar.setVisibility(View.INVISIBLE);
+                        }else {
+                            ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, spinner_account_name);
+                            spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            spinner.setAdapter(spinnerAdapter);
+                        }
+
 
                         fields_loaded += 1;
                         if (fields_loaded == 1 && !spinner_account_name.isEmpty()) {
                             fab.setVisibility(View.VISIBLE);
+                            progressBar.setVisibility(View.INVISIBLE);
                         }
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                        progressBar.setVisibility(View.INVISIBLE);
                     }
                 });
 
@@ -169,7 +184,7 @@ public class FragmentSelectAccount extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                progressBar.setVisibility(View.INVISIBLE);
             }
         });
 

@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -23,8 +24,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
-import org.joda.time.DateTimeComparator;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -32,7 +31,6 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.oxvsys.moneylender.HomeActivity.database;
-import static com.oxvsys.moneylender.MainActivity.getData;
 import static com.oxvsys.moneylender.MainActivity.logged_agent;
 
 public class FragmentDashboardSpecific extends Fragment {
@@ -87,6 +85,8 @@ public class FragmentDashboardSpecific extends Fragment {
 
         date_button = view.findViewById(R.id.dashboard_select_date);
         from_date_button = view.findViewById(R.id.dashboard_from_button);
+        final ProgressBar progressBar = view.findViewById(R.id.dashboard_progress);
+        progressBar.setVisibility(View.VISIBLE);
         to_date_button = view.findViewById(R.id.dashboard_to_button);
         todays_value = (TextView) view.findViewById(R.id.todays_collection_value_dashboard);
         view_monthly_value_till_today = (TextView) view.findViewById(R.id.monthly_collection_value_dashboard);
@@ -157,11 +157,12 @@ public class FragmentDashboardSpecific extends Fragment {
                         total_daily_amount = 0L;
                         total_monthly_amount_till_today = 0L;
                         total_collection = 0L;
+                        progressBar.setVisibility(View.INVISIBLE);
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                        progressBar.setVisibility(View.INVISIBLE);
                     }
                 });
 
@@ -170,7 +171,7 @@ public class FragmentDashboardSpecific extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                progressBar.setVisibility(View.INVISIBLE);
             }
         });
 

@@ -15,9 +15,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -80,7 +80,9 @@ public class FragmentCollect extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View view = inflater.inflate(R.layout.fragment_collect_daily, container, false);
+        View view = inflater.inflate(R.layout.fragment_collect_daily, container, false);
+        final ProgressBar progressBar = view.findViewById(R.id.collect_money_progress);
+        progressBar.setVisibility(View.VISIBLE);
         final EditText amount_field = view.findViewById(R.id.amount_field);
         final TextView customer_name_field = view.findViewById(R.id.customer_name_field);
         final TextView customer_id_field = view.findViewById(R.id.customer_id_field);
@@ -119,9 +121,10 @@ public class FragmentCollect extends Fragment {
 
         DatabaseReference account_customer_db_ref = database.getReference("agentAccount").child(logged_agent).child(selected_account.getNo());
         account_customer_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
+                progressBar.setVisibility(View.VISIBLE);
                 DatabaseReference customers_db_ref = database.getReference("customers").child(String.valueOf(dataSnapshot.getValue()));
                 customers_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -241,6 +244,7 @@ public class FragmentCollect extends Fragment {
 
                     }
                 });
+                progressBar.setVisibility(View.INVISIBLE);
             }
 
             @Override
@@ -262,7 +266,7 @@ public class FragmentCollect extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                progressBar.setVisibility(View.VISIBLE);
                 if (amount_field.getText().toString().length() == 0) {
                     amount_field.setError("Amount Money is required!");
                     return;
@@ -347,6 +351,7 @@ public class FragmentCollect extends Fragment {
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
                         fab.setVisibility(View.VISIBLE);
+                        progressBar.setVisibility(View.INVISIBLE);
                         Toast.makeText(getContext(), "Failed to collect money. Try again!", Toast.LENGTH_LONG).show();
 
                     }

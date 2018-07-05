@@ -1,21 +1,17 @@
 package com.oxvsys.moneylender;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -56,6 +52,14 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        Menu nav_menu = navigationView.getMenu();
+
+        if(logged_type.equals("agent")){
+            nav_menu.findItem(R.id.nav_monthly_loan_grant).setVisible(false);
+            nav_menu.findItem(R.id.nav_kyc).setVisible(false);
+            nav_menu.findItem(R.id.nav_agent_register).setVisible(false);
+        }
+
 
         View hView = navigationView.getHeaderView(0);
         TextView nav_user = hView.findViewById(R.id.nav_header_username);
@@ -179,7 +183,7 @@ public class MainActivity extends AppCompatActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_kyc) {
             // Handle the camera action
             if (getSupportActionBar() != null)
                 getSupportActionBar().setTitle("KYC");
@@ -213,14 +217,16 @@ public class MainActivity extends AppCompatActivity
             FragmentAgentRegister far = new FragmentAgentRegister();
             fragmentTransaction.replace(R.id.fragment_container, far).addToBackStack(null).
                     commit();
-        } else if (id == R.id.nav_customer_daily) {
-            if (getSupportActionBar() != null)
-                getSupportActionBar().setTitle("Customer Report");
-            Calendar calendar = Calendar.getInstance();
-            FragmentCustomerDailyInfo far = FragmentCustomerDailyInfo.newInstance(calendar);
-            fragmentTransaction.replace(R.id.fragment_container, far).addToBackStack(null).
-                    commit();
-        } else if (id == R.id.nav_logout) {
+        }
+//        else if (id == R.id.nav_customer_daily) {
+//            if (getSupportActionBar() != null)
+//                getSupportActionBar().setTitle("Customer Report");
+//            Calendar calendar = Calendar.getInstance();
+//            FragmentCustomerDailyInfo far = FragmentCustomerDailyInfo.newInstance(calendar);
+//            fragmentTransaction.replace(R.id.fragment_container, far).addToBackStack(null).
+//                    commit();
+//        }
+        else if (id == R.id.nav_logout) {
             SharedPreferences preferences = PreferenceManager.
                     getDefaultSharedPreferences(getApplicationContext());
             SharedPreferences.Editor editor = preferences.edit();

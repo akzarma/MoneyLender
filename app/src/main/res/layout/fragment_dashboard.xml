@@ -4,51 +4,60 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="8dp"
+    android:padding="0dp"
     tools:context=".FragmentDashboard">
+
+    <ProgressBar
+        android:id="@+id/dashboard_progress"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:theme="@style/LinearProgress"
+        android:visibility="visible" />
 
     <TextView
         android:id="@+id/dashboard_today_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#3c3c3c"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
         android:fontFamily="@font/roboto_bold"
+        android:text="Day Statistics"
         android:textAllCaps="true"
-        android:text="Day Statistics"/>
+        android:textColor="#3c3c3c" />
 
     <Button
-        android:layout_alignParentRight="true"
         android:id="@+id/dashboard_select_date"
         android:layout_width="140dp"
         android:layout_height="40dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="4dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="12dp"
+        android:layout_marginTop="12dp"
         android:background="@drawable/rounded_button"
         android:drawableEnd="@drawable/ic_date_range_black_24dp"
+        android:fontFamily="@font/roboto_regular"
         android:paddingHorizontal="14dp"
         android:src="@drawable/ic_date_range_black_24dp"
         android:text="..."
-        android:fontFamily="@font/roboto_regular"
         android:textColor="#3c3c3c"
         android:textSize="16sp"
         tools:targetApi="o" />
 
     <!--<Button-->
-        <!--android:id="@+id/dashboard_title_button"-->
-        <!--android:layout_width="140dp"-->
-        <!--android:layout_height="40dp"-->
-        <!--android:layout_centerHorizontal="true"-->
-        <!--android:layout_marginBottom="8dp"-->
-        <!--android:background="@drawable/rounded_button"-->
-        <!--android:drawableEnd="@drawable/ic_date_range_black_24dp"-->
-        <!--android:paddingHorizontal="14dp"-->
-        <!--android:src="@drawable/ic_date_range_black_24dp"-->
-        <!--android:text="..."-->
-<!--android:textColor="#fff"-->
-        <!--android:textSize="16sp"-->
-        <!--tools:targetApi="o" />-->
+    <!--android:id="@+id/dashboard_title_button"-->
+    <!--android:layout_width="140dp"-->
+    <!--android:layout_height="40dp"-->
+    <!--android:layout_centerHorizontal="true"-->
+    <!--android:layout_marginBottom="8dp"-->
+    <!--android:background="@drawable/rounded_button"-->
+    <!--android:drawableEnd="@drawable/ic_date_range_black_24dp"-->
+    <!--android:paddingHorizontal="14dp"-->
+    <!--android:src="@drawable/ic_date_range_black_24dp"-->
+    <!--android:text="..."-->
+    <!--android:textColor="#fff"-->
+    <!--android:textSize="16sp"-->
+    <!--tools:targetApi="o" />-->
 
 
     <LinearLayout
@@ -63,23 +72,24 @@
             android:layout_width="0dp"
             android:layout_height="160dp"
 
-            android:layout_margin="4dp"
-            android:layout_marginRight="8dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="12dp"
             android:layout_weight="1"
             app:cardCornerRadius="10dp">
 
             <RelativeLayout
-                android:background="@color/colorPrimary"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@color/colorPrimary"
                 android:paddingTop="8dp">
 
                 <TextView
                     android:id="@+id/todays_collection_dashboard"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_regular"
                     android:layout_centerHorizontal="true"
+                    android:fontFamily="@font/roboto_regular"
                     android:text="Daily Basis Account"
                     android:textAllCaps="false"
                     android:textColor="#fff"
@@ -104,8 +114,7 @@
         <android.support.v7.widget.CardView
             android:layout_width="0dp"
             android:layout_height="160dp"
-            android:layout_margin="4dp"
-            android:layout_marginLeft="8dp"
+            android:layout_marginEnd="12dp"
             android:layout_weight="1"
             app:cardCornerRadius="10dp">
 
@@ -120,10 +129,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
+                    android:fontFamily="@font/roboto_regular"
                     android:text="Monthly basis Account"
                     android:textAllCaps="false"
                     android:textColor="#fff"
-                    android:fontFamily="@font/roboto_regular"
                     android:textSize="14sp" />
 
                 <TextView
@@ -134,8 +143,8 @@
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="8dp"
-                    android:paddingTop="30dp"
                     android:fontFamily="@font/roboto_black"
+                    android:paddingTop="30dp"
                     android:text="..."
                     android:textColor="#fff"
                     android:textSize="25dp" />
@@ -157,16 +166,17 @@
         <android.support.v7.widget.CardView
             android:layout_width="0dp"
             android:layout_height="160dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="4dp"
             android:layout_weight="1"
-
-            android:layout_margin="4dp"
             app:cardCornerRadius="10dp">
 
             <RelativeLayout
                 android:id="@+id/totat_collection_card_layout"
                 android:layout_width="match_parent"
-                android:background="@color/colorPrimary"
                 android:layout_height="match_parent"
+                android:background="@color/colorPrimary"
                 android:paddingTop="8dp">
 
                 <TextView
@@ -174,10 +184,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
+                    android:fontFamily="@font/roboto_regular"
                     android:text="Today's Total Collection"
                     android:textAllCaps="false"
                     android:textColor="#fff"
-                    android:fontFamily="@font/roboto_regular"
                     android:textSize="14sp" />
 
                 <TextView
@@ -200,19 +210,17 @@
     </LinearLayout>
 
 
-
-
     <TextView
-        android:layout_marginTop="16dp"
         android:id="@+id/select_range_text"
-        android:layout_below="@id/dashboard_total_layout"
-        android:layout_marginStart="4dp"
         android:layout_width="wrap_content"
-        android:textColor="#3c3c3c"
-        android:textAllCaps="true"
-        android:fontFamily="@font/roboto_bold"
         android:layout_height="wrap_content"
-        android:text="Select Range"/>
+        android:layout_below="@id/dashboard_total_layout"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/roboto_bold"
+        android:text="Select Range"
+        android:textAllCaps="true"
+        android:textColor="#3c3c3c" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -224,23 +232,23 @@
             android:id="@+id/dashboard_from_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#3c3c3c"
-            android:fontFamily="@font/roboto_regular"
-            android:layout_marginLeft="4dp"
+            android:layout_marginStart="12dp"
             android:layout_marginRight="5dp"
-            android:text="From" />
+            android:fontFamily="@font/roboto_regular"
+            android:text="From"
+            android:textColor="#3c3c3c" />
 
         <Button
             android:id="@+id/dashboard_from_button"
             android:layout_width="140dp"
-            android:layout_toRightOf="@id/dashboard_from_label"
             android:layout_height="40dp"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="8dp"
+            android:layout_toRightOf="@id/dashboard_from_label"
             android:background="@drawable/rounded_button"
             android:drawableEnd="@drawable/ic_date_range_black_24dp"
-            android:paddingHorizontal="14dp"
             android:fontFamily="@font/roboto_regular"
+            android:paddingHorizontal="14dp"
             android:src="@drawable/ic_date_range_black_24dp"
             android:text="..."
             android:textColor="#3c3c3c"
@@ -250,24 +258,25 @@
         <TextView
             android:id="@+id/dashboard_to_label"
             android:layout_width="wrap_content"
-            android:textColor="#3c3c3c"
-            android:fontFamily="@font/roboto_regular"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/dashboard_to_button"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:text="To" />
+            android:layout_toLeftOf="@id/dashboard_to_button"
+            android:fontFamily="@font/roboto_regular"
+            android:text="To"
+            android:textColor="#3c3c3c" />
 
         <Button
             android:id="@+id/dashboard_to_button"
             android:layout_width="140dp"
-            android:layout_alignParentEnd="true"
             android:layout_height="40dp"
-            android:fontFamily="@font/roboto_regular"
+            android:layout_alignParentEnd="true"
             android:layout_centerHorizontal="true"
+            android:layout_marginEnd="12dp"
             android:layout_marginBottom="8dp"
             android:background="@drawable/rounded_button"
             android:drawableEnd="@drawable/ic_date_range_black_24dp"
+            android:fontFamily="@font/roboto_regular"
             android:paddingHorizontal="14dp"
             android:src="@drawable/ic_date_range_black_24dp"
             android:text="..."
