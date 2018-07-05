@@ -9,7 +9,6 @@
     tools:context=".LoginActivity">
 
 
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,18 +16,18 @@
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/login_mobile_til"
-            android:padding="8dp"
-            android:background="@drawable/login_username"
-            android:textColorHint="@color/colorAccent"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@drawable/login_username"
+            android:padding="8dp"
+            android:textColorHint="@color/colorAccent">
 
             <EditText
                 android:id="@+id/login_mobile"
-                android:background="@null"
-                android:layout_marginBottom="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:background="@null"
                 android:hint="Mobile Number"
                 android:inputType="text" />
         </android.support.design.widget.TextInputLayout>
@@ -37,36 +36,46 @@
         <android.support.design.widget.TextInputLayout
             android:id="@+id/login_password_til"
             android:layout_width="match_parent"
-            android:padding="8dp"
-            android:textColorHint="@color/colorAccent"
-            android:background="@drawable/login_password"
             android:layout_height="wrap_content"
-            android:layout_below="@id/login_mobile_til">
+            android:layout_below="@id/login_mobile_til"
+            android:background="@drawable/login_password"
+            android:padding="8dp"
+            android:textColorHint="@color/colorAccent">
 
             <EditText
                 android:id="@+id/login_password"
-                android:background="@null"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/login_mobile"
-android:layout_marginBottom="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@null"
                 android:hint="Password" />
         </android.support.design.widget.TextInputLayout>
 
+        <ProgressBar
+            android:id="@+id/login_progress"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/login_password_til"
+            android:indeterminate="true"
+            android:theme="@style/LinearProgress"
+            android:visibility="invisible" />
+
 
         <Button
-            android:layout_marginTop="16dp"
             android:id="@+id/login_button"
-            android:textColor="#fff"
             android:layout_width="match_parent"
-            android:fontFamily="@font/roboto_regular"
-            android:background="@color/colorAccent"
             android:layout_height="wrap_content"
             android:layout_below="@id/login_password_til"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:background="@color/colorAccent"
+            android:fontFamily="@font/roboto_regular"
             android:text="LOGIN"
+            android:textAllCaps="false"
 
-            android:textAllCaps="false" />
+            android:textColor="#fff" />
     </RelativeLayout>
 
 

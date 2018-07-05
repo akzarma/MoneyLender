@@ -5,6 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".FragmentCollect">
+    <ProgressBar
+        android:id="@+id/collect_money_progress"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:theme="@style/LinearProgress"
+        android:visibility="invisible" />
 
     <android.support.v7.widget.CardView
         android:id="@+id/collect_card"
@@ -86,8 +94,8 @@
                 android:id="@+id/collect_name_key"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:layout_below="@id/customer_account_field"
-                android:layout_marginTop="16dp"
                 android:fontFamily="@font/roboto_light"
                 android:text="Name"
                 android:textColor="@color/colorWhiteText" />
@@ -95,10 +103,10 @@
             <TextView
                 android:id="@+id/customer_name_field"
                 android:layout_width="match_parent"
+                android:layout_marginTop="8dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/customer_account_field"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
                 android:layout_toEndOf="@id/collect_name_key"
                 android:fontFamily="@font/roboto_medium"
                 android:textColor="@color/colorWhiteText" />

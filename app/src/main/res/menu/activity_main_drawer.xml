@@ -5,30 +5,30 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_person_add_black_24dp"
+            android:id="@+id/nav_kyc"
+            android:icon="@drawable/add_customer_96"
             android:title="KYC" />
         <item
             android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Collect Daily Loan" />
+            android:icon="@drawable/get_cash_96"
+            android:title="Collect Loan" />
         <item
             android:id="@+id/nav_monthly_loan_grant"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/loan_grant_96"
             android:title="Loan Grant" />
         <item
             android:id="@+id/nav_agent_register"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Agent Register" />
+            android:icon="@drawable/ic_person_add_black_24dp"
+            android:title="Register Agent" />
 
         <item
             android:id="@+id/nav_customer_daily"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/daily_96"
             android:title="Customer Daily Info" />
         <!--<item-->
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="Others">
         <menu>
             <item
                 android:id="@+id/nav_send"
@@ -36,7 +36,7 @@
                 android:title="Daily Info" />
             <item
                 android:id="@+id/nav_logout"
-                android:icon="@drawable/ic_menu_send"
+                android:icon="@drawable/log_out_96"
                 android:title="Logout" />
         </menu>
     </item>

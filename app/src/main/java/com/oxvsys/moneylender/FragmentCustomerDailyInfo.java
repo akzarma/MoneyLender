@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -74,6 +75,8 @@ public class FragmentCustomerDailyInfo extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_customer_daily_info, container, false);
 
+        final ProgressBar progressBar = view.findViewById(R.id.customer_daily_progress);
+        progressBar.setVisibility(View.VISIBLE);
         sel_calendar = (Calendar) getArguments().getSerializable(ARG_PARAM1);
         recyclerView = view.findViewById(R.id.customer_daily_info_recycler);
         Button date_button = view.findViewById(R.id.date_button);
@@ -92,7 +95,7 @@ public class FragmentCustomerDailyInfo extends Fragment {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
+                progressBar.setVisibility(View.VISIBLE);
                 List<Agent> agents = new ArrayList<>();
                 for (final DataSnapshot each_agent : dataSnapshot.getChildren()) {
                     final Agent curr_agent = new Agent();
@@ -127,7 +130,7 @@ public class FragmentCustomerDailyInfo extends Fragment {
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                            progressBar.setVisibility(View.INVISIBLE);
                         }
                     });
 //                    for(AgentCollect agentCollect : )
@@ -180,23 +183,23 @@ public class FragmentCustomerDailyInfo extends Fragment {
                             recyclerView.setLayoutManager(mLayoutManager);
                             recyclerView.setItemAnimator(new DefaultItemAnimator());
                             recyclerView.setAdapter(mAdapter);
+                            progressBar.setVisibility(View.INVISIBLE);
+
                         }
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                            progressBar.setVisibility(View.INVISIBLE);
                         }
                     });
 
 
                 }
-
-
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                progressBar.setVisibility(View.INVISIBLE);
             }
         });
 

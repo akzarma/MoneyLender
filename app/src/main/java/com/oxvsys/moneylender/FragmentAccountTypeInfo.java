@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +19,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -32,7 +35,6 @@ import java.util.Map;
 
 import static com.oxvsys.moneylender.HomeActivity.database;
 import static com.oxvsys.moneylender.MainActivity.CaltoStringDate;
-import static com.oxvsys.moneylender.MainActivity.getData;
 import static com.oxvsys.moneylender.MainActivity.logged_agent;
 import static com.oxvsys.moneylender.MainActivity.logged_type;
 
@@ -87,11 +89,17 @@ public class FragmentAccountTypeInfo extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_account_type_info, container, false);
 
+        final TextView textView = view.findViewById(R.id.no_customer_under_monthly);
+        textView.setVisibility(View.INVISIBLE);
+        final CardView heading_card = view.findViewById(R.id.heading_card_view);
+
         final RecyclerView recycler = view.findViewById(R.id.customer_daily_basis_recycler);
 
 //        final String logged_agent = getData("user_id", getContext());
 //        final String logged_type = getData("user_type", getContext());
-        Button date_button = (Button) view.findViewById(R.id.dashboard_title_button);
+        final ProgressBar progressBar = view.findViewById(R.id.account_type_progress);
+        progressBar.setVisibility(View.VISIBLE);
+        final Button date_button = (Button) view.findViewById(R.id.dashboard_title_button);
         selected_account_type = getArguments().getString(ARG_PARAM2);
         sel_calendar = (Calendar) getArguments().getSerializable(ARG_PARAM1);
         final String cal_str = CaltoStringDate(sel_calendar);
@@ -111,6 +119,7 @@ public class FragmentAccountTypeInfo extends Fragment {
                 agent_collect_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        progressBar.setVisibility(View.VISIBLE);
                         final HashMap<String, String> account_amount_map = new HashMap<>();
 
                         for (DataSnapshot each_account : dataSnapshot.getChildren()) {
@@ -174,25 +183,31 @@ public class FragmentAccountTypeInfo extends Fragment {
                                             }
                                         }
 
+                                        if (customer_amount_map.isEmpty()){
+                                            textView.setVisibility(View.VISIBLE);
+                                            heading_card.setVisibility(View.INVISIBLE);
+                                            date_button.setVisibility(View.INVISIBLE);
+                                        }
                                         mAdapter = new CustomerDailyInfoAdapter(customer_amount_map, sel_calendar, getContext(), getFragmentManager());
                                         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
                                         recycler.setLayoutManager(mLayoutManager);
                                         recycler.setItemAnimator(new DefaultItemAnimator());
                                         recycler.setAdapter(mAdapter);
+                                        progressBar.setVisibility(View.INVISIBLE);
 
 
                                     }
 
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                                        progressBar.setVisibility(View.INVISIBLE);
                                     }
                                 });
                             }
 
                             @Override
                             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                                progressBar.setVisibility(View.INVISIBLE);
                             }
                         });
 
@@ -201,6 +216,7 @@ public class FragmentAccountTypeInfo extends Fragment {
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
                         Log.d("onCancelled", databaseError.toString());
+                        progressBar.setVisibility(View.INVISIBLE);
                     }
                 });
             } else if (logged_type.equals("admin")) {
@@ -209,6 +225,7 @@ public class FragmentAccountTypeInfo extends Fragment {
                 agent_collect_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        progressBar.setVisibility(View.VISIBLE);
                         final HashMap<String, String> account_amount_map = new HashMap<>();
                         HashMap<String, Object> agent_object_map = (HashMap<String, Object>) dataSnapshot.getValue();
                         final HashMap<String, AgentAmount> agentAmountHashMap = new HashMap<>();
@@ -315,20 +332,21 @@ public class FragmentAccountTypeInfo extends Fragment {
                                         recycler.setLayoutManager(mLayoutManager);
                                         recycler.setItemAnimator(new DefaultItemAnimator());
                                         recycler.setAdapter(mAdapter);
+                                        progressBar.setVisibility(View.INVISIBLE);
 
 
                                     }
 
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                                        progressBar.setVisibility(View.INVISIBLE);
                                     }
                                 });
                             }
 
                             @Override
                             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                                progressBar.setVisibility(View.INVISIBLE);
                             }
                         });
 
@@ -337,6 +355,7 @@ public class FragmentAccountTypeInfo extends Fragment {
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
                         Log.d("onCancelled", databaseError.toString());
+                        progressBar.setVisibility(View.INVISIBLE);
                     }
                 });
 

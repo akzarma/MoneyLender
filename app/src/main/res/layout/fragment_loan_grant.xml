@@ -3,10 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="16dp"
+    android:layout_marginBottom="40dp"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
-    android:layout_marginBottom="40dp"
+    android:layout_marginTop="16dp"
     tools:context=".FragmentLoanGrant">
 
     <!-- TODO: Update blank fragment layout -->
@@ -24,7 +24,7 @@
                 android:id="@+id/account_number_prefix_field"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="22dp"
                 android:hint="--- - "
                 android:textSize="18sp" />
 
@@ -107,7 +107,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/discount_amount_til"
-                android:layout_margin="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="24dp"
                 android:fontFamily="@font/roboto_regular"
                 android:text="Select Type"
                 android:textAllCaps="true" />
@@ -115,15 +117,16 @@
 
             <Spinner
                 android:id="@+id/account_type_field"
+                style="@style/Base.Widget.AppCompat.Spinner.Underlined"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:layout_below="@+id/select_type"
                 android:entries="@array/account_type_items" />
 
 
             <Spinner
                 android:id="@+id/loan_grant_daily_payment_options_spinner"
+                style="@style/Base.Widget.AppCompat.Spinner.Underlined"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/account_type_field"
@@ -136,6 +139,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/account_type_field"
+                android:layout_marginTop="24dp"
                 android:visibility="invisible">
 
                 <EditText
@@ -201,25 +205,27 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/loan_grant_additional_til"
-                android:layout_margin="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="24dp"
                 android:fontFamily="@font/roboto_regular"
                 android:text="Select Agent"
                 android:textAllCaps="true" />
 
             <Spinner
                 android:id="@+id/agent_spinner"
+                style="@style/Base.Widget.AppCompat.Spinner.Underlined"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/select_agent_label"
-                android:layout_marginTop="16dp" />
+                android:layout_below="@+id/select_agent_label" />
 
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/loan_grant_roi_til"
-                android:layout_marginBottom="100dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/agent_spinner"
+                android:layout_marginBottom="100dp"
                 android:visibility="invisible">
 
                 <EditText

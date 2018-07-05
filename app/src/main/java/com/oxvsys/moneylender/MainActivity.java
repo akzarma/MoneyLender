@@ -51,6 +51,14 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        Menu nav_menu = navigationView.getMenu();
+
+        if(logged_type.equals("agent")){
+            nav_menu.findItem(R.id.nav_monthly_loan_grant).setVisible(false);
+            nav_menu.findItem(R.id.nav_kyc).setVisible(false);
+            nav_menu.findItem(R.id.nav_agent_register).setVisible(false);
+        }
+
 
         View hView = navigationView.getHeaderView(0);
         TextView nav_user = hView.findViewById(R.id.nav_header_username);
@@ -174,7 +182,7 @@ public class MainActivity extends AppCompatActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_kyc) {
             // Handle the camera action
             if (getSupportActionBar() != null)
                 getSupportActionBar().setTitle("KYC");

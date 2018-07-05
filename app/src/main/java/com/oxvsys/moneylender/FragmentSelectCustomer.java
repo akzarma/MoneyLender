@@ -2,10 +2,8 @@ package com.oxvsys.moneylender;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -16,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 
 import com.google.firebase.database.DataSnapshot;
@@ -87,6 +86,9 @@ public class FragmentSelectCustomer extends Fragment {
         fields_loaded = 0;
         View view = inflater.inflate(R.layout.fragment_select_customer, container, false);
 
+        final ProgressBar progressBar = view.findViewById(R.id.select_customer_progress);
+        progressBar.setVisibility(View.VISIBLE);
+
 //        final String agent_id = getData("user_id", getContext());
 //        final String logged_type = getData("user_type", getContext());
 
@@ -110,7 +112,6 @@ public class FragmentSelectCustomer extends Fragment {
 //        Button next_button = view.findViewById(R.id.customer_next_button);
         if (logged_type.equals("admin")) {
             customers_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
-                @RequiresApi(api = Build.VERSION_CODES.N)
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -135,13 +136,14 @@ public class FragmentSelectCustomer extends Fragment {
                     fields_loaded+=1;
                     if(fields_loaded==1){
                         fab.setVisibility(View.VISIBLE);
+                        progressBar.setVisibility(View.INVISIBLE);
                     }
                 }
 
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                    progressBar.setVisibility(View.INVISIBLE);
                 }
             });
 
