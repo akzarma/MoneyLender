@@ -70,10 +70,30 @@
                 android:textSize="32sp" />
 
             <TextView
-                android:id="@+id/collect_account_key"
+                android:id="@+id/remaining_money_key"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/customer_loan_amount_field"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/roboto_light"
+                android:text="Remaining Balance "
+                android:textColor="@color/colorWhiteText" />
+            <TextView
+                android:id="@+id/remaining_money_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/customer_loan_amount_field"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_toEndOf="@id/remaining_money_key"
+                android:fontFamily="@font/roboto_medium"
+                android:textColor="@color/colorWhiteText" />
+
+            <TextView
+                android:id="@+id/collect_account_key"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/remaining_money_key"
                 android:layout_marginTop="16dp"
                 android:fontFamily="@font/roboto_light"
                 android:text="Account No"
@@ -83,7 +103,7 @@
                 android:id="@+id/customer_account_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/customer_loan_amount_field"
+                android:layout_below="@id/remaining_money_key"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_toEndOf="@id/collect_account_key"
@@ -189,7 +209,7 @@
 
             <TextView
                 android:id="@+id/customer_mobile_field"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/customer_account_type_field"
                 android:layout_marginStart="16dp"
@@ -198,6 +218,17 @@
 
                 android:fontFamily="@font/roboto_medium"
                 android:textColor="@color/colorWhiteText" />
+            <ImageView
+                android:id="@+id/dialer_view"
+                android:layout_toRightOf="@id/customer_mobile_field"
+                android:layout_below="@id/customer_account_type_field"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:adjustViewBounds="true"
+                android:maxWidth="20dp"
+                android:src="@drawable/dialer"
+                />
 
             <!--<TextView-->
             <!--android:id="@+id/collect_mobile_key"-->
@@ -212,6 +243,7 @@
     </android.support.v7.widget.CardView>
 
     <RelativeLayout
+        android:id="@+id/amount_relative_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/collect_card"
@@ -238,8 +270,17 @@
             android:textSize="50dp"
             android:textStyle="bold" />
 
-    </RelativeLayout>
 
+
+
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/expected_amount_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Expected Amount "
+        android:layout_below="@id/amount_relative_layout"
+        android:layout_centerHorizontal="true"/>
 
     <!-- TODO: Update blank fragment layout -->
 
