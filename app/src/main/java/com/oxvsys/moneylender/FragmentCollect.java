@@ -1,6 +1,8 @@
 package com.oxvsys.moneylender;
 
 import android.content.Context;
+import android.content.Intent;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static com.oxvsys.moneylender.HomeActivity.database;
 import static com.oxvsys.moneylender.MainActivity.logged_agent;
@@ -38,7 +42,10 @@ public class FragmentCollect extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     Customer selected_customer;
     Long deposited = 0L;
+    Long file_amt;
     int fields_loaded = 0;
+    int months_passed;
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -83,6 +90,9 @@ public class FragmentCollect extends Fragment {
         final TextView customer_mobile_field = view.findViewById(R.id.customer_mobile_field);
         final TextView customer_account_field = view.findViewById(R.id.customer_account_field);
         final TextView loan_duration_field = view.findViewById(R.id.loan_duration_field);
+        final TextView expected_amount_view = view.findViewById(R.id.expected_amount_view);
+        final TextView remaining_money_field = view.findViewById(R.id.remaining_money_field);
+        ImageView dialer_view = view.findViewById(R.id.dialer_view);
 //        final Button deposit_button = view.findViewById(R.id.deposit_button);
         final Account selected_account = (Account) getArguments().getSerializable(ARG_PARAM1);
 
@@ -94,7 +104,7 @@ public class FragmentCollect extends Fragment {
 //        final String logged_agent = getData("user_id", getContext());
 //        String logged_agent = getData("user_id", getContext());
 
-        Account account = new Account();
+//        Account account = new Account();
         DatabaseReference account_customer_db_ref = database.getReference("agentAccount").child(logged_agent).child(selected_account.getNo());
         account_customer_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -116,18 +126,51 @@ public class FragmentCollect extends Fragment {
                         accountList.add(account);
                         selected_customer.setAccounts1(accountList);
 
-                        customer_loan_amount_field.setText(String.valueOf(account.getDisb_amt()));
+                        file_amt = account.getFile_amt();
+                        Long deposited = account.getDeposited();
+                        Long amt_left = file_amt - deposited;
+
+                        customer_loan_amount_field.setText(String.valueOf(account.getFile_amt()));
                         customer_deposited_field.setText(String.valueOf(account.getDeposited()));
                         if (account.getType().equals("0")) {
                             customer_account_type_field.setText("Daily basis");
-                            loan_duration_field.setText(String.valueOf(account.getDuration())+" days");
-                        }
-                        else if (account.getType().equals("1")) {
-                            customer_account_type_field.setText("Monthly basis (" + account.getRoi() + "% interest)");
-                            loan_duration_field.setText(String.valueOf(account.getDuration())+" months");
+                            loan_duration_field.setText(String.valueOf(account.getDuration()) + " days");
+                            expected_amount_view.setText(String.valueOf(amt_left / account.getDuration()));
+                            remaining_money_field.setText(String.valueOf(amt_left));
+                        } else if (account.getType().equals("1")) {
+                            customer_account_type_field.setText("Monthly basis (" + account.getRoi() + "% annual interest)");
+                            loan_duration_field.setText(String.valueOf(account.getDuration()) + " months");
+
+                            if (amt_left != 0) {
+
+                                float roi = account.getRoi();
+                                Long months_duration = account.getDuration();
+                                float roi_per_month_100 = roi / 1200;
+
+                                Calendar today_cal = Calendar.getInstance();
+                                today_cal.set(Calendar.HOUR, 0);
+                                today_cal.set(Calendar.MINUTE, 0);
+                                today_cal.set(Calendar.SECOND, 0);
+                                today_cal.set(Calendar.MILLISECOND, 0);
+                                Calendar o_date_cal = Calendar.getInstance();
+                                o_date_cal.setTimeInMillis(account.getO_date().getTimeInMillis());
+
+                                Long days_diff = TimeUnit.MILLISECONDS.toDays(today_cal.getTimeInMillis() - o_date_cal.getTimeInMillis());
+                                months_passed = Integer.parseInt(String.valueOf(days_diff / 30).split("\\.")[0]);
+
+
+                                int months_left = (int) (months_duration - months_passed);
+                                int rcmnd_amt = (int) (amt_left * (int) Math.pow( (1 + roi_per_month_100), Double.parseDouble(String.valueOf(months_left))));
+
+                                int curr_month_expected_amount = rcmnd_amt / months_left;
+                                remaining_money_field.setText(String.valueOf(amt_left) + " excl. interest");
+                                expected_amount_view.setText("Expected Amount   ₹ " + String.valueOf(curr_month_expected_amount));
+                            } else{
+                                remaining_money_field.setText("0");
+                                expected_amount_view.setText("0");
+                            }
                         }
                         customer_mobile_field.setText(selected_customer.getMobile());
-
 
 
 //                                List<Account> accountList = new ArrayList<>();
@@ -139,6 +182,7 @@ public class FragmentCollect extends Fragment {
                         if (fields_loaded == 1) {
                             fab.setVisibility(View.VISIBLE);
                         }
+                        file_amt = account.getFile_amt();
                     }
 
                     @Override
@@ -155,7 +199,15 @@ public class FragmentCollect extends Fragment {
         });
 
 
-
+        dialer_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                callIntent.setData(Uri.parse("tel:" + customer_mobile_field.getText().toString()));
+                callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(callIntent);
+            }
+        });
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
