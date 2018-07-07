@@ -98,7 +98,7 @@ public class FragmentKYC extends Fragment {
         final EditText dob_field = view.findViewById(R.id.dob_field);
         final EditText address_field = view.findViewById(R.id.address_field);
 
-        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        FloatingActionButton fab = getActivity().findViewById(R.id.fab);
         fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_save_black_24dp));
         fab.setVisibility(View.VISIBLE);
 

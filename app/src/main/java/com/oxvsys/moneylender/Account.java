@@ -3,6 +3,7 @@ package com.oxvsys.moneylender;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Account implements Serializable {
     private String no;
@@ -11,14 +12,34 @@ public class Account implements Serializable {
     private Long deposited = 0L;
     private Calendar o_date;
     private Calendar c_date;
-    private int roi;
+
+
+    private Calendar last_pay_date;
+    private int roi=0;
     private String type; //    "0" or  "1"
     private Long duration;
-    private String lf_no;
+    private String lf_no ="";
+
+    public HashMap<String, String> getMap(){
+        HashMap<String, String> attrs = new HashMap<>();
+        attrs.put("disb_amt", String.valueOf(this.disb_amt));
+        attrs.put("file_amt", String.valueOf(this.file_amt));
+        attrs.put("deposited", String.valueOf(this.deposited));
+        attrs.put("o_date", MainActivity.CaltoStringDate(this.o_date));
+        attrs.put("c_date", MainActivity.CaltoStringDate(this.c_date));
+        if(this.last_pay_date!=null)
+            attrs.put("last_pay_date", MainActivity.CaltoStringDate(this.last_pay_date));
+        attrs.put("roi", String.valueOf(this.roi));
+        attrs.put("type", this.type);
+        attrs.put("duration", String.valueOf(this.duration));
+        attrs.put("lf_no", this.lf_no);
+        return attrs;
+    }
 
     public Long getFile_amt() {
         return file_amt;
     }
+
 
     public void setFile_amt(Long file_amt) {
         this.file_amt = file_amt;
@@ -59,22 +80,22 @@ public class Account implements Serializable {
             this.setC_date(value1.get("c_date").toString());
             MainActivity.CaltoStringDate(this.c_date);
         }
-
+        if (value1.get("last_pay_date") != null) {
+            this.setLast_pay_date(value1.get("last_pay_date").toString());
+            MainActivity.CaltoStringDate(this.last_pay_date);
+        }
         if (value1.get("roi") != null)
             this.roi = Integer.parseInt(value1.get("roi").toString());
         if (value1.get("deposited") != null)
             this.deposited = Long.parseLong(value1.get("deposited").toString());
 
         this.type = value1.get("type").toString();
-        if(value1.get("duration")!=null)
+        if (value1.get("duration") != null)
             this.duration = Long.parseLong(value1.get("duration").toString());
-        if(value1.get("lf_no")!=null)
+        if (value1.get("lf_no") != null)
             this.lf_no = value1.get("lf_no").toString();
-        if(value1.get("file_amt")!=null)
+        if (value1.get("file_amt") != null)
             this.file_amt = Long.parseLong(value1.get("file_amt").toString());
-
-
-
 
 
     }
@@ -86,6 +107,7 @@ public class Account implements Serializable {
     public Long getDeposited() {
         return deposited;
     }
+
 
     public void setDeposited(Long deposited) {
         this.deposited = deposited;
@@ -121,6 +143,14 @@ public class Account implements Serializable {
 
     public void setC_date(String c_date) {
         this.c_date = MainActivity.StringDateToCal(c_date);
+    }
+
+    public Calendar getLast_pay_date() {
+        return last_pay_date;
+    }
+
+    public void setLast_pay_date(String last_pay_date) {
+        this.last_pay_date = MainActivity.StringDateToCal(last_pay_date);
     }
 
     public int getRoi() {

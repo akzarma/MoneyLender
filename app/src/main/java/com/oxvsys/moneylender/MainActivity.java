@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity
             nav_menu.findItem(R.id.nav_monthly_loan_grant).setVisible(false);
             nav_menu.findItem(R.id.nav_kyc).setVisible(false);
             nav_menu.findItem(R.id.nav_agent_register).setVisible(false);
+            nav_menu.findItem(R.id.nav_send).setVisible(false);
         }
 
 
@@ -116,7 +117,7 @@ public class MainActivity extends AppCompatActivity
                     if (getSupportActionBar() != null)
                         getSupportActionBar().setTitle("Daily Basis Payment");
                     if (getData("user_type", getApplicationContext()).equals("admin")) {
-                        FragmentCustomerDailyInfo fcdi = FragmentCustomerDailyInfo.newInstance(calendar);
+                        FragmentAccountTypeInfo fcdi = FragmentAccountTypeInfo.newInstance(calendar, "0");
                         fragmentTransaction.replace(R.id.fragment_container, fcdi).addToBackStack(null).
                                 commit();
                         return true;
@@ -205,7 +206,7 @@ public class MainActivity extends AppCompatActivity
                     commit();
         } else if (id == R.id.nav_send) {
             if (getSupportActionBar() != null)
-                getSupportActionBar().setTitle("Daily Info");
+                getSupportActionBar().setTitle("Agents Collection");
             Calendar calendar = Calendar.getInstance();
             FragmentDailyInfo fragmentDailyInfo = FragmentDailyInfo.newInstance(calendar);
             fragmentTransaction.replace(R.id.fragment_container, fragmentDailyInfo).addToBackStack(null).
@@ -213,7 +214,6 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_agent_register) {
             if (getSupportActionBar() != null)
                 getSupportActionBar().setTitle("Register Agent");
-            Calendar calendar = Calendar.getInstance();
             FragmentAgentRegister far = new FragmentAgentRegister();
             fragmentTransaction.replace(R.id.fragment_container, far).addToBackStack(null).
                     commit();

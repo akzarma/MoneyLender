@@ -174,12 +174,31 @@
                 android:layout_toEndOf="@id/loan_duration_key"
                 android:fontFamily="@font/roboto_medium"
                 android:textColor="@color/colorWhiteText" />
+            <TextView
+                android:id="@+id/start_date_key"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/loan_duration_key"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/roboto_light"
+                android:text="Start Date"
+                android:textColor="@color/colorWhiteText" />
 
+            <TextView
+                android:id="@+id/start_date_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/loan_duration_key"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_toEndOf="@id/start_date_key"
+                android:fontFamily="@font/roboto_medium"
+                android:textColor="@color/colorWhiteText" />
             <TextView
                 android:id="@+id/last_date_key"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/loan_duration_key"
+                android:layout_below="@id/start_date_field"
                 android:layout_marginTop="8dp"
                 android:fontFamily="@font/roboto_light"
                 android:text="Last Date"
@@ -189,7 +208,7 @@
                 android:id="@+id/last_date_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/loan_duration_key"
+                android:layout_below="@id/start_date_field"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:layout_toEndOf="@id/last_date_key"
@@ -300,8 +319,15 @@
         android:id="@+id/expected_amount_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Expected Amount "
+        android:text=""
         android:layout_below="@id/amount_relative_layout"
+        android:layout_centerHorizontal="true"/>
+    <TextView
+        android:id="@+id/info_field"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_below="@id/expected_amount_view"
         android:layout_centerHorizontal="true"/>
 
     <!-- TODO: Update blank fragment layout -->

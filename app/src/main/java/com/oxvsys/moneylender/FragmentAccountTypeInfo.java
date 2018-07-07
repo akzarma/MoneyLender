@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
@@ -104,9 +105,22 @@ public class FragmentAccountTypeInfo extends Fragment {
         sel_calendar = (Calendar) getArguments().getSerializable(ARG_PARAM1);
         final String cal_str = CaltoStringDate(sel_calendar);
         date_button.setText(cal_str);
+
+
         final FloatingActionButton fab = getActivity().findViewById(R.id.fab);
-        fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_chevron_right_black_24dp));
-        fab.setVisibility(View.INVISIBLE);
+        fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.get_cash_96));
+//        fab.setVisibility(View.INVISIBLE);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                FragmentSelectAccount fragmentSelectAccount = new FragmentSelectAccount();
+                fragmentTransaction.replace(R.id.fragment_container, fragmentSelectAccount).addToBackStack(null).
+                        commit();
+            }
+        });
+
 
 
 //        List<CustomerAmount> customerAmountList = new ArrayList<>();
