@@ -4,14 +4,18 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseError;
@@ -39,6 +43,7 @@ public class FragmentKYC extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     TextInputLayout name_til , aadhar_til , occupation_til , mobile_til , dob_til , address_til;
+    Long lastCustomerId = -1L;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -77,14 +82,14 @@ public class FragmentKYC extends Fragment {
         }
     }
 
-    
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        View view = inflater.inflate(R.layout.fragment_fragment_kyc, container, false);
+        final View view = inflater.inflate(R.layout.fragment_fragment_kyc, container, false);
 
         final EditText name_field = view.findViewById(R.id.name_field);
         final EditText aadhar_field = view.findViewById(R.id.aadhar_field);
@@ -92,6 +97,10 @@ public class FragmentKYC extends Fragment {
         final EditText mobile_field = view.findViewById(R.id.mobile_field);
         final EditText dob_field = view.findViewById(R.id.dob_field);
         final EditText address_field = view.findViewById(R.id.address_field);
+
+        FloatingActionButton fab = getActivity().findViewById(R.id.fab);
+        fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_save_black_24dp));
+        fab.setVisibility(View.VISIBLE);
 
         name_til = view.findViewById(R.id.kyc_full_name_til);
         aadhar_til = view.findViewById(R.id.kyc_aadhar_til);
@@ -127,53 +136,47 @@ public class FragmentKYC extends Fragment {
         });
 
 
-
-        Button save_button = view.findViewById(R.id.deposit_button);
-        save_button.setOnClickListener(new View.OnClickListener() {
+//        Button save_button = view.findViewById(R.id.deposit_button);
+        fab.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
 
-                if(name_field.getText().toString().isEmpty()){
+                if (name_field.getText().toString().isEmpty()) {
                     name_til.setError("Name is required.");
                     return;
-                }
-                else if(aadhar_field.getText().toString().isEmpty()){
+                } else if (aadhar_field.getText().toString().isEmpty()) {
                     name_til.setErrorEnabled(false);
                     aadhar_til.setError("Aadhar is required.");
                     return;
                 }
 //                else aadhar_til.setErrorEnabled(false);
-                else if (aadhar_field.getText().toString().length() != 12){
+                else if (aadhar_field.getText().toString().length() != 12) {
                     aadhar_til.setErrorEnabled(false);
-
                     aadhar_til.setError("Invalid Aadhaar ID");
+                    return;
                 }
 //                else aadhar_til.setErrorEnabled(false);
-                else if(occupation_field.getText().toString().isEmpty()){
+                else if (occupation_field.getText().toString().isEmpty()) {
                     aadhar_til.setErrorEnabled(false);
-
                     occupation_til.setError("Occupation is required.");
                     return;
                 }
 //                else occupation_til.setErrorEnabled(false);
-                else if(mobile_field.getText().toString().isEmpty()){
+                else if (mobile_field.getText().toString().isEmpty()) {
                     occupation_til.setErrorEnabled(false);
-
                     mobile_til.setError("Mobile is required.");
                     return;
                 }
 //                else mobile_til.setErrorEnabled(false);
-                else if(dob_field.getText().toString().isEmpty()){
+                else if (dob_field.getText().toString().isEmpty()) {
                     mobile_til.setErrorEnabled(false);
-
                     dob_til.setError("DOB is required.");
                     return;
                 }
 //                else dob_til.setErrorEnabled(false);
-                else if(address_field.getText().toString().isEmpty()){
+                else if (address_field.getText().toString().isEmpty()) {
                     dob_til.setErrorEnabled(false);
-
                     address_til.setError("Address is required.");
                     return;
                 }
@@ -193,16 +196,27 @@ public class FragmentKYC extends Fragment {
                 attrs.put("address", address_field.getText().toString());
 
                 id.put(key, attrs);
+                final RelativeLayout rl = view.findViewById(R.id.kyc_relative_layout);
                 customers.updateChildren(id, new DatabaseReference.CompletionListener() {
                     @Override
                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                         if (databaseError == null) {
+
+                            Snackbar snackbar = Snackbar
+                                    .make(rl, "Customer Added Successfully!", Snackbar.LENGTH_LONG);
+                            snackbar.show();
+                            FragmentTransaction ft = getFragmentManager().beginTransaction();
+                            FragmentKYC fd = new FragmentKYC();
+                            ft.replace(R.id.fragment_container, fd).addToBackStack(null).
+                                    commit();
 
                         } else {
                             Toast.makeText(getContext(), "There is some error in saving the details.", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
+
+
 //                customers.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
 //                    @Override
 //                    public void onDataChange(@NonNull DataSnapshot id) {

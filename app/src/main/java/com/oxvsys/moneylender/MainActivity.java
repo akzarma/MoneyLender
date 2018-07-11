@@ -24,39 +24,52 @@ import android.widget.TextView;
 
 import java.util.Calendar;
 
-import static com.oxvsys.moneylender.HomeActivity.database;
-
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, FragmentKYC.OnFragmentInteractionListener {
 
     Toolbar toolbar;
+    static String logged_agent;
+    static String logged_type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
 
+        logged_agent = getData("user_id", getApplicationContext());
+        logged_type = getData("user_type", getApplicationContext());
+
+
         setContentView(R.layout.activity_main);
-        toolbar = findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 //
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        Menu nav_menu = navigationView.getMenu();
+
+        if(logged_type.equals("agent")){
+            nav_menu.findItem(R.id.nav_monthly_loan_grant).setVisible(false);
+            nav_menu.findItem(R.id.nav_kyc).setVisible(false);
+            nav_menu.findItem(R.id.nav_agent_register).setVisible(false);
+            nav_menu.findItem(R.id.nav_send).setVisible(false);
+        }
+
 
         View hView = navigationView.getHeaderView(0);
         TextView nav_user = hView.findViewById(R.id.nav_header_username);
         TextView info_user = hView.findViewById(R.id.nav_header_info);
 
-        nav_user.setText(getData("user_id" , getApplicationContext()));
+        nav_user.setText(getData("user_id", getApplicationContext()));
         info_user.setText("");
 
-        BottomNavigationView navigation = findViewById(R.id.bottom_nav_view);
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.bottom_nav_view);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         setupFirstFragment();
@@ -70,13 +83,13 @@ public class MainActivity extends AppCompatActivity
         Calendar calendar = Calendar.getInstance();
         if (getSupportActionBar() != null)
             getSupportActionBar().setTitle("Dashboard");
-        String logged_in = getData("user_type" , getApplicationContext());
-        if(logged_in.equals("admin")){
+//        String logged_in = getData("user_type", getApplicationContext());
+        if (logged_type.equals("admin")) {
             FragmentDashboard fragmentDashboard = FragmentDashboard.newInstance(calendar);
             fragmentTransaction.replace(R.id.fragment_container, fragmentDashboard).
                     addToBackStack(null).
                     commit();
-        }else {
+        } else {
             FragmentDashboardSpecific fragmentDashboardSpecific =
                     FragmentDashboardSpecific.newInstance(calendar);
             fragmentTransaction.replace(R.id.fragment_container,
@@ -100,18 +113,27 @@ public class MainActivity extends AppCompatActivity
                     setupFirstFragment();
                     return true;
                 case R.id.bottom_nav_daily_basis:
-                    toolbar.setTitle("Daily Basis Accounts");
+//                    toolbar.setTitle("Daily Basis Accounts");
                     if (getSupportActionBar() != null)
-                        getSupportActionBar().setTitle("Customer Daily Report");
-                    FragmentAccountTypeInfo fragmentAccountTypeInfo = FragmentAccountTypeInfo.newInstance(calendar, "0");
-                    fragmentTransaction.replace(R.id.fragment_container, fragmentAccountTypeInfo).addToBackStack(null).
-                            commit();
-                    return true;
+                        getSupportActionBar().setTitle("Daily Basis Payment");
+                    if (getData("user_type", getApplicationContext()).equals("admin")) {
+                        FragmentAccountTypeInfo fcdi = FragmentAccountTypeInfo.newInstance(calendar, "0");
+                        fragmentTransaction.replace(R.id.fragment_container, fcdi).addToBackStack(null).
+                                commit();
+                        return true;
+                    } else {
+                        FragmentAccountTypeInfo fragmentAccountTypeInfo = FragmentAccountTypeInfo.newInstance(calendar, "0");
+                        fragmentTransaction.replace(R.id.fragment_container, fragmentAccountTypeInfo).addToBackStack(null).
+                                commit();
+                        return true;
+                    }
+
+
                 case R.id.bottom_nav_monthly_basis:
-                    toolbar.setTitle("Monthly Basis Accounts");
+                    toolbar.setTitle("Monthly Basis Payment");
                     if (getSupportActionBar() != null)
-                        getSupportActionBar().setTitle("Customer Monthly Report");
-                    fragmentAccountTypeInfo = FragmentAccountTypeInfo.newInstance(calendar, "1");
+                        getSupportActionBar().setTitle("Monthly Basis Payment");
+                    FragmentAccountTypeInfo fragmentAccountTypeInfo = FragmentAccountTypeInfo.newInstance(calendar, "1");
                     fragmentTransaction.replace(R.id.fragment_container, fragmentAccountTypeInfo).addToBackStack(null).
                             commit();
                     return true;
@@ -122,7 +144,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -145,9 +167,11 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+
+        // Toolbar top-right options
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -160,7 +184,7 @@ public class MainActivity extends AppCompatActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_kyc) {
             // Handle the camera action
             if (getSupportActionBar() != null)
                 getSupportActionBar().setTitle("KYC");
@@ -169,20 +193,20 @@ public class MainActivity extends AppCompatActivity
                     commit();
         } else if (id == R.id.nav_gallery) {
             if (getSupportActionBar() != null)
-                getSupportActionBar().setTitle("Daily Collect Loan");
+                getSupportActionBar().setTitle("Collect Money");
             FragmentSelectAccount fragmentSelectAccount = new FragmentSelectAccount();
             fragmentTransaction.replace(R.id.fragment_container, fragmentSelectAccount).addToBackStack(null).
                     commit();
 
         } else if (id == R.id.nav_monthly_loan_grant) {
             if (getSupportActionBar() != null)
-                getSupportActionBar().setTitle("Monthly Loan Grant");
+                getSupportActionBar().setTitle("Grant Loan");
             FragmentSelectCustomer fragmentSelectCustomer = new FragmentSelectCustomer();
             fragmentTransaction.replace(R.id.fragment_container, fragmentSelectCustomer).addToBackStack(null).
                     commit();
         } else if (id == R.id.nav_send) {
             if (getSupportActionBar() != null)
-                getSupportActionBar().setTitle("Daily Info");
+                getSupportActionBar().setTitle("Agents Collection");
             Calendar calendar = Calendar.getInstance();
             FragmentDailyInfo fragmentDailyInfo = FragmentDailyInfo.newInstance(calendar);
             fragmentTransaction.replace(R.id.fragment_container, fragmentDailyInfo).addToBackStack(null).
@@ -190,20 +214,19 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_agent_register) {
             if (getSupportActionBar() != null)
                 getSupportActionBar().setTitle("Register Agent");
-            Calendar calendar = Calendar.getInstance();
             FragmentAgentRegister far = new FragmentAgentRegister();
             fragmentTransaction.replace(R.id.fragment_container, far).addToBackStack(null).
                     commit();
         }
-
-        else if(id == R.id.nav_customer_daily){
-            if (getSupportActionBar() != null)
-                getSupportActionBar().setTitle("Customer Daily Report");
-            Calendar calendar = Calendar.getInstance();
-            FragmentCustomerDailyInfo far = FragmentCustomerDailyInfo.newInstance(calendar);
-            fragmentTransaction.replace(R.id.fragment_container, far).addToBackStack(null).
-                    commit();
-        }else if(id == R.id.nav_logout){
+//        else if (id == R.id.nav_customer_daily) {
+//            if (getSupportActionBar() != null)
+//                getSupportActionBar().setTitle("Customer Report");
+//            Calendar calendar = Calendar.getInstance();
+//            FragmentCustomerDailyInfo far = FragmentCustomerDailyInfo.newInstance(calendar);
+//            fragmentTransaction.replace(R.id.fragment_container, far).addToBackStack(null).
+//                    commit();
+//        }
+        else if (id == R.id.nav_logout) {
             SharedPreferences preferences = PreferenceManager.
                     getDefaultSharedPreferences(getApplicationContext());
             SharedPreferences.Editor editor = preferences.edit();
@@ -216,7 +239,7 @@ public class MainActivity extends AppCompatActivity
             finish();
         }
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -226,17 +249,19 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    public static String CaltoStringDate(Calendar cal){
-        return cal.get(Calendar.DAY_OF_MONTH)+"-"+ (cal.get(Calendar.MONTH)+1) +"-"+ cal.get(Calendar.YEAR);
+    public static String CaltoStringDate(Calendar cal) {
+        return cal.get(Calendar.DAY_OF_MONTH) + "-" + (cal.get(Calendar.MONTH) + 1) + "-" + cal.get(Calendar.YEAR);
     }
-    public static Calendar StringDateToCal(String date){
+
+    public static Calendar StringDateToCal(String date) {
         String[] date1 = date.split("-");
         Calendar cal = Calendar.getInstance();
-        cal.set(Integer.parseInt(date1[2]), Integer.parseInt(date1[1])-1, Integer.parseInt(date1[0]));
+        cal.set(Integer.parseInt(date1[2]), Integer.parseInt(date1[1]) - 1, Integer.parseInt(date1[0]));
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
+        CaltoStringDate(cal);
         return cal;
     }
 

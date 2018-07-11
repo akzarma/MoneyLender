@@ -1,52 +1,343 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:padding="16dp"
     android:layout_height="match_parent"
     tools:context=".FragmentCollect">
+    <ProgressBar
+        android:id="@+id/collect_money_progress"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:theme="@style/LinearProgress"
+        android:visibility="invisible" />
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <android.support.v7.widget.CardView
+        android:id="@+id/collect_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/customer_name_field"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/customer_id_field"
-        android:layout_below="@id/customer_name_field"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/customer_loan_amount_field"
-        android:layout_below="@id/customer_id_field"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/customer_deposited_field"
-        android:layout_below="@id/customer_loan_amount_field"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/customer_account_type_field"
-        android:layout_below="@id/customer_deposited_field"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/customer_mobile_field"
-        android:layout_below="@id/customer_account_type_field"/>
-    <EditText
-        android:id="@+id/amount_field"
-        android:inputType="number"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/customer_mobile_field"/>
-    <Button
-        android:id="@+id/deposit_button"
+        android:layout_margin="16dp"
+        app:cardBackgroundColor="#fff"
+        app:cardCornerRadius="4dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/collect_loan_amt_key"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_medium"
+                android:text="Loan Amount"
+                android:textAllCaps="true"
+                android:textColor="@color/colorWhiteText" />
+
+            <TextView
+                android:id="@+id/customer_loan_amount_field"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/collect_loan_amt_key"
+                android:fontFamily="@font/roboto_medium"
+                android:text="..."
+                android:textColor="@color/colorWhiteText"
+                android:textSize="32sp" />
+
+            <TextView
+                android:id="@+id/collect_deposit_key"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginStart="16dp"
+                android:fontFamily="@font/roboto_medium"
+                android:text="Total Deposited"
+                android:textAllCaps="true"
+                android:textColor="@color/colorWhiteText" />
+
+            <TextView
+                android:id="@+id/customer_deposited_field"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/collect_deposit_key"
+                android:layout_alignParentRight="true"
+                android:fontFamily="@font/roboto_medium"
+                android:text="..."
+                android:textColor="@color/colorWhiteText"
+                android:textSize="32sp" />
+
+            <TextView
+                android:id="@+id/remaining_money_key"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/customer_loan_amount_field"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/roboto_light"
+                android:text="Remaining Balance "
+                android:textColor="@color/colorWhiteText" />
+            <TextView
+                android:id="@+id/remaining_money_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/customer_loan_amount_field"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_toEndOf="@id/remaining_money_key"
+                android:fontFamily="@font/roboto_medium"
+                android:textColor="@color/colorWhiteText" />
+
+            <TextView
+                android:id="@+id/collect_account_key"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/remaining_money_key"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/roboto_light"
+                android:text="Account No"
+                android:textColor="@color/colorWhiteText" />
+
+            <TextView
+                android:id="@+id/customer_account_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/remaining_money_key"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_toEndOf="@id/collect_account_key"
+                android:fontFamily="@font/roboto_medium"
+                android:textColor="@color/colorWhiteText" />
+
+            <TextView
+                android:id="@+id/collect_name_key"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_below="@id/customer_account_field"
+                android:fontFamily="@font/roboto_light"
+                android:text="Name"
+                android:textColor="@color/colorWhiteText" />
+
+            <TextView
+                android:id="@+id/customer_name_field"
+                android:layout_width="match_parent"
+                android:layout_marginTop="8dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/customer_account_field"
+                android:layout_marginStart="16dp"
+                android:layout_toEndOf="@id/collect_name_key"
+                android:fontFamily="@font/roboto_medium"
+                android:textColor="@color/colorWhiteText" />
+
+
+            <TextView
+                android:id="@+id/collect_customer_id_key"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/collect_name_key"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/roboto_light"
+                android:text="Customer ID"
+                android:textColor="@color/colorWhiteText" />
+
+            <TextView
+                android:id="@+id/customer_id_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/customer_name_field"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_toEndOf="@id/collect_customer_id_key"
+                android:fontFamily="@font/roboto_medium"
+                android:textColor="@color/colorWhiteText" />
+
+
+            <TextView
+                android:id="@+id/loan_duration_key"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/customer_id_field"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/roboto_light"
+                android:text="Loan Duration"
+                android:textColor="@color/colorWhiteText" />
+
+            <TextView
+                android:id="@+id/loan_duration_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/collect_customer_id_key"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_toEndOf="@id/loan_duration_key"
+                android:fontFamily="@font/roboto_medium"
+                android:textColor="@color/colorWhiteText" />
+            <TextView
+                android:id="@+id/start_date_key"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/loan_duration_key"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/roboto_light"
+                android:text="Start Date"
+                android:textColor="@color/colorWhiteText" />
+
+            <TextView
+                android:id="@+id/start_date_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/loan_duration_key"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_toEndOf="@id/start_date_key"
+                android:fontFamily="@font/roboto_medium"
+                android:textColor="@color/colorWhiteText" />
+            <TextView
+                android:id="@+id/last_date_key"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/start_date_field"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/roboto_light"
+                android:text="Last Date"
+                android:textColor="@color/colorWhiteText" />
+
+            <TextView
+                android:id="@+id/last_date_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/start_date_field"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_toEndOf="@id/last_date_key"
+                android:fontFamily="@font/roboto_medium"
+                android:textColor="@color/colorWhiteText" />
+
+
+
+            <TextView
+                android:id="@+id/collect_type_key"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/last_date_key"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/roboto_light"
+                android:text="Type"
+                android:textColor="@color/colorWhiteText" />
+
+            <TextView
+                android:id="@+id/customer_account_type_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/last_date_key"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_toEndOf="@id/collect_type_key"
+                android:fontFamily="@font/roboto_medium"
+                android:textColor="@color/colorWhiteText" />
+
+            <TextView
+                android:id="@+id/collect_mobile_key"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/collect_type_key"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/roboto_light"
+                android:text="Mobile"
+                android:textColor="@color/colorWhiteText" />
+
+            <TextView
+                android:id="@+id/customer_mobile_field"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/customer_account_type_field"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_toEndOf="@id/collect_mobile_key"
+
+                android:fontFamily="@font/roboto_medium"
+                android:textColor="@color/colorWhiteText" />
+            <ImageView
+                android:id="@+id/dialer_view"
+                android:layout_toRightOf="@id/customer_mobile_field"
+                android:layout_below="@id/customer_account_type_field"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:adjustViewBounds="true"
+                android:maxWidth="20dp"
+                android:src="@drawable/dialer"
+                />
+
+            <!--<TextView-->
+            <!--android:id="@+id/collect_mobile_key"-->
+            <!--android:layout_width="wrap_content"-->
+
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@id/collect_type_key"-->
+            <!--android:text="Mobile" />-->
+
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+    <RelativeLayout
+        android:id="@+id/amount_relative_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/amount_field"
-        android:text="Collect"/>
+        android:layout_below="@id/collect_card"
+        android:layout_centerHorizontal="true">
+
+        <TextView
+            android:id="@+id/inr_sign"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="₹"
+            android:textSize="30dp" />
+
+        <EditText
+            android:id="@+id/amount_field"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/inr_sign"
+            android:fontFamily="@font/roboto_regular"
+            android:hint="0"
+            android:background="@android:color/transparent"
+            android:inputType="number"
+            android:textColor="@color/black"
+            android:textSize="50dp"
+            android:textStyle="bold" />
+
+
+
+
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/expected_amount_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_below="@id/amount_relative_layout"
+        android:layout_centerHorizontal="true"/>
+    <TextView
+        android:id="@+id/info_field"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_below="@id/expected_amount_view"
+        android:layout_centerHorizontal="true"/>
+
+    <!-- TODO: Update blank fragment layout -->
+
+
+    <!--<Button-->
+    <!--android:id="@+id/deposit_button"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_below="@id/amount_field"-->
+    <!--android:text="Collect"/>-->
 
 </RelativeLayout>

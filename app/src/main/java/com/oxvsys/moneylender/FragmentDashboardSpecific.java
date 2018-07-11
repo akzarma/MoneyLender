@@ -5,14 +5,18 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -21,8 +25,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
-import org.joda.time.DateTimeComparator;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -30,7 +32,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.oxvsys.moneylender.HomeActivity.database;
-import static com.oxvsys.moneylender.MainActivity.getData;
+import static com.oxvsys.moneylender.MainActivity.logged_agent;
 
 public class FragmentDashboardSpecific extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -84,6 +86,8 @@ public class FragmentDashboardSpecific extends Fragment {
 
         date_button = view.findViewById(R.id.dashboard_select_date);
         from_date_button = view.findViewById(R.id.dashboard_from_button);
+        final ProgressBar progressBar = view.findViewById(R.id.dashboard_progress);
+        progressBar.setVisibility(View.VISIBLE);
         to_date_button = view.findViewById(R.id.dashboard_to_button);
         todays_value = (TextView) view.findViewById(R.id.todays_collection_value_dashboard);
         view_monthly_value_till_today = (TextView) view.findViewById(R.id.monthly_collection_value_dashboard);
@@ -97,11 +101,26 @@ public class FragmentDashboardSpecific extends Fragment {
                 sel_calendar.get(Calendar.YEAR);
 
         date_button.setText(sel_date);
+        final FloatingActionButton fab = getActivity().findViewById(R.id.fab);
+        fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.get_cash_96));
+//        fab.setVisibility(View.INVISIBLE);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                FragmentSelectAccount fragmentSelectAccount = new FragmentSelectAccount();
+                fragmentTransaction.replace(R.id.fragment_container, fragmentSelectAccount).addToBackStack(null).
+                        commit();
+            }
+        });
 
-        final String logged_in = getData("user_id", getContext());
 
-        DateTimeComparator d = DateTimeComparator.getDateOnlyInstance();
-        int comp = d.compare(sel_calendar , sel_calendar);
+
+//        final String logged_in = getData("user_id", getContext());
+
+//        DateTimeComparator d = DateTimeComparator.getDateOnlyInstance();
+//        int comp = d.compare(sel_calendar , sel_calendar);
 
         DatabaseReference ref = database.getReference("agentCollect");
         ref.addValueEventListener(new ValueEventListener() {
@@ -109,7 +128,7 @@ public class FragmentDashboardSpecific extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 final List<AccountAmountCollect> accountAmountCollectList = new ArrayList<>();
                 for (DataSnapshot agents : dataSnapshot.getChildren()) {
-                    if (Objects.requireNonNull(agents.getKey()).equals(logged_in)) {
+                    if (Objects.requireNonNull(agents.getKey()).equals(logged_agent)) {
 //                        List<AgentCollect> agentCollectList = new ArrayList<>();
                         for (DataSnapshot date : agents.getChildren()) {
                             if (Objects.requireNonNull(date.getKey()).equals(sel_date)) {
@@ -150,11 +169,12 @@ public class FragmentDashboardSpecific extends Fragment {
                         total_daily_amount = 0L;
                         total_monthly_amount_till_today = 0L;
                         total_collection = 0L;
+                        progressBar.setVisibility(View.INVISIBLE);
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                        progressBar.setVisibility(View.INVISIBLE);
                     }
                 });
 
@@ -163,7 +183,7 @@ public class FragmentDashboardSpecific extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                progressBar.setVisibility(View.INVISIBLE);
             }
         });
 

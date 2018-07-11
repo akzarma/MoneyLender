@@ -5,14 +5,17 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -25,11 +28,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import static com.oxvsys.moneylender.HomeActivity.database;
 
 
 public class FragmentDashboard extends Fragment {
+
+    //Admin Dashboard
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final String ARG_PARAM3 = "param3";
@@ -52,7 +59,7 @@ public class FragmentDashboard extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     public FragmentDashboard() {
-        // Required empty public constructor
+
     }
 
     public static FragmentDashboard newInstance(Calendar sel_cal) {
@@ -75,14 +82,16 @@ public class FragmentDashboard extends Fragment {
         View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
 
+        final ProgressBar progressBar = view.findViewById(R.id.dashboard_progress);
+        progressBar.setVisibility(View.VISIBLE);
         date_button = view.findViewById(R.id.dashboard_select_date);
         from_date_button = view.findViewById(R.id.dashboard_from_button);
         to_date_button = view.findViewById(R.id.dashboard_to_button);
-        todays_value = (TextView) view.findViewById(R.id.todays_collection_value_dashboard);
-        view_monthly_value_till_today = (TextView) view.findViewById(R.id.monthly_collection_value_dashboard);
+        todays_value = view.findViewById(R.id.todays_collection_value_dashboard);
+        view_monthly_value_till_today = view.findViewById(R.id.monthly_collection_value_dashboard);
         total_collection_value_dashboard = view.findViewById(R.id.total_collection_value_dashboard);
         totat_collection_card_layout = view.findViewById(R.id.totat_collection_card_layout);
-        sel_calendar = (Calendar) getArguments().getSerializable(ARG_PARAM1);
+        sel_calendar = (Calendar) Objects.requireNonNull(getArguments()).getSerializable(ARG_PARAM1);
 
         int month = sel_calendar.get(Calendar.MONTH) + 1;
         final String sel_date = sel_calendar.get(Calendar.DAY_OF_MONTH) + "-" +
@@ -91,11 +100,17 @@ public class FragmentDashboard extends Fragment {
 
         date_button.setText(sel_date);
 
+        final FloatingActionButton fab = getActivity().findViewById(R.id.fab);
+        fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_chevron_right_black_24dp));
+        fab.setVisibility(View.INVISIBLE);
+
+
 
         DatabaseReference ref = database.getReference("agentCollect");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                progressBar.setVisibility(View.VISIBLE);
                 final List<AccountAmountCollect> accountAmountCollectList = new ArrayList<>();
                 for (DataSnapshot agents : dataSnapshot.getChildren()) {
                     List<AgentCollect> agentCollectList = new ArrayList<>();
@@ -107,8 +122,6 @@ public class FragmentDashboard extends Fragment {
                                 account_temp.setNo(account.getKey());
                                 accountAmountCollectList.add(new AccountAmountCollect(account_temp,
                                         Long.parseLong(account.getValue().toString())));
-
-
 //                                total_daily_amount += Long.parseLong(account.getValue().toString());
 //                                Log.d("------", "onDataChange: " + total_daily_amount);
                             }
@@ -142,20 +155,21 @@ public class FragmentDashboard extends Fragment {
                         total_daily_amount = 0L;
                         total_monthly_amount_till_today = 0L;
                         total_collection = 0L;
+                        progressBar.setVisibility(View.INVISIBLE);
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                        progressBar.setVisibility(View.INVISIBLE);
                     }
                 });
-
+                progressBar.setVisibility(View.INVISIBLE);
             }
 
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                progressBar.setVisibility(View.INVISIBLE);
             }
         });
 

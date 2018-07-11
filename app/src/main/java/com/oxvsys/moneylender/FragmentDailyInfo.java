@@ -1,16 +1,20 @@
 package com.oxvsys.moneylender;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -24,15 +28,6 @@ import java.util.List;
 
 import static com.oxvsys.moneylender.HomeActivity.database;
 
-
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link FragmentDailyInfo.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link FragmentDailyInfo#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class FragmentDailyInfo extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -40,7 +35,7 @@ public class FragmentDailyInfo extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     private RecyclerView recyclerView;
     private AgentAdapter mAdapter;
-    private TextView currentDay_textView;
+//    private TextView currentDay_textView;
     Calendar sel_calendar;
 
 
@@ -76,15 +71,16 @@ public class FragmentDailyInfo extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_daily_info, container, false);
         recyclerView = view.findViewById(R.id.recycler);
-        currentDay_textView = view.findViewById(R.id.fragment_textV_day);
-        currentDay_textView.setText("Daily Info");
+//        currentDay_textView = view.findViewById(R.id.fragment_textV_day);
+//        currentDay_textView.setText("Daily Info");
+        Button date_button = (Button) view.findViewById(R.id.date_button);
+
 
         sel_calendar = (Calendar) getArguments().getSerializable(ARG_PARAM1);
 
-        int month = sel_calendar.get(Calendar.MONTH) + 1;
-        final String sel_date = sel_calendar.get(Calendar.DAY_OF_MONTH) + "-" +
-                month + "-" +
-                sel_calendar.get(Calendar.YEAR);
+//        int month = sel_calendar.get(Calendar.MONTH) + 1;
+        final String sel_date = MainActivity.CaltoStringDate(sel_calendar);
+        date_button.setText(sel_date);
 
         DatabaseReference agentDailyCollects = database.getReference("agentCollect");
 
@@ -93,38 +89,38 @@ public class FragmentDailyInfo extends Fragment {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                List<Agent> agents = new ArrayList<>();
+                List<AgentCollect> agentCollectList = new ArrayList<>();
+//                List<Agent> agents = new ArrayList<>();
                 for (DataSnapshot each_agent : dataSnapshot.getChildren()) {
                     Agent curr_agent = new Agent();
                     curr_agent.setId(each_agent.getKey());
-                    agents.add(curr_agent);
+//                    agents.add(curr_agent);
 
-                    List<AgentCollect> agentCollectList = new ArrayList<>();
 
                     for (DataSnapshot date : each_agent.getChildren()) {
                         if (date.getKey().equals(sel_date)) {
                             List<AccountAmountCollect> accountAmountCollectList = new ArrayList<>();
                             for (DataSnapshot each_account : date.getChildren()) {
                                 Account account = new Account();
-                                account.setType("daily");
+                                account.setType("");
                                 account.setNo(each_account.getKey());
 
                                 accountAmountCollectList.add(new AccountAmountCollect(account,
                                         Long.parseLong(each_account.getValue().toString())));
                             }
-                            agentCollectList.add(new AgentCollect(curr_agent, "daily", sel_calendar, accountAmountCollectList));
+                            agentCollectList.add(new AgentCollect(curr_agent, "", sel_calendar, accountAmountCollectList));
 
                         }
                     }
 
-                    mAdapter = new AgentAdapter(agentCollectList, sel_calendar, getContext());
-                    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-                    recyclerView.setLayoutManager(mLayoutManager);
-                    recyclerView.setItemAnimator(new DefaultItemAnimator());
-                    recyclerView.setAdapter(mAdapter);
 
                 }
+
+                mAdapter = new AgentAdapter(agentCollectList, sel_calendar, getContext());
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+                recyclerView.setLayoutManager(mLayoutManager);
+                recyclerView.setItemAnimator(new DefaultItemAnimator());
+                recyclerView.setAdapter(mAdapter);
 
 
             }
@@ -143,12 +139,12 @@ public class FragmentDailyInfo extends Fragment {
 //        agent1.setName("Anish");
 //
 //        Account account = new Account();
-//        account.setAmt(1000);
+//        account.setDisb_amt(1000);
 //        account.setNo("230");
 //        account.setType("daily");
 //
 //        Account account1 = new Account();
-//        account1.setAmt(2000);
+//        account1.setDisb_amt(2000);
 //        account1.setNo("231");
 //        account1.setType("daily");
 //
@@ -182,6 +178,32 @@ public class FragmentDailyInfo extends Fragment {
 //        recyclerView.setLayoutManager(mLayoutManager);
 //        recyclerView.setItemAnimator(new DefaultItemAnimator());
 //        recyclerView.setAdapter(mAdapter);
+        date_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int mYear = sel_calendar.get(Calendar.YEAR);
+                int mMonth = sel_calendar.get(Calendar.MONTH);
+                int mDay = sel_calendar.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog mDatePicker = new DatePickerDialog(
+                        getActivity(), new DatePickerDialog.OnDateSetListener() {
+                    public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
+                        Calendar selected_cal = Calendar.getInstance();
+                        selected_cal.set(selectedyear, selectedmonth, selectedday);
+                        selected_cal.set(Calendar.HOUR_OF_DAY, 0);
+                        selected_cal.set(Calendar.MINUTE, 0);
+                        selected_cal.set(Calendar.SECOND, 0);
+                        selected_cal.set(Calendar.MILLISECOND, 0);
+                        FragmentTransaction ft = getFragmentManager().beginTransaction();
+                        FragmentDailyInfo fd = FragmentDailyInfo.newInstance(selected_cal);
+                        ft.replace(R.id.fragment_container, fd).addToBackStack(null).
+                                commit();
+                    }
+                }, mYear, mMonth, mDay);
+                mDatePicker.setTitle("Select date");
+                mDatePicker.show();
+            }
+        });
 
         return view;
     }

@@ -3,15 +3,24 @@ package com.oxvsys.moneylender;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+
+import java.util.HashMap;
 
 import static com.oxvsys.moneylender.HomeActivity.database;
 
@@ -61,35 +70,76 @@ public class FragmentAgentRegister extends Fragment {
         final EditText aadhar = view.findViewById(R.id.agent_register_aadhar);
         final EditText address_view = view.findViewById(R.id.agent_register_address);
         final EditText mobile_view = view.findViewById(R.id.agent_register_mobile);
-        Button register_button = view.findViewById(R.id.agent_register_button);
+//        Button register_button = view.findViewById(R.id.agent_register_button);
 
-        register_button.setOnClickListener(new View.OnClickListener() {
+        final RelativeLayout rl = view.findViewById(R.id.agent_register_relative_layout);
+
+        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_save_black_24dp));
+        fab.setVisibility(View.VISIBLE);
+
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 if(name_view.getText().toString().equals("")){
                     name_til.setError("Name required.");
-                }else name_til.setErrorEnabled(false);
+                    return;
+                }
 
                 if (aadhar.getText().toString().equals("")){
+                    name_til.setErrorEnabled(false);
                     aadhaar_til.setError("Aadhaar required.");
-                }else aadhaar_til.setErrorEnabled(false);
+                    return;
+                }
 
                 if (address_view.getText().toString().equals("")){
+                    aadhaar_til.setErrorEnabled(false);
                     address_til.setError("Address required.");
-                }else address_til.setErrorEnabled(false);
+                    return;
+                }
 
                 if (mobile_view.getText().toString().equals("")){
+                    address_til.setErrorEnabled(false);
                     mobile_til.setError("Mobile required.");
-                }else mobile_til.setErrorEnabled(false);
+                    return;
+                }else {
+                    mobile_til.setErrorEnabled(false);
+                }
 
                 String unique_agent_id = "agent_" + mobile_view.getText().toString();
 
                 DatabaseReference ref = database.getReference("agents").child(unique_agent_id);
-                ref.child("mobile").setValue(mobile_view.getText().toString());
-                ref.child("name").setValue(name_view.getText().toString());
-                ref.child("aadhar").setValue(aadhar.getText().toString());
-                ref.child("address").setValue(address_view.getText().toString());
+
+                HashMap<String , String> attrs = new HashMap<>();
+                HashMap<String , Object> id = new HashMap<>();
+
+                attrs.put("mobile" , mobile_view.getText().toString());
+                attrs.put("name" , name_view.getText().toString());
+                attrs.put("aadhaar" , aadhar.getText().toString());
+                attrs.put("address" , address_view.getText().toString());
+
+                id.put(unique_agent_id , attrs);
+                ref.updateChildren(id, new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                        Snackbar snackbar = Snackbar
+                                .make(rl, "Agent added successfully!", Snackbar.LENGTH_LONG);
+                        snackbar.show();
+                        FragmentTransaction ft = getFragmentManager().beginTransaction();
+                        FragmentKYC fd = new FragmentKYC();
+                        ft.replace(R.id.fragment_container, fd).addToBackStack(null).
+                                commit();
+                    }
+                });
+
+//                ref.child("mobile").setValue(mobile_view.getText().toString());
+//                ref.child("name").setValue(name_view.getText().toString());
+//                ref.child("aadhar").setValue(aadhar.getText().toString());
+//                ref.child("address").setValue(address_view.getText().toString());
+
+
+
             }
         });
 

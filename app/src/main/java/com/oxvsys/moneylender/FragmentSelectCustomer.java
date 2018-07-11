@@ -2,19 +2,19 @@ package com.oxvsys.moneylender;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 
 import com.google.firebase.database.DataSnapshot;
@@ -28,7 +28,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import static com.oxvsys.moneylender.HomeActivity.database;
-import static com.oxvsys.moneylender.MainActivity.getData;
+import static com.oxvsys.moneylender.MainActivity.logged_type;
 
 
 /**
@@ -46,6 +46,7 @@ public class FragmentSelectCustomer extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     Spinner spinner;
     Customer customer_selected = new Customer();
+    int fields_loaded = 0;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -82,19 +83,35 @@ public class FragmentSelectCustomer extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        fields_loaded = 0;
         View view = inflater.inflate(R.layout.fragment_select_customer, container, false);
-        final String agent_id = getData("user_id", getContext());
-        final String logged_type = getData("user_type", getContext());
+
+        final ProgressBar progressBar = view.findViewById(R.id.select_customer_progress);
+        progressBar.setVisibility(View.VISIBLE);
+
+//        final String agent_id = getData("user_id", getContext());
+//        final String logged_type = getData("user_type", getContext());
 
         final List<Customer> customerList = new ArrayList<>();
         DatabaseReference customers_db_ref = database.getReference("customers");
         spinner = view.findViewById(R.id.customer_spinner);
         spinner.setAdapter(null);
 
-        Button next_button = view.findViewById(R.id.customer_next_button);
+//        final Button next_button = view.findViewById(R.id.customer_next_button);
+        final FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_chevron_right_black_24dp));
+        fab.setVisibility(View.INVISIBLE);
+
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//            }
+//        });
+
+//        Button next_button = view.findViewById(R.id.customer_next_button);
         if (logged_type.equals("admin")) {
             customers_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
-                @RequiresApi(api = Build.VERSION_CODES.N)
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -111,21 +128,26 @@ public class FragmentSelectCustomer extends Fragment {
                     });
                     List<String> customers = new ArrayList<>();
                     for (Customer each : customerList) {
-                        customers.add(each.getId() + " - " + each.getName().split(" ")[0]);
+                        customers.add(each.getName().split(" ")[0] + " ("+each.getId() +")");
                     }
                     ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, customers);
                     spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spinner.setAdapter(spinnerAdapter);
+                    fields_loaded+=1;
+                    if(fields_loaded==1){
+                        fab.setVisibility(View.VISIBLE);
+                        progressBar.setVisibility(View.INVISIBLE);
+                    }
                 }
 
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                    progressBar.setVisibility(View.INVISIBLE);
                 }
             });
 
-            next_button.setOnClickListener(new View.OnClickListener() {
+            fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 

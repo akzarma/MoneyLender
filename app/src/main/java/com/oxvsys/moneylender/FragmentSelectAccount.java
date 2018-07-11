@@ -4,16 +4,19 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -21,30 +24,22 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.oxvsys.moneylender.HomeActivity.database;
-import static com.oxvsys.moneylender.MainActivity.getData;
+import static com.oxvsys.moneylender.MainActivity.logged_agent;
 
+//import static com.oxvsys.moneylender.MainActivity.getData;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link FragmentSelectAccount.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link FragmentSelectAccount#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class FragmentSelectAccount extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    List<Account> accountList = new ArrayList<>();
     Account account_selected;
     Spinner spinner;
+    int fields_loaded = 0;
+    List<String> customer_ids = new ArrayList<>();
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -53,18 +48,9 @@ public class FragmentSelectAccount extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     public FragmentSelectAccount() {
-        // Required empty public constructor
+
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment FragmentSelectAccount.
-     */
-    // TODO: Rename and change types and number of parameters
     public static FragmentSelectAccount newInstance(String param1, String param2) {
         FragmentSelectAccount fragment = new FragmentSelectAccount();
         Bundle args = new Bundle();
@@ -83,50 +69,128 @@ public class FragmentSelectAccount extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        fields_loaded = 0;
         View view = inflater.inflate(R.layout.fragment_select_account, container, false);
 
-        final String logged_agent = getData("user_id",getContext());
+//        final String logged_agent = getData("user_id",getContext());
+        final List<Account> accountList = new ArrayList<>();
+        final List<Account> spinner_accountList = new ArrayList<>();
+        final TextView no_account_linked = view.findViewById(R.id.no_account_linked);
+        no_account_linked.setVisibility(View.INVISIBLE);
+
+        final ProgressBar progressBar = view.findViewById(R.id.select_account_progress);
+        progressBar.setVisibility(View.VISIBLE);
+
+        final FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_chevron_right_black_24dp));
+        fab.setVisibility(View.INVISIBLE);
+//        final String logged_agent = getData("user_id", getContext());
 
         DatabaseReference agent_account_db_ref = database.getReference("agentAccount").child(logged_agent);
         spinner = view.findViewById(R.id.account_spinner);
         spinner.setAdapter(null);
 
-        Button next_button = view.findViewById(R.id.next_button);
+
+//        final Button next_button = view.findViewById(R.id.next_button);
         agent_account_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
+                final HashMap<String, String> account_customer_map = new HashMap<>();
+
                 for (DataSnapshot account : dataSnapshot.getChildren()) {
                     Account account1 = new Account();
                     account1.setNo(account.getKey());
+                    account_customer_map.put(account.getKey(), account.getValue().toString());
                     accountList.add(account1);
                 }
-                Collections.sort(accountList, new Comparator<Account>() {
+
+//                Collections.sort(accountList, new Comparator<Account>() {
+//                    @Override
+//                    public int compare(Account o1, Account o2) {
+//                        return o1.getNo().compareTo(o2.getNo());
+//                    }
+//                });
+
+//                DatabaseReference accountType = database.getReference("accountType");
+//                accountType.addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                        for (DataSnapshot account : dataSnapshot.getChildren()){
+//                            if()
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                    }
+//                });
+
+                final List<String> spinner_account_name = new ArrayList<>();
+                DatabaseReference customers = database.getReference("customers");
+                customers.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public int compare(Account o1, Account o2) {
-                        return o1.getNo().compareTo(o2.getNo());
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        progressBar.setVisibility(View.VISIBLE);
+                        for (DataSnapshot single_customer : dataSnapshot.getChildren()) {
+                            HashMap<String, Object> customer_map = new HashMap<>();
+                            customer_map.put(single_customer.getKey(), single_customer.getValue());
+                            HashMap<String, Object> account_map;
+                            account_map = (HashMap<String, Object>) ((HashMap<String, Object>)
+                                    customer_map.get(single_customer.getKey())).get("accounts");
+
+                            if (account_map != null) {
+                                for (Map.Entry<String, Object> account : account_map.entrySet()) {
+                                    if (account_customer_map.containsKey(account.getKey())) {
+                                        spinner_account_name.add(((HashMap<String, Object>) customer_map.
+                                                get(single_customer.getKey())).get("name") + " (A/C: " +
+                                                account.getKey() + ")");
+                                        Account account1 = new Account();
+                                        account1.setNo(account.getKey());
+                                        spinner_accountList.add(account1);
+                                    }
+                                }
+                            }
+                        }
+
+                        if(spinner_account_name.isEmpty()){
+                            spinner.setVisibility(View.INVISIBLE);
+                            no_account_linked.setVisibility(View.VISIBLE);
+                            progressBar.setVisibility(View.INVISIBLE);
+                        }else {
+                            ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, spinner_account_name);
+                            spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            spinner.setAdapter(spinnerAdapter);
+                        }
+
+
+                        fields_loaded += 1;
+                        if (fields_loaded == 1 && !spinner_account_name.isEmpty()) {
+                            fab.setVisibility(View.VISIBLE);
+                            progressBar.setVisibility(View.INVISIBLE);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        progressBar.setVisibility(View.INVISIBLE);
                     }
                 });
-                List<String> accounts = new ArrayList<>();
-                for (Account each : accountList) {
-                    accounts.add(each.getNo());
-                }
-                ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, accounts);
-                spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spinner.setAdapter(spinnerAdapter);
+
+
             }
 
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                progressBar.setVisibility(View.INVISIBLE);
             }
         });
 
-        next_button.setOnClickListener(new View.OnClickListener() {
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 FragmentCollect fragmentCollect = FragmentCollect.newInstance(account_selected);
@@ -135,18 +199,26 @@ public class FragmentSelectAccount extends Fragment {
             }
         });
 
+//        next_button.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//
+//            }
+//        });
+
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
 
         {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                account_selected = accountList.get(position);
+                account_selected = spinner_accountList.get(position);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                account_selected = accountList.get(0);
+                account_selected = spinner_accountList.get(0);
             }
         });
         return view;
@@ -173,18 +245,7 @@ public class FragmentSelectAccount extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 }

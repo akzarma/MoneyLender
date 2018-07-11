@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -26,23 +27,28 @@ public class LoginActivity extends AppCompatActivity {
     String TAG = "LoginActivity";
 
 
-
     boolean isInvalid, userDoesNotExist, networkError = false;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        progressBar = (ProgressBar) findViewById(R.id.login_progress);
+
         Log.d(TAG, "onCreate: " + "login started");
 
-        if(getData("user_id",getApplicationContext()).equals("ERROR")){
-            final EditText mobile_view = findViewById(R.id.login_mobile);
-            final EditText password_view = findViewById(R.id.login_password);
-            Button login_button = findViewById(R.id.login_button);
+        if (getData("user_id", getApplicationContext()).equals("ERROR")) {
+
+
+            final EditText mobile_view = (EditText) findViewById(R.id.login_mobile);
+            final EditText password_view = (EditText) findViewById(R.id.login_password);
+            Button login_button = (Button) findViewById(R.id.login_button);
             login_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    progressBar.setVisibility(View.VISIBLE);
                     DatabaseReference ref = database.getReference("users");
                     Log.d(TAG, "onClick: " + "in on click");
                     ref.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -53,10 +59,10 @@ public class LoginActivity extends AppCompatActivity {
                                 for (DataSnapshot user : dataSnapshot.getChildren()) {
                                     String pwd = ((HashMap<String, Object>) user.getValue()).get("pwd").toString();
                                     String type = ((HashMap<String, Object>) user.getValue()).get("type").toString();
-                                    if(mobile_view.getText().toString().equals(user.getKey())){
+                                    if (mobile_view.getText().toString().equals(user.getKey())) {
                                         if (password_view.getText().toString().equals(pwd)) {
                                             Log.d(TAG, "onDataChange: " + "success");
-                                            saveData("user_id",user.getKey(),getApplicationContext());
+                                            saveData("user_id", user.getKey(), getApplicationContext());
                                             saveData("user_type", type, getApplicationContext());
                                             Log.d(TAG, "onDataChange: " + pwd + type);
                                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -64,7 +70,7 @@ public class LoginActivity extends AppCompatActivity {
                                             finish();
                                             return;
 
-                                        }else {
+                                        } else {
                                             Log.d(TAG, "onDataChange: " + "failure");
                                             Toast.makeText(getApplicationContext(), "Invalid Credentials", Toast.LENGTH_SHORT).show();
                                         }
@@ -72,10 +78,11 @@ public class LoginActivity extends AppCompatActivity {
 
                                 }
 //                            Log.d(TAG, "onDataChange: " + dataSnapshot.getValue().toString());
-
+                                progressBar.setVisibility(View.INVISIBLE);
 
                             } else {
                                 Log.d(TAG, "onDataChange: " + "user does not exist");
+                                progressBar.setVisibility(View.INVISIBLE);
                                 Toast.makeText(getApplicationContext(), "User does not exist.", Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -83,6 +90,7 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
                             Toast.makeText(getApplicationContext(), "Network Error.", Toast.LENGTH_SHORT).show();
+                            progressBar.setVisibility(View.INVISIBLE);
                         }
                     });
 
@@ -107,7 +115,7 @@ public class LoginActivity extends AppCompatActivity {
 //                }
                 }
             });
-        }else {
+        } else {
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
             finish();

@@ -10,6 +10,7 @@ public class Customer implements Serializable,Cloneable {
     private String aadhar_id;
     private String mobile;
     private String DOB;
+    private String address;
 
     private List<Account> accounts1;
     @Override
@@ -23,6 +24,14 @@ public class Customer implements Serializable,Cloneable {
     }
     public List<Account> getAccounts1() {
         return accounts1;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public void setAccounts1(List<Account> accounts1) {

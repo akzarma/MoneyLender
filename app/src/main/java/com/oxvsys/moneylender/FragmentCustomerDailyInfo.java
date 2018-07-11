@@ -1,10 +1,14 @@
 package com.oxvsys.moneylender;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +16,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -68,23 +75,27 @@ public class FragmentCustomerDailyInfo extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_customer_daily_info, container, false);
 
+        final ProgressBar progressBar = view.findViewById(R.id.customer_daily_progress);
+        progressBar.setVisibility(View.VISIBLE);
         sel_calendar = (Calendar) getArguments().getSerializable(ARG_PARAM1);
         recyclerView = view.findViewById(R.id.customer_daily_info_recycler);
+        Button date_button = view.findViewById(R.id.date_button);
+//        customer_daily_info_title = view.findViewById(R.id.customer_daily_info_title);
+        final  String sel_date = MainActivity.CaltoStringDate(sel_calendar);
+        date_button.setText(sel_date);
 
-        customer_daily_info_title = view.findViewById(R.id.customer_daily_info_title);
-        int month = sel_calendar.get(Calendar.MONTH) + 1;
-        final String sel_date = sel_calendar.get(Calendar.DAY_OF_MONTH) + "-" +
-                month + "-" +
-                sel_calendar.get(Calendar.YEAR);
+//        customer_daily_info_title.setText(sel_date);
+        final FloatingActionButton fab = getActivity().findViewById(R.id.fab);
+        fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_chevron_right_black_24dp));
+        fab.setVisibility(View.INVISIBLE);
 
-        customer_daily_info_title.setText(sel_date);
         DatabaseReference agentDailyCollects = database.getReference("agentCollect");
 
         agentDailyCollects.addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
+                progressBar.setVisibility(View.VISIBLE);
                 List<Agent> agents = new ArrayList<>();
                 for (final DataSnapshot each_agent : dataSnapshot.getChildren()) {
                     final Agent curr_agent = new Agent();
@@ -102,6 +113,26 @@ public class FragmentCustomerDailyInfo extends Fragment {
                     customer_amount_map = new HashMap<>();
 
 
+                    DatabaseReference accounts = database.getReference("accounts");
+                    accounts.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot each_account : dataSnapshot.getChildren()){
+
+                                HashMap<String , Object> account = new HashMap<>();
+                                account.put(each_account.getKey(),each_account.getValue());
+                                String customer_id = account.get("customer").toString();
+
+
+
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            progressBar.setVisibility(View.INVISIBLE);
+                        }
+                    });
 //                    for(AgentCollect agentCollect : )
                     final DatabaseReference customerAccount = database.getReference("customers");
                     customerAccount.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -147,37 +178,62 @@ public class FragmentCustomerDailyInfo extends Fragment {
 
 //                                Log.d("customer_daily", "onDataChange: " + accounts.get("3").toString());
                             }
-
                             mAdapter = new CustomerDailyInfoAdapter(customer_amount_map,sel_calendar, getContext(), getFragmentManager());
                             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
                             recyclerView.setLayoutManager(mLayoutManager);
                             recyclerView.setItemAnimator(new DefaultItemAnimator());
                             recyclerView.setAdapter(mAdapter);
+                            progressBar.setVisibility(View.INVISIBLE);
+
                         }
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                            progressBar.setVisibility(View.INVISIBLE);
                         }
                     });
 
 
                 }
-
-
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                progressBar.setVisibility(View.INVISIBLE);
             }
         });
 
+
+        date_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int mYear = sel_calendar.get(Calendar.YEAR);
+                int mMonth = sel_calendar.get(Calendar.MONTH);
+                int mDay = sel_calendar.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog mDatePicker = new DatePickerDialog(
+                        getActivity(), new DatePickerDialog.OnDateSetListener() {
+                    public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
+                        Calendar selected_cal = Calendar.getInstance();
+                        selected_cal.set(selectedyear, selectedmonth, selectedday);
+                        selected_cal.set(Calendar.HOUR_OF_DAY, 0);
+                        selected_cal.set(Calendar.MINUTE, 0);
+                        selected_cal.set(Calendar.SECOND, 0);
+                        selected_cal.set(Calendar.MILLISECOND, 0);
+                        FragmentTransaction ft = getFragmentManager().beginTransaction();
+                        FragmentCustomerDailyInfo fd = FragmentCustomerDailyInfo.newInstance(selected_cal);
+                        ft.replace(R.id.fragment_container, fd).addToBackStack(null).
+                                commit();
+                    }
+                }, mYear, mMonth, mDay);
+                mDatePicker.setTitle("Select date");
+                mDatePicker.show();
+            }
+        });
         return view;
     }
 
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
@@ -199,7 +255,6 @@ public class FragmentCustomerDailyInfo extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 }

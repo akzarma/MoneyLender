@@ -3,15 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/agent_register_relative_layout"
     android:padding="16dp"
     tools:context=".FragmentAgentRegister">
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/agent_name_til"
+        android:theme="@style/Theme.AppCompat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <EditText
+        <android.support.v7.widget.AppCompatEditText
             android:id="@+id/agent_register_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -25,9 +27,10 @@
         android:id="@+id/agent_aadhaar_til"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:theme="@style/Theme.AppCompat"
         android:layout_below="@id/agent_name_til">
 
-        <EditText
+        <android.support.v7.widget.AppCompatEditText
             android:id="@+id/agent_register_aadhar"
             android:fontFamily="@font/roboto_regular"
             android:layout_width="match_parent"
@@ -40,10 +43,11 @@
     <android.support.design.widget.TextInputLayout
         android:id="@+id/agent_address_til"
         android:layout_width="match_parent"
+        android:theme="@style/Theme.AppCompat"
         android:layout_height="wrap_content"
         android:layout_below="@id/agent_aadhaar_til">
 
-        <EditText
+        <android.support.v7.widget.AppCompatEditText
             android:id="@+id/agent_register_address"
             android:layout_width="match_parent"
             android:fontFamily="@font/roboto_regular"
@@ -56,10 +60,11 @@
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:id="@+id/agent_mobile_til"
+        android:theme="@style/Theme.AppCompat"
         android:layout_below="@id/agent_address_til"
         android:layout_height="wrap_content">
 
-        <EditText
+        <android.support.v7.widget.AppCompatEditText
             android:id="@+id/agent_register_mobile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -70,13 +75,13 @@
     </android.support.design.widget.TextInputLayout>
 
 
-    <Button
-        android:id="@+id/agent_register_button"
-        android:textColor="#000"
-        android:layout_width="wrap_content"
-        android:fontFamily="@font/roboto_regular"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/agent_mobile_til"
-        android:text="Register Agent" />
+    <!--<Button-->
+        <!--android:id="@+id/agent_register_button"-->
+        <!--android:textColor="#000"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:fontFamily="@font/roboto_regular"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@id/agent_mobile_til"-->
+        <!--android:text="Register Agent" />-->
 
 </RelativeLayout>
