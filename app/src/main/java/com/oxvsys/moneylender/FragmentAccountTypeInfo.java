@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -50,6 +51,7 @@ public class FragmentAccountTypeInfo extends Fragment {
     private Calendar sel_calendar;
     private String selected_account_type;
     private int loop_count = 0;
+    private boolean inactive_cust_required = false;
 
     private CustomerDailyInfoAdapter mAdapter;
 
@@ -122,7 +124,6 @@ public class FragmentAccountTypeInfo extends Fragment {
         });
 
 
-
 //        List<CustomerAmount> customerAmountList = new ArrayList<>();
         final HashMap<String, AccountAmountCollect> cust_account_amount = new HashMap<>();
 
@@ -159,11 +160,11 @@ public class FragmentAccountTypeInfo extends Fragment {
                                 customer_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                        for (DataSnapshot each_customer : dataSnapshot.getChildren()) {
-                                            if (cust_account_amount.containsKey(each_customer.getKey())) {
-                                                Customer curr_customer = each_customer.getValue(Customer.class);
-                                                curr_customer.setId(each_customer.getKey());
-                                                HashMap<String, Object> accounts = (HashMap<String, Object>) ((HashMap<String, Object>) each_customer.getValue()).get("accounts");
+                                        for (Map.Entry<String, AccountAmountCollect> each_cust_ac_amt : cust_account_amount.entrySet()) {
+                                            if (dataSnapshot.hasChild(each_cust_ac_amt.getKey())) {
+                                                Customer curr_customer = dataSnapshot.child(each_cust_ac_amt.getKey()).getValue(Customer.class);
+                                                curr_customer.setId(each_cust_ac_amt.getKey());
+                                                HashMap<String, Object> accounts = (HashMap<String, Object>) ((HashMap<String, Object>) dataSnapshot.child(each_cust_ac_amt.getKey()).getValue()).get("accounts");
                                                 if (accounts != null) {
                                                     for (Map.Entry<String, Object> account : accounts.entrySet()) {
                                                         if (account_amount_map.containsKey(account.getKey())) {
@@ -194,21 +195,90 @@ public class FragmentAccountTypeInfo extends Fragment {
                                                     }
                                                 }
 
+                                            } else {
+                                                inactive_cust_required = true;
                                             }
                                         }
 
-                                        if (customer_amount_map.isEmpty()){
-                                            textView.setVisibility(View.VISIBLE);
-                                            heading_card.setVisibility(View.INVISIBLE);
-                                            date_button.setVisibility(View.INVISIBLE);
-                                        }
-                                        mAdapter = new CustomerDailyInfoAdapter(customer_amount_map, sel_calendar, getContext(), getFragmentManager());
-                                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-                                        recycler.setLayoutManager(mLayoutManager);
-                                        recycler.setItemAnimator(new DefaultItemAnimator());
-                                        recycler.setAdapter(mAdapter);
-                                        progressBar.setVisibility(View.INVISIBLE);
+                                        if (inactive_cust_required) {
+                                            DatabaseReference customer_db_ref = database.getReference("inactive/customers");
+                                            customer_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                    for (Map.Entry<String, AccountAmountCollect> each_cust_ac_amt : cust_account_amount.entrySet()) {
+                                                        if (dataSnapshot.hasChild(each_cust_ac_amt.getKey())) {
+                                                            Customer curr_customer = dataSnapshot.child(each_cust_ac_amt.getKey()).getValue(Customer.class);
+                                                            curr_customer.setId(each_cust_ac_amt.getKey());
+                                                            HashMap<String, Object> accounts = (HashMap<String, Object>) ((HashMap<String, Object>) dataSnapshot.child(each_cust_ac_amt.getKey()).getValue()).get("accounts");
+                                                            if (accounts != null) {
+                                                                for (Map.Entry<String, Object> account : accounts.entrySet()) {
+                                                                    if (account_amount_map.containsKey(account.getKey())) {
+                                                                        Log.d("customer_collect_daily", account.getValue().toString());
+                                                                        Long amount_collected = Long.parseLong(String.valueOf(account_amount_map.get(account.getKey())));
 
+                                                                        List<Account> accountList = new ArrayList<Account>();
+                                                                        Account account1 = new Account(account.getValue());
+                                                                        account1.setNo(account.getKey());
+                                                                        accountList.add(account1);
+                                                                        Customer newCustomer = (Customer) curr_customer.clone();
+                                                                        newCustomer.setAccounts1(accountList);
+                                                                        CustomerAmount customerAmount = new CustomerAmount();
+                                                                        customerAmount.setCustomer(newCustomer);
+                                                                        customerAmount.setAmount_collected(amount_collected);
+
+                                                                        account_amount_map.remove(account.getKey());
+                                                                        if (customerAmount.getCustomer().getAccounts1().get(0).getType().equals(selected_account_type))
+                                                                            customer_amount_map.put(account.getKey(), customerAmount);
+//                                                            else if (customerAmount.getCustomer().getAccounts1().get(0).getType().equals(selected_account_type))
+//                                                                monthly_customer_amount_map.put(account.getKey(), customerAmount);
+
+                                                                    }
+//                                    HashMap<String, Object> accountMap = (HashMap<String, Object>) account.getValue();
+//                                    total_amount += Integer.parseInt(accountMap.get("amt").toString());
+//                                    Log.d("customer_daily_amap", accountMap.get("amt").toString());
+//                                    Log.d("customer_daily", "onDataChange: " + account.getValue());
+                                                                }
+                                                            }
+
+                                                        } else {
+                                                            inactive_cust_required = true;
+                                                        }
+                                                    }
+
+
+                                                    if (customer_amount_map.isEmpty()) {
+                                                        textView.setVisibility(View.VISIBLE);
+                                                        heading_card.setVisibility(View.INVISIBLE);
+                                                        date_button.setVisibility(View.VISIBLE);
+                                                    }
+                                                    mAdapter = new CustomerDailyInfoAdapter(customer_amount_map, sel_calendar, getContext(), getFragmentManager());
+                                                    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+                                                    recycler.setLayoutManager(mLayoutManager);
+                                                    recycler.setItemAnimator(new DefaultItemAnimator());
+                                                    recycler.setAdapter(mAdapter);
+                                                    progressBar.setVisibility(View.INVISIBLE);
+
+
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                    progressBar.setVisibility(View.INVISIBLE);
+                                                }
+                                            });
+                                        } else {
+                                            if (customer_amount_map.isEmpty()) {
+                                                textView.setVisibility(View.VISIBLE);
+                                                heading_card.setVisibility(View.INVISIBLE);
+                                                date_button.setVisibility(View.VISIBLE);
+                                            }
+                                            mAdapter = new CustomerDailyInfoAdapter(customer_amount_map, sel_calendar, getContext(), getFragmentManager());
+                                            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+                                            recycler.setLayoutManager(mLayoutManager);
+                                            recycler.setItemAnimator(new DefaultItemAnimator());
+                                            recycler.setAdapter(mAdapter);
+                                            progressBar.setVisibility(View.INVISIBLE);
+                                        }
 
                                     }
 
@@ -244,8 +314,8 @@ public class FragmentAccountTypeInfo extends Fragment {
                         HashMap<String, Object> agent_object_map = (HashMap<String, Object>) dataSnapshot.getValue();
                         final HashMap<String, AgentAmount> agentAmountHashMap = new HashMap<>();
                         for (Map.Entry<String, Object> each_agent_map : agent_object_map.entrySet()) {
-                            HashMap<String,String> hashMap = (HashMap<String, String>)(((HashMap<String, Object>) each_agent_map.getValue()).get(cal_str));
-                            if(hashMap!=null)
+                            HashMap<String, String> hashMap = (HashMap<String, String>) (((HashMap<String, Object>) each_agent_map.getValue()).get(cal_str));
+                            if (hashMap != null)
                                 account_amount_map.putAll(hashMap);
                             for (Map.Entry<String, String> each_account_amount_map : account_amount_map.entrySet()) {
                                 Agent agent = new Agent();
@@ -337,16 +407,90 @@ public class FragmentAccountTypeInfo extends Fragment {
                                                     }
                                                 }
 
+                                            }else {
+                                                inactive_cust_required = true;
                                             }
                                         }
 
+                                        if (inactive_cust_required) {
+                                            DatabaseReference customer_db_ref = database.getReference("inactive/customers");
+                                            customer_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                    for (Map.Entry<String, AccountAmountCollect> each_cust_ac_amt : cust_account_amount.entrySet()) {
+                                                        if (dataSnapshot.hasChild(each_cust_ac_amt.getKey())) {
+                                                            Customer curr_customer = dataSnapshot.child(each_cust_ac_amt.getKey()).getValue(Customer.class);
+                                                            curr_customer.setId(each_cust_ac_amt.getKey());
+                                                            HashMap<String, Object> accounts = (HashMap<String, Object>) ((HashMap<String, Object>) dataSnapshot.child(each_cust_ac_amt.getKey()).getValue()).get("accounts");
+                                                            if (accounts != null) {
+                                                                for (Map.Entry<String, Object> account : accounts.entrySet()) {
+                                                                    if (account_amount_map.containsKey(account.getKey())) {
+                                                                        Log.d("customer_collect_daily", account.getValue().toString());
+                                                                        Long amount_collected = Long.parseLong(String.valueOf(account_amount_map.get(account.getKey())));
 
-                                        mAdapter = new CustomerDailyInfoAdapter(customer_amount_map, sel_calendar, getContext(), getFragmentManager());
-                                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-                                        recycler.setLayoutManager(mLayoutManager);
-                                        recycler.setItemAnimator(new DefaultItemAnimator());
-                                        recycler.setAdapter(mAdapter);
-                                        progressBar.setVisibility(View.INVISIBLE);
+                                                                        List<Account> accountList = new ArrayList<Account>();
+                                                                        Account account1 = new Account(account.getValue());
+                                                                        account1.setNo(account.getKey());
+                                                                        accountList.add(account1);
+                                                                        Customer newCustomer = (Customer) curr_customer.clone();
+                                                                        newCustomer.setAccounts1(accountList);
+                                                                        CustomerAmount customerAmount = new CustomerAmount();
+                                                                        customerAmount.setCustomer(newCustomer);
+                                                                        customerAmount.setAmount_collected(amount_collected);
+
+                                                                        account_amount_map.remove(account.getKey());
+                                                                        if (customerAmount.getCustomer().getAccounts1().get(0).getType().equals(selected_account_type))
+                                                                            customer_amount_map.put(account.getKey(), customerAmount);
+//                                                                        else if (customerAmount.getCustomer().getAccounts1().get(0).getType().equals(selected_account_type))
+//                                                                            monthly_customer_amount_map.put(account.getKey(), customerAmount);
+
+                                                                    }
+//                                    HashMap<String, Object> accountMap = (HashMap<String, Object>) account.getValue();
+//                                    total_amount += Integer.parseInt(accountMap.get("amt").toString());
+//                                    Log.d("customer_daily_amap", accountMap.get("amt").toString());
+//                                    Log.d("customer_daily", "onDataChange: " + account.getValue());
+                                                                }
+                                                            }
+
+                                                        } else {
+                                                            inactive_cust_required = true;
+                                                        }
+                                                    }
+
+
+                                                    if (customer_amount_map.isEmpty()) {
+                                                        textView.setVisibility(View.VISIBLE);
+                                                        heading_card.setVisibility(View.INVISIBLE);
+                                                        date_button.setVisibility(View.VISIBLE);
+                                                    }
+                                                    mAdapter = new CustomerDailyInfoAdapter(customer_amount_map, sel_calendar, getContext(), getFragmentManager());
+                                                    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+                                                    recycler.setLayoutManager(mLayoutManager);
+                                                    recycler.setItemAnimator(new DefaultItemAnimator());
+                                                    recycler.setAdapter(mAdapter);
+                                                    progressBar.setVisibility(View.INVISIBLE);
+
+
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                    progressBar.setVisibility(View.INVISIBLE);
+                                                }
+                                            });
+                                        } else {
+                                            if (customer_amount_map.isEmpty()) {
+                                                textView.setVisibility(View.VISIBLE);
+                                                heading_card.setVisibility(View.INVISIBLE);
+                                                date_button.setVisibility(View.VISIBLE);
+                                            }
+                                            mAdapter = new CustomerDailyInfoAdapter(customer_amount_map, sel_calendar, getContext(), getFragmentManager());
+                                            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+                                            recycler.setLayoutManager(mLayoutManager);
+                                            recycler.setItemAnimator(new DefaultItemAnimator());
+                                            recycler.setAdapter(mAdapter);
+                                            progressBar.setVisibility(View.INVISIBLE);
+                                        }
 
 
                                     }

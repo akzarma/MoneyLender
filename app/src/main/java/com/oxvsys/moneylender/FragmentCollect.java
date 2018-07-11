@@ -110,8 +110,6 @@ public class FragmentCollect extends Fragment {
         customer_account_field.setText(selected_account.getNo());
 
 
-
-
 //        final String logged_agent = getData("user_id", getContext());
 //        String logged_agent = getData("user_id", getContext());
 
@@ -184,16 +182,10 @@ public class FragmentCollect extends Fragment {
                                 float roi = account.getRoi();
                                 Long months_duration = account.getDuration();
                                 float roi_per_month_100 = roi / 1200;
-
-                                Calendar today_cal = Calendar.getInstance();
-                                today_cal.set(Calendar.HOUR, 0);
-                                today_cal.set(Calendar.MINUTE, 0);
-                                today_cal.set(Calendar.SECOND, 0);
-                                today_cal.set(Calendar.MILLISECOND, 0);
                                 Calendar o_date_cal = Calendar.getInstance();
                                 o_date_cal.setTimeInMillis(account.getO_date().getTimeInMillis());
 
-                                days_diff = TimeUnit.MILLISECONDS.toDays(today_cal.getTimeInMillis() - o_date_cal.getTimeInMillis());
+                                days_diff = TimeUnit.MILLISECONDS.toDays(curr_cal.getTimeInMillis() - o_date_cal.getTimeInMillis());
 
 
                                 months_passed = Integer.parseInt(String.valueOf(days_diff / 30).split("\\.")[0]);
@@ -273,44 +265,15 @@ public class FragmentCollect extends Fragment {
                             }
                         } else if (account.getType().equals("1")) {
                             if (last_pay_date != null) {
-                                Calendar today_cal = Calendar.getInstance();
-                                today_cal.set(Calendar.HOUR, 0);
-                                today_cal.set(Calendar.MINUTE, 0);
-                                today_cal.set(Calendar.SECOND, 0);
-                                today_cal.set(Calendar.MILLISECOND, 0);
-                                days_diff = TimeUnit.MILLISECONDS.toDays(today_cal.getTimeInMillis() - last_pay_date.getTimeInMillis());
+                                days_diff = TimeUnit.MILLISECONDS.toDays(curr_cal.getTimeInMillis() - last_pay_date.getTimeInMillis());
                                 int months_passed = (int) (days_diff / 30);
                                 if (months_passed < 1) {
-                                    DatabaseReference agent_collect_date_db_ref = database.getReference("agentCollect").child(logged_agent)
-                                            .child(MainActivity.CaltoStringDate(last_pay_date));
-                                    agent_collect_date_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            if (dataSnapshot.hasChild(selected_account.getNo())) {
-
-                                                Long last_amt = ((HashMap<String, Long>) dataSnapshot.getValue()).get(selected_account.getNo());
-                                                if (last_amt != null) {
-                                                    expected_amount_view.setText("");
-                                                    inr_sign.setText("");
-                                                    amount_field.setText("");
-                                                    amount_field.setHint("");
-                                                    info_field.setText("Last Amount of ₹ " + last_amt + " received on " + MainActivity.CaltoStringDate(last_pay_date));
-                                                } else {
-                                                    amount_field.setText("0");
-                                                }
-                                                fab.setVisibility(View.INVISIBLE);
-                                                amount_field.setEnabled(false);
-
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                        }
-                                    });
-
-
+                                    expected_amount_view.setText("");
+                                    inr_sign.setText("");
+                                    amount_field.setText("");
+                                    amount_field.setHint("");
+                                    fab.setVisibility(View.INVISIBLE);
+                                    amount_field.setEnabled(false);
                                 }
                             }
 

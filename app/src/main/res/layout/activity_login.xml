@@ -18,11 +18,12 @@
             android:id="@+id/login_mobile_til"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:theme="@style/Theme.AppCompat"
             android:background="@drawable/login_username"
             android:padding="8dp"
             android:textColorHint="@color/colorAccent">
 
-            <EditText
+            <android.support.v7.widget.AppCompatEditText
                 android:id="@+id/login_mobile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -37,12 +38,13 @@
             android:id="@+id/login_password_til"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:theme="@style/Theme.AppCompat"
             android:layout_below="@id/login_mobile_til"
             android:background="@drawable/login_password"
             android:padding="8dp"
             android:textColorHint="@color/colorAccent">
 
-            <EditText
+            <android.support.v7.widget.AppCompatEditText
                 android:id="@+id/login_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
