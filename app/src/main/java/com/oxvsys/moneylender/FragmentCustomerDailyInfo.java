@@ -4,6 +4,8 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -26,11 +28,20 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+
+import jxl.Workbook;
+import jxl.write.Label;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
+import jxl.write.WriteException;
 
 import static com.oxvsys.moneylender.HomeActivity.database;
 
@@ -40,6 +51,9 @@ public class FragmentCustomerDailyInfo extends Fragment {
 
     private String mParam1;
     private String mParam2;
+
+    String TAG = "FragmentCustomerDailyInfo";
+    int row = 0, accountCol = 0 , amountCollected = 1;
 
     private RecyclerView recyclerView;
     private CustomerDailyInfoAdapter mAdapter;
@@ -75,6 +89,7 @@ public class FragmentCustomerDailyInfo extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_customer_daily_info, container, false);
 
+
         final ProgressBar progressBar = view.findViewById(R.id.customer_daily_progress);
         progressBar.setVisibility(View.VISIBLE);
         sel_calendar = (Calendar) getArguments().getSerializable(ARG_PARAM1);
@@ -88,6 +103,9 @@ public class FragmentCustomerDailyInfo extends Fragment {
         final FloatingActionButton fab = getActivity().findViewById(R.id.fab);
         fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_chevron_right_black_24dp));
         fab.setVisibility(View.INVISIBLE);
+
+
+
 
         DatabaseReference agentDailyCollects = database.getReference("agentCollect");
 
