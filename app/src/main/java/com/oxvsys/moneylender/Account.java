@@ -3,7 +3,6 @@ package com.oxvsys.moneylender;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Map;
 
 public class Account implements Serializable {
     private String no;

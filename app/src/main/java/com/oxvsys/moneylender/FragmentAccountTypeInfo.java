@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -22,18 +23,26 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import jxl.Workbook;
+import jxl.write.Label;
+import jxl.write.Number;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
+import jxl.write.WriteException;
 
 import static com.oxvsys.moneylender.HomeActivity.database;
 import static com.oxvsys.moneylender.MainActivity.CaltoStringDate;
@@ -46,7 +55,10 @@ public class FragmentAccountTypeInfo extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String TAG = "FragmentAccountTypeInfo";
     HashMap<String, CustomerAmount> customer_amount_map = new HashMap<>();
+    int row = 0, accountCol = 1 , amountCol = 2;
+    int serialCol = 0;
     //    HashMap<String, CustomerAmount> monthly_customer_amount_map = new HashMap<>();
     private Calendar sel_calendar;
     private String selected_account_type;
@@ -92,6 +104,10 @@ public class FragmentAccountTypeInfo extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_account_type_info, container, false);
 
+
+
+
+
         final TextView textView = view.findViewById(R.id.no_customer_under_monthly);
         textView.setVisibility(View.INVISIBLE);
         final CardView heading_card = view.findViewById(R.id.heading_card_view);
@@ -109,6 +125,84 @@ public class FragmentAccountTypeInfo extends Fragment {
         date_button.setText(cal_str);
 
 
+        Button getReport = view.findViewById(R.id.get_report);
+        getReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String state = Environment.getExternalStorageState();
+                if (Environment.MEDIA_MOUNTED.equals(state)) {
+                    Log.d(TAG, "onCreate: " + "true file");
+                }else Log.d(TAG, "onCreate: " + "not writable");
+                File root = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "MoneyLender");
+                File DocsDirectory = new File(root.getAbsolutePath(),"Reports");
+                DocsDirectory.mkdirs();
+                File actualDoc = new File(DocsDirectory.getAbsolutePath(),cal_str+".xls");
+                try {
+
+                    final WritableWorkbook workbook = Workbook.createWorkbook(actualDoc);
+                    final WritableSheet sheet = workbook.createSheet("Test Sheet",0);
+                    Label heading = new Label(0,row,"Report for " + cal_str);
+                    row++;
+                    Label account_label = new Label(accountCol , row , "Account No");
+                    Label amount_label = new Label(amountCol, row , "Amount Deposited");
+                    Label sr_number = new Label(serialCol, row , "Sr.No");
+                    row++;
+
+                    try {
+                        sheet.addCell(heading);
+                        sheet.addCell(account_label);
+                        sheet.addCell(amount_label);
+                        sheet.addCell(sr_number);
+                    } catch (WriteException e) {
+                        e.printStackTrace();
+                    }
+                    DatabaseReference agentCollect = database.getReference("agentCollect");
+                    agentCollect.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot agent : dataSnapshot.getChildren()){
+                                if (agent.hasChild(cal_str)){
+                                    DataSnapshot date = agent.child(cal_str);
+                                    for (DataSnapshot collection : date.getChildren()){
+                                        Number ser_no = new Number(serialCol, row , row);
+                                        Number account_number = new Number(accountCol, row, Integer.parseInt(collection.getKey()));
+                                        Number amount_collected = new Number(amountCol, row , Integer.parseInt(collection.getValue().toString()));
+                                        row++;
+                                        try {
+                                            sheet.addCell(account_number);
+                                            sheet.addCell(amount_collected);
+                                            sheet.addCell(ser_no);
+                                        } catch (WriteException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+                            }
+                            try {
+                                workbook.write();
+                                workbook.close();
+                            } catch (IOException | WriteException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            Log.d(TAG, "onCancelled: " + databaseError.getDetails());
+                        }
+                    });
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+
+                }
+
+
+            }
+        });
+
+
         final FloatingActionButton fab = getActivity().findViewById(R.id.fab);
         fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.get_cash_96));
 //        fab.setVisibility(View.INVISIBLE);
@@ -120,6 +214,8 @@ public class FragmentAccountTypeInfo extends Fragment {
                 FragmentSelectAccount fragmentSelectAccount = new FragmentSelectAccount();
                 fragmentTransaction.replace(R.id.fragment_container, fragmentSelectAccount).addToBackStack(null).
                         commit();
+
+
             }
         });
 
@@ -306,6 +402,8 @@ public class FragmentAccountTypeInfo extends Fragment {
                     }
                 });
             } else if (logged_type.equals("admin")) {
+
+
 
                 DatabaseReference agent_collect_db_ref = database.getReference("agentCollect");
                 agent_collect_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -501,6 +599,8 @@ public class FragmentAccountTypeInfo extends Fragment {
 
             }
         }
+
+
 
 
         date_button.setOnClickListener(new View.OnClickListener() {
