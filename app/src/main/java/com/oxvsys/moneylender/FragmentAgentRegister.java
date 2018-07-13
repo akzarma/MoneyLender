@@ -109,7 +109,7 @@ public class FragmentAgentRegister extends Fragment {
 
                 String unique_agent_id = "agent_" + mobile_view.getText().toString();
 
-                DatabaseReference ref = database.getReference("agents").child(unique_agent_id);
+                DatabaseReference ref = database.getReference("agents");
 
                 HashMap<String , String> attrs = new HashMap<>();
                 HashMap<String , Object> id = new HashMap<>();

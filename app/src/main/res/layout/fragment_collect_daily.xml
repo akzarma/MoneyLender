@@ -315,19 +315,13 @@
 
 
     </RelativeLayout>
-    <TextView
-        android:id="@+id/expected_amount_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:layout_below="@id/amount_relative_layout"
-        android:layout_centerHorizontal="true"/>
+
     <TextView
         android:id="@+id/info_field"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
-        android:layout_below="@id/expected_amount_view"
+        android:layout_below="@id/amount_relative_layout"
         android:layout_centerHorizontal="true"/>
 
     <!-- TODO: Update blank fragment layout -->
