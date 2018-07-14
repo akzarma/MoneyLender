@@ -35,6 +35,10 @@
                 android:icon="@drawable/ic_menu_send"
                 android:title="Agents Collection" />
             <item
+                android:id="@+id/change_password"
+                android:icon="@drawable/ic_menu_pass"
+                android:title="Change Password" />
+            <item
                 android:id="@+id/nav_logout"
                 android:icon="@drawable/log_out_96"
                 android:title="Logout" />

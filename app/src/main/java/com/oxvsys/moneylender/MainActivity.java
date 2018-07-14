@@ -1,14 +1,18 @@
 package com.oxvsys.moneylender;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -21,8 +25,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Calendar;
+
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, FragmentKYC.OnFragmentInteractionListener {
@@ -30,6 +36,7 @@ public class MainActivity extends AppCompatActivity
     Toolbar toolbar;
     static String logged_agent;
     static String logged_type;
+    static String user_pwd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +45,7 @@ public class MainActivity extends AppCompatActivity
 
         logged_agent = getData("user_id", getApplicationContext());
         logged_type = getData("user_type", getApplicationContext());
+        user_pwd = getData("user_pwd", getApplicationContext());
 
 
         setContentView(R.layout.activity_main);
@@ -54,11 +62,17 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         Menu nav_menu = navigationView.getMenu();
 
-        if(logged_type.equals("agent")){
+
+        if (logged_type.equals("agent")) {
             nav_menu.findItem(R.id.nav_monthly_loan_grant).setVisible(false);
             nav_menu.findItem(R.id.nav_kyc).setVisible(false);
             nav_menu.findItem(R.id.nav_agent_register).setVisible(false);
             nav_menu.findItem(R.id.nav_send).setVisible(false);
+            if (user_pwd.equals("1234")) {
+                nav_menu.findItem(R.id.nav_gallery).setVisible(false);
+//                nav_menu.findItem(R.id.toolbar).setVisible(false);
+            }
+
         }
 
 
@@ -74,13 +88,69 @@ public class MainActivity extends AppCompatActivity
 
         setupFirstFragment();
 
+        // Here, thisActivity is the current activity
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (getApplicationContext().checkSelfPermission(
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
 
+                // No explanation needed; request the permission
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest.permission.CALL_PHONE},
+                        1);
+
+            }
+        }
     }
+
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                } else {
+
+                    Toast.makeText(MainActivity.this, "Permission denied to read your External storage", Toast.LENGTH_SHORT).show();
+                }
+                if (grantResults.length > 0
+                        && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+
+                } else {
+
+                    Toast.makeText(MainActivity.this, "Permission denied to Call", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
+    }
+
 
     private void setupFirstFragment() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         Calendar calendar = Calendar.getInstance();
+
+
+        if (user_pwd.equals("1234")) {
+
+            SetPassword setPassword = new SetPassword();
+            fragmentTransaction.replace(R.id.fragment_container, setPassword).
+                    addToBackStack(null)
+                    .commit();
+            return;
+        }
+
         if (getSupportActionBar() != null)
             getSupportActionBar().setTitle("Dashboard");
 //        String logged_in = getData("user_type", getApplicationContext());
@@ -137,6 +207,7 @@ public class MainActivity extends AppCompatActivity
                     fragmentTransaction.replace(R.id.fragment_container, fragmentAccountTypeInfo).addToBackStack(null).
                             commit();
                     return true;
+
             }
             return false;
         }
@@ -237,6 +308,12 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
             finish();
+        } else if (id == R.id.change_password) {
+            if (getSupportActionBar() != null)
+                getSupportActionBar().setTitle("Change Password");
+            SetPassword far = new SetPassword();
+            fragmentTransaction.replace(R.id.fragment_container, far).addToBackStack(null).
+                    commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
