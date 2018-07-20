@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -166,8 +167,8 @@ public class FragmentAccountTypeInfo extends Fragment {
                                     DataSnapshot date = agent.child(cal_str);
                                     for (DataSnapshot collection : date.getChildren()){
                                         Number ser_no = new Number(serialCol, row , row);
-                                        Number account_number = new Number(accountCol, row, Integer.parseInt(collection.getKey()));
-                                        Number amount_collected = new Number(amountCol, row , Integer.parseInt(collection.getValue().toString()));
+                                        Label account_number = new Label(accountCol, row, String.valueOf(collection.getKey()));
+                                        Number amount_collected = new Number(amountCol, row , Long.parseLong(String.valueOf(collection.getValue())));
                                         row++;
                                         try {
                                             sheet.addCell(account_number);
@@ -182,6 +183,7 @@ public class FragmentAccountTypeInfo extends Fragment {
                             try {
                                 workbook.write();
                                 workbook.close();
+                                Toast.makeText(getContext(),"File saved in Documents folder",Toast.LENGTH_LONG).show();
                             } catch (IOException | WriteException e) {
                                 e.printStackTrace();
                             }
@@ -463,6 +465,10 @@ public class FragmentAccountTypeInfo extends Fragment {
                                 customer_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        final HashMap<String, AccountAmountCollect> cust_account_amount_copy = new HashMap<>();
+                                        cust_account_amount_copy.putAll(cust_account_amount);
+                                        final HashMap<String, String> account_amount_map_copy = new HashMap<>();
+                                        account_amount_map_copy.putAll(account_amount_map);
                                         for (Map.Entry<String, AccountAmountCollect> each_cust_ac_amt : cust_account_amount.entrySet()) {
                                             if (dataSnapshot.hasChild(each_cust_ac_amt.getKey())) {
                                                 Customer curr_customer = dataSnapshot.child(each_cust_ac_amt.getKey()).getValue(Customer.class);
@@ -472,7 +478,7 @@ public class FragmentAccountTypeInfo extends Fragment {
                                                     for (Map.Entry<String, String> each_acc_amt : account_amount_map.entrySet()) {
                                                         if (accounts.containsKey(each_acc_amt.getKey())) {
 
-                                                            Log.d("customer_collect_daily", each_acc_amt.getValue().toString());
+//                                                            Log.d("customer_collect_daily", each_acc_amt.getValue().toString());
                                                             Long amount_collected = Long.parseLong(String.valueOf(each_acc_amt.getValue()));
                                                             Object account = accounts.get(each_acc_amt.getKey());
                                                             List<Account> accountList = new ArrayList<Account>();
@@ -487,8 +493,8 @@ public class FragmentAccountTypeInfo extends Fragment {
 
                                                             if (customerAmount.getCustomer().getAccounts1().get(0).getType().equals(selected_account_type))
                                                                 customer_amount_map.put(each_acc_amt.getKey(), customerAmount);
-                                                            account_amount_map.remove(each_acc_amt.getKey());
-                                                            cust_account_amount.remove(each_cust_ac_amt.getKey());
+                                                            account_amount_map_copy.remove(each_acc_amt.getKey());
+                                                            cust_account_amount_copy.remove(each_cust_ac_amt.getKey());
 //                                                                        else if (customerAmount.getCustomer().getAccounts1().get(0).getType().equals(selected_account_type))
 //                                                                            monthly_customer_amount_map.put(account.getKey(), customerAmount);
 
@@ -512,13 +518,13 @@ public class FragmentAccountTypeInfo extends Fragment {
                                             customer_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                    for (Map.Entry<String, AccountAmountCollect> each_cust_ac_amt : cust_account_amount.entrySet()) {
+                                                    for (Map.Entry<String, AccountAmountCollect> each_cust_ac_amt : cust_account_amount_copy.entrySet()) {
                                                         if (dataSnapshot.hasChild(each_cust_ac_amt.getKey())) {
                                                             Customer curr_customer = dataSnapshot.child(each_cust_ac_amt.getKey()).getValue(Customer.class);
                                                             curr_customer.setId(each_cust_ac_amt.getKey());
                                                             HashMap<String, Object> accounts = (HashMap<String, Object>) ((HashMap<String, Object>) dataSnapshot.child(each_cust_ac_amt.getKey()).getValue()).get("accounts");
                                                             if (accounts != null) {
-                                                                for (Map.Entry<String, String> each_acc_amt : account_amount_map.entrySet()) {
+                                                                for (Map.Entry<String, String> each_acc_amt : account_amount_map_copy.entrySet()) {
                                                                     if (accounts.containsKey(each_acc_amt.getKey())) {
                                                                         Long amount_collected = Long.parseLong(String.valueOf(each_acc_amt.getValue()));
                                                                         Object account = accounts.get(each_acc_amt.getKey());
@@ -534,8 +540,8 @@ public class FragmentAccountTypeInfo extends Fragment {
 
                                                                         if (customerAmount.getCustomer().getAccounts1().get(0).getType().equals(selected_account_type))
                                                                             customer_amount_map.put(each_acc_amt.getKey(), customerAmount);
-                                                                        account_amount_map.remove(each_acc_amt.getKey());
-                                                                        cust_account_amount.remove(each_cust_ac_amt.getKey());
+                                                                        account_amount_map_copy.remove(each_acc_amt.getKey());
+                                                                        cust_account_amount_copy.remove(each_cust_ac_amt.getKey());
 //                                                                        else if (customerAmount.getCustomer().getAccounts1().get(0).getType().equals(selected_account_type))
 //                                                                            monthly_customer_amount_map.put(account.getKey(), customerAmount);
 
@@ -570,7 +576,17 @@ public class FragmentAccountTypeInfo extends Fragment {
                                                 }
                                             });
                                         }
-
+                                        if (customer_amount_map.isEmpty()) {
+                                            textView.setVisibility(View.VISIBLE);
+                                            heading_card.setVisibility(View.INVISIBLE);
+                                            date_button.setVisibility(View.VISIBLE);
+                                        }
+                                        mAdapter = new CustomerDailyInfoAdapter(customer_amount_map, sel_calendar, getContext(), getFragmentManager());
+                                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+                                        recycler.setLayoutManager(mLayoutManager);
+                                        recycler.setItemAnimator(new DefaultItemAnimator());
+                                        recycler.setAdapter(mAdapter);
+                                        progressBar.setVisibility(View.INVISIBLE);
 
                                     }
 

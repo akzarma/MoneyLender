@@ -49,6 +49,7 @@
                 android:layout_below="@id/login_mobile"
                 android:layout_marginBottom="8dp"
                 android:background="@null"
+                android:inputType="textPassword"
                 android:hint="Password" />
         </android.support.design.widget.TextInputLayout>
 
