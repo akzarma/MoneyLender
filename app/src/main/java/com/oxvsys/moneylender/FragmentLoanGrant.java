@@ -67,6 +67,7 @@ public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragme
     String account_type_selected;
     String selected_days;
     int fields_loaded = 0;
+    Calendar curr_cal;
 
     private OnFragmentInteractionListener mListener;
 
@@ -126,6 +127,9 @@ public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragme
         fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_save_black_24dp));
         fab.setVisibility(View.INVISIBLE);
         final Customer selected_customer = (Customer) getArguments().getSerializable(ARG_PARAM1);
+
+        curr_cal = Calendar.getInstance();
+        edit_o_date.setText(MainActivity.CaltoStringDate(curr_cal));
 
         months_field.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -442,6 +446,7 @@ public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragme
                 grant_info.put("info", info);
                 grant_info.put("lf_number", lf_number);
                 grant_info.put("file_amount", file_amount);
+                grant_info.put("r_amt", file_amount);
                 grant_info.put("agent", agent_selected.getName());
                 grant_info.put("account", final_account_no);
                 grant_info.put("customer", selected_customer.getName());
@@ -511,6 +516,8 @@ public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragme
         account_number_details.put("c_date", grant_info.get("c_date"));
         account_number_details.put("info", grant_info.get("info"));
         account_number_details.put("file_amt", grant_info.get("file_amount"));
+        account_number_details.put("r_amt", grant_info.get("r_amt"));
+        account_number_details.put("last_int_calc", MainActivity.CaltoStringDate(curr_cal));
         if (account_type_selected.equals("1")) {
             account_number_details.put("roi", grant_info.get("roi"));
             account_number_details.put("duration", grant_info.get("months"));

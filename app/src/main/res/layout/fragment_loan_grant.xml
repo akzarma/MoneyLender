@@ -171,7 +171,7 @@
                     android:focusable="false"
                     android:hint="File Opening date"
                     android:inputType="date"
-                    android:text="10-06-2018" />
+                    android:text="" />
             </android.support.design.widget.TextInputLayout>
 
 

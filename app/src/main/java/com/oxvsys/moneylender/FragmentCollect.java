@@ -43,9 +43,12 @@ public class FragmentCollect extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     Customer selected_customer;
     Long deposited = 0L;
-    Long file_amt;
+    //    Long file_amt;
+    Long remaining_amt;
     int fields_loaded = 0;
     int months_passed;
+    int months_left = 0;
+    int months_duration;
     Long final_file_amount_interest;
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -93,7 +96,7 @@ public class FragmentCollect extends Fragment {
         final TextView customer_mobile_field = view.findViewById(R.id.customer_mobile_field);
         final TextView customer_account_field = view.findViewById(R.id.customer_account_field);
         final TextView loan_duration_field = view.findViewById(R.id.loan_duration_field);
-        final TextView expected_amount_view = view.findViewById(R.id.expected_amount_view);
+//        final TextView expected_amount_view = view.findViewById(R.id.expected_amount_view);
         final TextView remaining_money_field = view.findViewById(R.id.remaining_money_field);
         final ImageView dialer_view = view.findViewById(R.id.dialer_view);
         final TextView last_date_field = view.findViewById(R.id.last_date_field);
@@ -146,128 +149,38 @@ public class FragmentCollect extends Fragment {
                         accountList.add(account);
                         selected_customer.setAccounts1(accountList);
 
-                        file_amt = account.getFile_amt();
-                        Long deposited = account.getDeposited();
-                        Long amt_left = file_amt - deposited;
+//                        file_amt = account.getFile_amt();
+//                        Long deposited = account.getDeposited();
+                        remaining_amt = account.getR_amt();
+
+
+                        customer_mobile_field.setText(selected_customer.getMobile());
+                        customer_name_field.setText(selected_customer.getName());
+                        customer_id_field.setText(selected_customer.getId());
 
 
                         customer_loan_amount_field.setText("₹ " + String.valueOf(account.getFile_amt()));
                         customer_deposited_field.setText("₹ " + String.valueOf(account.getDeposited()));
                         Long days_diff = 0L;
                         if (account.getType().equals("0")) {
-                            customer_account_type_field.setText("Daily basis");
-                            loan_duration_field.setText(String.valueOf(account.getDuration()) + " days");
-                            remaining_money_field.setText(String.valueOf(amt_left));
-                            Calendar today_cal = Calendar.getInstance();
-                            today_cal.set(Calendar.HOUR_OF_DAY, 0);
-                            today_cal.set(Calendar.MINUTE, 0);
-                            today_cal.set(Calendar.SECOND, 0);
-                            today_cal.set(Calendar.MILLISECOND, 0);
+                            customer_account_type_field.setText("Daily Basis");
+
                             Calendar c_date_cal = Calendar.getInstance();
                             c_date_cal.setTimeInMillis(account.getC_date().getTimeInMillis());
-
-                            days_diff = TimeUnit.MILLISECONDS.toDays(c_date_cal.getTimeInMillis() - today_cal.getTimeInMillis());
-
-                            final_file_amount_interest = file_amt;
-
-                            last_date_field.setText(String.valueOf(MainActivity.CaltoStringDate(account.getC_date())) + " (" + days_diff + " days left)");
-                            start_date_field.setText(MainActivity.CaltoStringDate(account.getO_date()));
-                        } else if (account.getType().equals("1")) {
-                            customer_account_type_field.setText("Monthly basis (" + account.getRoi() + "% annual interest)");
-                            loan_duration_field.setText(String.valueOf(account.getDuration()) + " months");
-                            int months_left = 0;
-                            if (amt_left != 0) {
-
-                                float roi = account.getRoi();
-                                Long months_duration = account.getDuration();
-                                float roi_per_month_100 = roi / 1200;
-                                Calendar o_date_cal = Calendar.getInstance();
-                                o_date_cal.setTimeInMillis(account.getO_date().getTimeInMillis());
-
-                                days_diff = TimeUnit.MILLISECONDS.toDays(curr_cal.getTimeInMillis() - o_date_cal.getTimeInMillis());
+                            loan_duration_field.setText(String.valueOf(account.getDuration()) + " days");
+                            remaining_money_field.setText(String.valueOf(account.getR_amt()));
 
 
-                                months_passed = Integer.parseInt(String.valueOf(days_diff / 30).split("\\.")[0]);
+                            days_diff = TimeUnit.MILLISECONDS.toDays(c_date_cal.getTimeInMillis() - curr_cal.getTimeInMillis());
 
+//                            final_file_amount_interest = file_amt;
 
-                                months_left = (int) (months_duration - months_passed);
-                                Long rcmnd_amt = (long) ((double) amt_left * (double) Math.pow((1 + roi_per_month_100), Double.parseDouble(String.valueOf(months_left))));
-                                final_file_amount_interest = rcmnd_amt;
-                                long curr_month_expected_amount = 0;
-                                if (months_left != 0)
-                                    curr_month_expected_amount = rcmnd_amt / months_left;
-                                remaining_money_field.setText("₹ " + String.valueOf(amt_left) + " excl. interest");
-                                expected_amount_view.setText("Expected Amount   ₹ " + String.valueOf(curr_month_expected_amount));
-                            } else {
-                                fab.setVisibility(View.INVISIBLE);
-                                amount_field.setVisibility(View.INVISIBLE);
-                                remaining_money_field.setText("₹ 0");
-                                expected_amount_view.setText("₹ 0");
-                            }
-                            start_date_field.setText(MainActivity.CaltoStringDate(account.getO_date()));
-                            last_date_field.setText(String.valueOf(MainActivity.CaltoStringDate(account.getC_date())) + " (" + months_left + " months left)");
+                            Calendar last_pay_date = selected_customer.getAccounts1().get(0).getLast_pay_date();
 
-                        }
-                        customer_mobile_field.setText(selected_customer.getMobile());
-
-
-//                                List<Account> accountList = new ArrayList<>();
-//                                accountList.add(selected_account);
-//                                selected_customer.setAccounts1(accountList);
-                        customer_name_field.setText(selected_customer.getName());
-                        customer_id_field.setText(selected_customer.getId());
-                        fields_loaded += 1;
-                        if (fields_loaded == 1) {
-                            fab.setVisibility(View.VISIBLE);
-                        }
-                        file_amt = account.getFile_amt();
-                        final Calendar last_pay_date = selected_customer.getAccounts1().get(0).getLast_pay_date();
-
-
-                        if (account.getType().equals("0")) {
-                            if (last_pay_date == null) {
-                                expected_amount_view.setText("Expected Amount   ₹ " + String.valueOf(amt_left / days_diff));
-                            } else {
-                                if (!curr_date.equals(MainActivity.CaltoStringDate(last_pay_date))) {
-                                    expected_amount_view.setText("Expected Amount   ₹ " + String.valueOf(amt_left / days_diff));
-                                }
-                                if (last_pay_date != null && MainActivity.CaltoStringDate(last_pay_date).equals(curr_date)) {
-                                    DatabaseReference agent_collect_date_db_ref = database.getReference("agentCollect").child(logged_agent)
-                                            .child(MainActivity.CaltoStringDate(last_pay_date));
-                                    agent_collect_date_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            if (dataSnapshot.hasChild(selected_account.getNo())) {
-
-                                                Long last_amt = ((HashMap<String, Long>) dataSnapshot.getValue()).get(selected_account.getNo());
-                                                if (last_amt != null) {
-                                                    expected_amount_view.setText("");
-                                                    inr_sign.setText("");
-                                                    amount_field.setText("");
-                                                    amount_field.setHint("");
-                                                    info_field.setText("Last Amount of ₹ " + last_amt + " received on " + MainActivity.CaltoStringDate(last_pay_date));
-                                                } else {
-                                                    amount_field.setText("0");
-                                                }
-                                                fab.setVisibility(View.INVISIBLE);
-                                                amount_field.setEnabled(false);
-
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                        }
-                                    });
-                                }
-                            }
-                        } else if (account.getType().equals("1")) {
                             if (last_pay_date != null) {
                                 days_diff = TimeUnit.MILLISECONDS.toDays(curr_cal.getTimeInMillis() - last_pay_date.getTimeInMillis());
-                                int months_passed = (int) (days_diff / 30);
-                                if (months_passed < 1) {
-                                    expected_amount_view.setText("");
+                                info_field.setText("Last Payment received on " + MainActivity.CaltoStringDate(last_pay_date));
+                                if (days_diff < 1) {
                                     inr_sign.setText("");
                                     amount_field.setText("");
                                     amount_field.setHint("");
@@ -275,6 +188,129 @@ public class FragmentCollect extends Fragment {
                                     amount_field.setEnabled(false);
                                 }
                             }
+
+                            last_date_field.setText(String.valueOf(MainActivity.CaltoStringDate(account.getC_date())) + " (" + days_diff + " days left)");
+                            start_date_field.setText(MainActivity.CaltoStringDate(account.getO_date()));
+                        } else if (account.getType().equals("1")) {
+                            customer_account_type_field.setText("Monthly basis (" + account.getRoi() + "% annual interest)");
+                            loan_duration_field.setText(String.valueOf(account.getDuration()) + " months");
+
+                            if (remaining_amt != 0) {
+
+                                float roi = account.getRoi();
+                                months_duration = Integer.parseInt(account.getDuration().toString());
+                                float roi_per_month = roi / 12;
+                                Calendar o_date_cal = account.getO_date();
+                                days_diff = TimeUnit.MILLISECONDS.toDays(curr_cal.getTimeInMillis() - o_date_cal.getTimeInMillis());
+                                months_passed = Integer.parseInt(String.valueOf(days_diff / 30).split("\\.")[0]);
+                                months_left = months_duration - months_passed;
+
+                                Calendar last_int_calc_cal = account.getLast_int_calc();
+
+                                Long days_diff_without_calc = TimeUnit.MILLISECONDS.toDays(curr_cal.getTimeInMillis() - last_int_calc_cal.getTimeInMillis());
+
+                                int months_passed_without_calc = Integer.parseInt(String.valueOf(days_diff_without_calc / 30).split("\\.")[0]);
+                                if (months_passed_without_calc > 0) {
+                                    remaining_amt = compoundInterest(remaining_amt, roi_per_month, months_passed_without_calc);
+                                    database.getReference("customers")
+                                            .child(selected_customer.getId())
+                                            .child("accounts")
+                                            .child(selected_account.getNo())
+                                            .child("r_amt")
+                                            .setValue(remaining_amt).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            database.getReference("customers")
+                                                    .child(selected_customer.getId())
+                                                    .child("accounts")
+                                                    .child(selected_account.getNo())
+                                                    .child("last_int_calc").setValue(MainActivity.CaltoStringDate(curr_cal));
+                                            remaining_money_field.setText("₹ " + String.valueOf(remaining_amt));
+                                        }
+                                    });
+                                } else {
+                                    remaining_money_field.setText("₹ " + String.valueOf(remaining_amt));
+                                }
+
+
+                                if (months_passed < 1) {
+                                    fab.setVisibility(View.INVISIBLE);
+                                    fields_loaded -= 1;
+                                    inr_sign.setVisibility(View.INVISIBLE);
+                                    amount_field.setVisibility(View.INVISIBLE);
+                                }
+
+
+                            } else {
+                                fab.setVisibility(View.INVISIBLE);
+                                fields_loaded -= 1;
+                                amount_field.setVisibility(View.INVISIBLE);
+                                remaining_money_field.setText("₹ 0");
+                            }
+                            start_date_field.setText(MainActivity.CaltoStringDate(account.getO_date()));
+                            last_date_field.setText(String.valueOf(MainActivity.CaltoStringDate(account.getC_date())) + " (" + months_left + " months left)");
+
+                            Calendar last_pay_date = selected_customer.getAccounts1().get(0).getLast_pay_date();
+
+                            if (last_pay_date != null) {
+                                days_diff = TimeUnit.MILLISECONDS.toDays(curr_cal.getTimeInMillis() - last_pay_date.getTimeInMillis());
+                                info_field.setText("Last Payment received on " + MainActivity.CaltoStringDate(last_pay_date));
+                                int months_passed = (int) (days_diff / 30);
+                                if (months_passed < 1) {
+                                    inr_sign.setText("");
+                                    amount_field.setText("");
+                                    amount_field.setHint("");
+                                    fab.setVisibility(View.INVISIBLE);
+                                    amount_field.setEnabled(false);
+                                }
+                            }
+                        }
+                        fields_loaded += 1;
+                        if (fields_loaded == 1) {
+                            fab.setVisibility(View.VISIBLE);
+                        }
+//                        file_amt = account.getFile_amt();
+
+
+                        if (account.getType().equals("0")) {
+//                            if (last_pay_date == null) {
+//                                expected_amount_view.setText("Expected Amount   ₹ " + String.valueOf(amt_left / days_diff));
+//                            } else {
+//                                if (!curr_date.equals(MainActivity.CaltoStringDate(last_pay_date))) {
+//                                    expected_amount_view.setText("Expected Amount   ₹ " + String.valueOf(amt_left / days_diff));
+//                                }
+//                                if (last_pay_date != null && MainActivity.CaltoStringDate(last_pay_date).equals(curr_date)) {
+//                                    DatabaseReference agent_collect_date_db_ref = database.getReference("agentCollect").child(logged_agent)
+//                                            .child(MainActivity.CaltoStringDate(last_pay_date));
+//                                    agent_collect_date_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+//                                        @Override
+//                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                                            if (dataSnapshot.hasChild(selected_account.getNo())) {
+//
+//                                                Long last_amt = ((HashMap<String, Long>) dataSnapshot.getValue()).get(selected_account.getNo());
+//                                                if (last_amt != null) {
+//                                                    expected_amount_view.setText("");
+//                                                    inr_sign.setText("");
+//                                                    amount_field.setText("");
+//                                                    amount_field.setHint("");
+//                                                    info_field.setText("Last Amount of ₹ " + last_amt + " received on " + MainActivity.CaltoStringDate(last_pay_date));
+//                                                } else {
+//                                                    amount_field.setText("0");
+//                                                }
+//                                                fab.setVisibility(View.INVISIBLE);
+//                                                amount_field.setEnabled(false);
+//
+//                                            }
+//                                        }
+//
+//                                        @Override
+//                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                                        }
+//                                    });
+//                                }
+//                            }
+                        } else if (account.getType().equals("1")) {
 
 
                         }
@@ -316,132 +352,172 @@ public class FragmentCollect extends Fragment {
                 fab.setVisibility(View.INVISIBLE);
                 final Long amount_recieved = Long.parseLong(String.valueOf(amount_field.getText()));
 
+                if (amount_recieved <= remaining_amt) {
+                    DatabaseReference account_deposited_db_ref = database.getReference("customers")
+                            .child(selected_customer.getId()).child("accounts")
+                            .child(selected_customer.getAccounts1().get(0).getNo())
+                            .child("deposited");
+                    account_deposited_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            Object get_value = dataSnapshot.getValue();
+                            if (get_value != null) {
+                                deposited = Long.parseLong(dataSnapshot.getValue().toString());
+                            } else {
+                                deposited = 0L;
+                            }
 
-                DatabaseReference account_deposited_db_ref = database.getReference("customers")
-                        .child(selected_customer.getId()).child("accounts")
-                        .child(selected_customer.getAccounts1().get(0).getNo())
-                        .child("deposited");
-                account_deposited_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        Object get_value = dataSnapshot.getValue();
-                        if (get_value != null) {
-                            deposited = Long.parseLong(dataSnapshot.getValue().toString());
-                        } else {
-                            deposited = 0L;
+
+                            deposited += amount_recieved;
+
+                            DatabaseReference agent = database.getReference("agentCollect");
+                            agent.child(logged_agent).child(curr_date)
+                                    .child(selected_account.getNo())
+                                    .setValue(amount_recieved).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    database.getReference("customers")
+                                            .child(selected_customer.getId()).child("accounts")
+                                            .child(selected_account.getNo())
+                                            .child("deposited").setValue(deposited).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            database.getReference("customers")
+                                                    .child(selected_customer.getId()).child("accounts")
+                                                    .child(selected_account.getNo())
+                                                    .child("last_pay_date").setValue(MainActivity.CaltoStringDate(curr_cal)).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+
+                                                    remaining_amt = remaining_amt - amount_recieved;
+                                                    database.getReference("customers")
+                                                            .child(selected_customer.getId()).child("accounts")
+                                                            .child(selected_account.getNo())
+                                                            .child("r_amt").setValue(remaining_amt);
+                                                    Log.d("deposited new money: ", "Account: " + selected_account.getNo());
+
+
+                                                    if (remaining_amt == 0) {
+                                                        DatabaseReference customer_accounts = database.getReference("customers").child(selected_customer.getId());
+                                                        customer_accounts.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                            @Override
+                                                            public void onDataChange(@NonNull final DataSnapshot selected_customer_dataSnapshot) {
+                                                                DatabaseReference inactive_cust_ref = database.getReference("inactive/customers");
+                                                                inactive_cust_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                    @Override
+                                                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                        if (dataSnapshot.hasChild(selected_customer.getId())) {
+                                                                            Map<String, Object> account_id_map = new HashMap<>();
+                                                                            Map<String, String> account_attrs = selected_customer.getAccounts1().get(0).getMap();
+                                                                            account_id_map.put(selected_account.getNo(), account_attrs);
+                                                                            database.getReference("inactive/customers")
+                                                                                    .child(selected_customer.getId())
+                                                                                    .child("accounts")
+                                                                                    .updateChildren(account_id_map, new DatabaseReference.CompletionListener() {
+                                                                                        @Override
+                                                                                        public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                                                                                            Log.d("inactive: ", "The customer is transferred with A/C: " + selected_account.getNo());
+                                                                                            if (((HashMap<String, String>) (((HashMap<String, Object>) selected_customer_dataSnapshot.getValue()).get("accounts"))).entrySet().size() <= 1) {
+                                                                                                //only one or zero account is there which has deposited == file_amount
+                                                                                                //so move the whole customer object to another tree which has path "inactive/customer_id"
+                                                                                                selected_customer_dataSnapshot.getRef().removeValue();
+                                                                                            } else {
+                                                                                                database.getReference("customers").child(selected_customer.getId()).child("accounts")
+                                                                                                        .child(selected_account.getNo()).removeValue();
+                                                                                            }
+                                                                                        }
+                                                                                    });
+                                                                        } else {
+                                                                            Map<String, Object> attrs = new HashMap<>();
+                                                                            Map<String, Object> account_id_map = new HashMap<>();
+
+                                                                            Account curr_account = selected_customer.getAccounts1().get(0);
+                                                                            curr_account.setLast_pay_date((MainActivity.CaltoStringDate(curr_cal)));
+                                                                            curr_account.setDeposited(deposited);
+                                                                            curr_account.setR_amt(remaining_amt);
+                                                                            Map<String, String> account_attrs = selected_customer.getAccounts1().get(0).getMap();
+
+                                                                            attrs.put("name", selected_customer.getName());
+                                                                            attrs.put("aadhar", selected_customer.getAadhar_id());
+                                                                            attrs.put("occupation", selected_customer.getOccupation());
+                                                                            attrs.put("mobile", selected_customer.getMobile());
+                                                                            attrs.put("dob", selected_customer.getDOB());
+                                                                            attrs.put("address", selected_customer.getAddress());
+
+                                                                            account_id_map.put(selected_account.getNo(), account_attrs);
+
+                                                                            attrs.put("accounts", account_id_map);
+
+                                                                            database.getReference("inactive/customers").child(selected_customer.getId()).updateChildren(attrs, new DatabaseReference.CompletionListener() {
+                                                                                @Override
+                                                                                public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                                                                                    Log.d("inactive: ", "The customer is transferred with A/C: " + selected_account.getNo());
+                                                                                    if (((HashMap<String, String>) (((HashMap<String, Object>) selected_customer_dataSnapshot.getValue()).get("accounts"))).entrySet().size() <= 1) {
+                                                                                        //only one or zero account is there which has deposited == file_amount
+                                                                                        //so move the whole customer object to another tree which has path "inactive/customer_id"
+                                                                                        selected_customer_dataSnapshot.getRef().removeValue();
+                                                                                    } else {
+                                                                                        database.getReference("customers").child(selected_customer.getId()).child("accounts")
+                                                                                                .child(selected_account.getNo()).removeValue();
+                                                                                    }
+                                                                                }
+                                                                            });
+                                                                        }
+                                                                    }
+
+                                                                    @Override
+                                                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                                    }
+                                                                });
+
+
+                                                            }
+
+                                                            @Override
+                                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                            }
+                                                        });
+                                                    }
+                                                    FragmentManager fragmentManager = getFragmentManager();
+                                                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+                                                    FragmentAccountTypeInfo fragmentAccountTypeInfo = FragmentAccountTypeInfo.newInstance(Calendar.getInstance(), selected_customer.getAccounts1().get(0).getType());
+                                                    fragmentTransaction.replace(R.id.fragment_container, fragmentAccountTypeInfo).addToBackStack(null).
+                                                            commit();
+                                                }
+                                            });
+
+                                        }
+                                    });
+                                }
+                            });
+
                         }
 
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            fab.setVisibility(View.VISIBLE);
+                            Toast.makeText(getContext(), "Failed to collect money. Try again!", Toast.LENGTH_LONG).show();
+                        }
+                    });
 
-                        DatabaseReference agent_collect_date_db_ref = database.getReference("agentCollect").child(logged_agent)
-                                .child(curr_date);
-                        agent_collect_date_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                deposited += amount_recieved;
-
-                                DatabaseReference agent = database.getReference("agentCollect");
-                                agent.child(logged_agent).child(curr_date).child(selected_account.getNo()).setValue(amount_recieved).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        database.getReference("customers")
-                                                .child(selected_customer.getId()).child("accounts")
-                                                .child(selected_customer.getAccounts1().get(0).getNo())
-                                                .child("deposited").setValue(deposited).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                database.getReference("customers")
-                                                        .child(selected_customer.getId()).child("accounts")
-                                                        .child(selected_customer.getAccounts1().get(0).getNo())
-                                                        .child("last_pay_date").setValue(MainActivity.CaltoStringDate(curr_cal)).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                    @Override
-                                                    public void onComplete(@NonNull Task<Void> task) {
-
-
-                                                        Log.d("deposited new money: ", "Account: " + selected_account.getNo());
-
-
-                                                        if (deposited.equals(final_file_amount_interest)) {
-                                                            DatabaseReference customer_accounts = database.getReference("customers").child(selected_customer.getId());
-                                                            customer_accounts.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                                @Override
-                                                                public void onDataChange(@NonNull final DataSnapshot selected_customer_dataSnapshot) {
-
-                                                                    Map<String, Object> attrs = new HashMap<>();
-                                                                    Map<String, Object> account_id_map = new HashMap<>();
-
-                                                                    Account curr_account = selected_customer.getAccounts1().get(0);
-                                                                    curr_account.setLast_pay_date((MainActivity.CaltoStringDate(curr_cal)));
-                                                                    curr_account.setDeposited(deposited);
-                                                                    Map<String, String> account_attrs = selected_customer.getAccounts1().get(0).getMap();
-
-                                                                    attrs.put("name", selected_customer.getName());
-                                                                    attrs.put("aadhar", selected_customer.getAadhar_id());
-                                                                    attrs.put("occupation", selected_customer.getOccupation());
-                                                                    attrs.put("mobile", selected_customer.getMobile());
-                                                                    attrs.put("dob", selected_customer.getDOB());
-                                                                    attrs.put("address", selected_customer.getAddress());
-
-                                                                    account_id_map.put(selected_account.getNo(), account_attrs);
-
-                                                                    attrs.put("accounts", account_id_map);
-
-                                                                    database.getReference("inactive/customers").child(selected_customer.getId()).updateChildren(attrs, new DatabaseReference.CompletionListener() {
-                                                                        @Override
-                                                                        public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-                                                                            Log.d("inactive: ", "The customer is transferred with A/C: " + selected_account.getNo());
-                                                                            if (((HashMap<String, String>) (((HashMap<String, Object>) selected_customer_dataSnapshot.getValue()).get("accounts"))).entrySet().size() <= 1) {
-                                                                                //only one or zero account is there which has deposited == file_amount
-                                                                                //so move the whole customer object to another tree which has path "inactive/customer_id"
-                                                                                selected_customer_dataSnapshot.getRef().removeValue();
-                                                                            }
-                                                                        }
-                                                                    });
-
-                                                                }
-
-                                                                @Override
-                                                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                                                }
-                                                            });
-                                                        }
-                                                        FragmentManager fragmentManager = getFragmentManager();
-                                                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-                                                        FragmentAccountTypeInfo fragmentAccountTypeInfo = FragmentAccountTypeInfo.newInstance(Calendar.getInstance(), selected_customer.getAccounts1().get(0).getType());
-                                                        fragmentTransaction.replace(R.id.fragment_container, fragmentAccountTypeInfo).addToBackStack(null).
-                                                                commit();
-                                                    }
-                                                });
-
-                                            }
-                                        });
-                                    }
-                                });
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-                                fab.setVisibility(View.VISIBLE);
-                                Toast.makeText(getContext(), "Failed to collect money. Try again!", Toast.LENGTH_LONG).show();
-
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        fab.setVisibility(View.VISIBLE);
-                        Toast.makeText(getContext(), "Failed to collect money. Try again!", Toast.LENGTH_LONG).show();
-                    }
-                });
-
-
+                } else {
+                    amount_field.setError("Amount Money should be less than remaing amount!");
+                    progressBar.setVisibility(View.INVISIBLE);
+                    return;
+                }
             }
         });
 
 
         return view;
+    }
+
+
+    private Long compoundInterest(Long amt, double roi_per_month, int months) {
+        return (long) ((double) amt * (Math.pow((1 + roi_per_month / 100), months)));
     }
 
     // TODO: Rename method, update argument and hook method into UI event

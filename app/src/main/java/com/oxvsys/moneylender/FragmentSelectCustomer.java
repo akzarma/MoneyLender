@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -128,7 +129,8 @@ public class FragmentSelectCustomer extends Fragment {
                     });
                     List<String> customers = new ArrayList<>();
                     for (Customer each : customerList) {
-                        customers.add(each.getName().split(" ")[0] + " ("+each.getId() +")");
+                            Log.d("Customer ID", each.getId());
+                            customers.add(each.getName().split(" ")[0] + " ("+each.getId() +")");
                     }
                     ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, customers);
                     spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
