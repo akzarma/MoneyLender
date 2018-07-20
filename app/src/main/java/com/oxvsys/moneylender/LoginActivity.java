@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -45,7 +47,6 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
 
-
         progressBar = (ProgressBar) findViewById(R.id.login_progress);
 
         Log.d(TAG, "onCreate: " + "login started");
@@ -61,24 +62,27 @@ public class LoginActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     progressBar.setVisibility(View.VISIBLE);
                     DatabaseReference ref = database.getReference("users");
-                    Log.d(TAG, "onClick: " + "in on click");
+//                    Log.d(TAG, "onClick: " + "in on click");
                     ref.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            Log.d(TAG, "onDataChange: " + dataSnapshot);
+//                            Log.d(TAG, "onDataChange: " + dataSnapshot);
                             if (dataSnapshot.hasChild(mobile_view.getText().toString())) {
                                 for (DataSnapshot user : dataSnapshot.getChildren()) {
                                     String pwd = ((HashMap<String, Object>) user.getValue()).get("pwd").toString();
                                     String type = ((HashMap<String, Object>) user.getValue()).get("type").toString();
                                     if (mobile_view.getText().toString().equals(user.getKey())) {
                                         if (password_view.getText().toString().equals(pwd)) {
-                                            Log.d(TAG, "onDataChange: " + "success");
+//                                            Log.d(TAG, "onDataChange: " + "success");
                                             saveData("user_id", user.getKey(), getApplicationContext());
+                                            saveData("user_pwd", pwd, getApplicationContext());
                                             saveData("user_type", type, getApplicationContext());
-                                            Log.d(TAG, "onDataChange: " + pwd + type);
+
+//                                            Log.d(TAG, "onDataChange: " + pwd + type);
                                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                             startActivity(intent);
                                             finish();
+
                                             return;
 
                                         } else {

@@ -17,8 +17,10 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 
@@ -59,7 +61,7 @@ public class FragmentAgentRegister extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_agent_register, container, false);
-        final TextInputLayout name_til , aadhaar_til , mobile_til , address_til;
+        final TextInputLayout name_til, aadhaar_til, mobile_til, address_til;
 
         name_til = view.findViewById(R.id.agent_name_til);
         aadhaar_til = view.findViewById(R.id.agent_aadhaar_til);
@@ -82,62 +84,90 @@ public class FragmentAgentRegister extends Fragment {
             @Override
             public void onClick(View v) {
 
-                if(name_view.getText().toString().equals("")){
+                if (name_view.getText().toString().equals("")) {
                     name_til.setError("Name required.");
                     return;
                 }
 
-                if (aadhar.getText().toString().equals("")){
+                if (aadhar.getText().toString().equals("")) {
                     name_til.setErrorEnabled(false);
                     aadhaar_til.setError("Aadhaar required.");
                     return;
                 }
 
-                if (address_view.getText().toString().equals("")){
+                if (address_view.getText().toString().equals("")) {
                     aadhaar_til.setErrorEnabled(false);
                     address_til.setError("Address required.");
                     return;
                 }
 
-                if (mobile_view.getText().toString().equals("")){
+                if (mobile_view.getText().toString().length()!=10) {
                     address_til.setErrorEnabled(false);
-                    mobile_til.setError("Mobile required.");
+                    mobile_til.setError("Enter a valid Mobile No.");
                     return;
-                }else {
+                } else {
                     mobile_til.setErrorEnabled(false);
                 }
 
-                String unique_agent_id = "agent_" + mobile_view.getText().toString();
+                final String unique_agent_id = mobile_view.getText().toString();
 
-                DatabaseReference ref = database.getReference("agents");
 
-                HashMap<String , String> attrs = new HashMap<>();
-                HashMap<String , Object> id = new HashMap<>();
+                final DatabaseReference ref = database.getReference("agents");
 
-                attrs.put("mobile" , mobile_view.getText().toString());
-                attrs.put("name" , name_view.getText().toString());
-                attrs.put("aadhaar" , aadhar.getText().toString());
-                attrs.put("address" , address_view.getText().toString());
-
-                id.put(unique_agent_id , attrs);
-                ref.updateChildren(id, new DatabaseReference.CompletionListener() {
+                ref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-                        Snackbar snackbar = Snackbar
-                                .make(rl, "Agent added successfully!", Snackbar.LENGTH_LONG);
-                        snackbar.show();
-                        FragmentTransaction ft = getFragmentManager().beginTransaction();
-                        FragmentKYC fd = new FragmentKYC();
-                        ft.replace(R.id.fragment_container, fd).addToBackStack(null).
-                                commit();
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.hasChild(unique_agent_id)) {
+                            address_til.setErrorEnabled(false);
+                            mobile_til.setError("User with this mobile already exists.");
+                        } else {
+                            HashMap<String, String> attrs = new HashMap<>();
+                            HashMap<String, Object> id = new HashMap<>();
+
+                            attrs.put("mobile", mobile_view.getText().toString());
+                            attrs.put("name", name_view.getText().toString());
+                            attrs.put("aadhaar", aadhar.getText().toString());
+                            attrs.put("address", address_view.getText().toString());
+
+                            id.put(unique_agent_id, attrs);
+                            ref.updateChildren(id, new DatabaseReference.CompletionListener() {
+                                @Override
+                                public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+
+                                    DatabaseReference users_ref = database.getReference("users").child(unique_agent_id);
+                                    HashMap<String, Object> users_attrs = new HashMap<>();
+                                    users_attrs.put("type", "agent");
+                                    users_attrs.put("pwd", "1234");
+                                    users_ref.updateChildren(users_attrs, new DatabaseReference.CompletionListener() {
+                                        @Override
+                                        public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                                            Snackbar snackbar = Snackbar
+                                                    .make(rl, "Agent added with Password 1234", Snackbar.LENGTH_LONG);
+                                            snackbar.show();
+                                            FragmentTransaction ft = getFragmentManager().beginTransaction();
+                                            FragmentAgentRegister fd = new FragmentAgentRegister();
+                                            ft.replace(R.id.fragment_container, fd).addToBackStack(null).
+                                                    commit();
+                                        }
+                                    });
+
+                                }
+                            });
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
                     }
                 });
+
 
 //                ref.child("mobile").setValue(mobile_view.getText().toString());
 //                ref.child("name").setValue(name_view.getText().toString());
 //                ref.child("aadhar").setValue(aadhar.getText().toString());
 //                ref.child("address").setValue(address_view.getText().toString());
-
 
 
             }

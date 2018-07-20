@@ -27,15 +27,13 @@
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/kyc_full_name_til"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:theme="@style/Theme.AppCompat">
+                android:layout_height="wrap_content">
 
                 <android.support.v7.widget.AppCompatEditText
                     android:id="@+id/name_field"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
-
                     android:fontFamily="@font/roboto_regular"
                     android:hint="Full Name"
                     android:inputType="textPersonName" />
@@ -45,7 +43,6 @@
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/kyc_aadhar_til"
                 android:layout_width="match_parent"
-                android:theme="@style/Theme.AppCompat"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/kyc_full_name_til">
 
@@ -63,7 +60,6 @@
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/kyc_occupation_til"
                 android:layout_width="match_parent"
-                android:theme="@style/Theme.AppCompat"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/kyc_aadhar_til">
 
@@ -81,7 +77,6 @@
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/kyc_mobile_til"
                 android:layout_width="match_parent"
-                android:theme="@style/Theme.AppCompat"
                 android:layout_below="@id/kyc_occupation_til"
                 android:layout_height="wrap_content">
 
@@ -100,7 +95,6 @@
                 android:layout_width="match_parent"
                 android:id="@+id/kyc_dob_til"
                 android:layout_below="@id/kyc_mobile_til"
-                android:theme="@style/Theme.AppCompat"
                 android:layout_height="wrap_content">
                 <android.support.v7.widget.AppCompatEditText
                     android:id="@+id/dob_field"
@@ -118,7 +112,6 @@
                 android:layout_width="match_parent"
                 android:id="@+id/kyc_address_til"
                 android:layout_below="@id/kyc_dob_til"
-                android:theme="@style/Theme.AppCompat"
                 android:layout_height="wrap_content">
                 <android.support.v7.widget.AppCompatEditText
                     android:id="@+id/address_field"

@@ -33,7 +33,6 @@
                 android:id="@+id/loan_grant_account_til"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:theme="@style/Theme.AppCompat"
                 android:layout_marginLeft="8dp"
                 android:layout_toEndOf="@id/account_number_prefix_field">
 
@@ -48,7 +47,6 @@
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/lf_number_til"
                 android:layout_width="match_parent"
-                android:theme="@style/Theme.AppCompat"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/loan_grant_account_til">
 
@@ -64,7 +62,6 @@
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/disbursement_amount_til"
                 android:layout_width="match_parent"
-                android:theme="@style/Theme.AppCompat"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/lf_number_til">
 
@@ -80,7 +77,6 @@
                 android:id="@+id/file_amount_til"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:theme="@style/Theme.AppCompat"
                 android:layout_below="@id/disbursement_amount_til">
 
                 <android.support.v7.widget.AppCompatEditText
@@ -95,7 +91,6 @@
                 android:id="@+id/discount_amount_til"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:theme="@style/Theme.AppCompat"
                 android:layout_below="@id/file_amount_til">
 
                 <android.support.v7.widget.AppCompatEditText
@@ -144,7 +139,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/account_type_field"
-                android:theme="@style/Theme.AppCompat"
                 android:layout_marginTop="24dp"
                 android:visibility="invisible">
 
@@ -161,7 +155,6 @@
                 android:id="@+id/loan_grant_opening_til"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:theme="@style/Theme.AppCompat"
                 android:layout_below="@id/loan_grant_duration_til">
 
                 <android.support.v7.widget.AppCompatEditText
@@ -179,7 +172,6 @@
                 android:id="@+id/loan_grant_closing_til"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:theme="@style/Theme.AppCompat"
                 android:layout_below="@id/loan_grant_opening_til">
 
                 <android.support.v7.widget.AppCompatEditText
@@ -197,7 +189,6 @@
                 android:id="@+id/loan_grant_additional_til"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:theme="@style/Theme.AppCompat"
                 android:layout_below="@id/loan_grant_closing_til">
 
                 <android.support.v7.widget.AppCompatEditText
@@ -233,7 +224,6 @@
                 android:id="@+id/loan_grant_roi_til"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:theme="@style/Theme.AppCompat"
                 android:layout_below="@id/agent_spinner"
                 android:layout_marginBottom="100dp"
                 android:visibility="invisible">
