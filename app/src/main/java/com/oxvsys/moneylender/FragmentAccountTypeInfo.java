@@ -589,6 +589,8 @@ public class FragmentAccountTypeInfo extends Fragment {
                     Label sr_number = new Label(serialCol, row, "Sr.No");
                     row++;
 
+
+
                     try {
                         sheet.addCell(heading);
                         sheet.addCell(account_label);
@@ -598,12 +600,16 @@ public class FragmentAccountTypeInfo extends Fragment {
                     } catch (WriteException e) {
                         e.printStackTrace();
                     }
+                    Number amount_collected;
+                    Label customer_label;
+                    long total_amount = 0;
                     for(CustomerAmount each_customer_amt: customer_amount_map.values()){
                         Number ser_no = new Number(serialCol, row, row - 1);
                         Label account_number = new Label(accountCol, row, String.valueOf(each_customer_amt.getCustomer().getAccounts1().get(0).getNo()));
-                        Label customer_label = new Label(custCol, row, String.valueOf(each_customer_amt.getCustomer().getName())+" ("+
+                        customer_label = new Label(custCol, row, String.valueOf(each_customer_amt.getCustomer().getName())+" ("+
                                 each_customer_amt.getCustomer().getId()+")");
-                        Number amount_collected = new Number(amountCol, row, Long.parseLong(String.valueOf(each_customer_amt.getAmount_collected())));
+                        amount_collected = new Number(amountCol, row,each_customer_amt.getAmount_collected());
+                        total_amount+= each_customer_amt.getAmount_collected();
                         row++;
                         try {
                             sheet.addCell(account_number);
@@ -617,8 +623,12 @@ public class FragmentAccountTypeInfo extends Fragment {
 
 
 
-
                     try {
+                        row++;
+                        amount_collected = new Number(amountCol, row, total_amount);
+                        sheet.addCell(amount_collected);
+                        customer_label = new Label(custCol, row, "Total Collection");
+                        sheet.addCell(customer_label);
                         workbook.write();
                         workbook.close();
                         Toast.makeText(getContext(), "File saved in Documents folder", Toast.LENGTH_LONG).show();

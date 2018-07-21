@@ -15,6 +15,9 @@ import android.widget.TextView;
 import org.w3c.dom.Text;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -78,6 +81,13 @@ public class FragmentDateAmount extends Fragment {
         date_amount_heading1_field.setText("Agent ID: "+getArguments().getString(ARG_PARAM3));
         List<DateAmount> dateAmountList = (List<DateAmount>) getArguments().getSerializable(ARG_PARAM1);
         CustomerAmount customerAmount = (CustomerAmount) getArguments().getSerializable(ARG_PARAM2);
+
+        Collections.sort(dateAmountList, new Comparator<DateAmount>() {
+            @Override
+            public int compare(DateAmount o1, DateAmount o2) {
+                return MainActivity.StringDateToCal(o1.getDate()).compareTo(MainActivity.StringDateToCal(o2.getDate()));
+            }
+        });
 
         date_amount_heading_field.setText(customerAmount.getCustomer().getName().split(" ")[0] + " (A/C: " +
                 customerAmount.getCustomer().getAccounts1().get(0).getNo()+")");
