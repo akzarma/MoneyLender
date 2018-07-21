@@ -58,7 +58,7 @@ public class FragmentAccountTypeInfo extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     private static final String TAG = "FragmentAccountTypeInfo";
     HashMap<String, CustomerAmount> customer_amount_map = new HashMap<>();
-    int row = 0, accountCol = 1 , amountCol = 2;
+    int row = 0, accountCol = 1, amountCol = 3;
     int serialCol = 0;
     //    HashMap<String, CustomerAmount> monthly_customer_amount_map = new HashMap<>();
     private Calendar sel_calendar;
@@ -123,83 +123,8 @@ public class FragmentAccountTypeInfo extends Fragment {
         date_button.setText(cal_str);
 
 
-        Button getReport = view.findViewById(R.id.get_report);
-        getReport.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                String state = Environment.getExternalStorageState();
-                if (Environment.MEDIA_MOUNTED.equals(state)) {
-                    Log.d(TAG, "onCreate: " + "true file");
-                }else Log.d(TAG, "onCreate: " + "not writable");
-                File root = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "MoneyLender");
-                File DocsDirectory = new File(root.getAbsolutePath(),"Reports");
-                DocsDirectory.mkdirs();
-                File actualDoc = new File(DocsDirectory.getAbsolutePath(),cal_str+".xls");
-                try {
-
-                    final WritableWorkbook workbook = Workbook.createWorkbook(actualDoc);
-                    final WritableSheet sheet = workbook.createSheet("Test Sheet",0);
-                    Label heading = new Label(0,row,"Report for " + cal_str);
-                    row++;
-                    Label account_label = new Label(accountCol , row , "Account No");
-                    Label amount_label = new Label(amountCol, row , "Amount Deposited");
-                    Label sr_number = new Label(serialCol, row , "Sr.No");
-                    row++;
-
-                    try {
-                        sheet.addCell(heading);
-                        sheet.addCell(account_label);
-                        sheet.addCell(amount_label);
-                        sheet.addCell(sr_number);
-                    } catch (WriteException e) {
-                        e.printStackTrace();
-                    }
-                    DatabaseReference agentCollect = database.getReference("agentCollect");
-                    agentCollect.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            for (DataSnapshot agent : dataSnapshot.getChildren()){
-                                if (agent.hasChild(cal_str)){
-                                    DataSnapshot date = agent.child(cal_str);
-                                    for (DataSnapshot collection : date.getChildren()){
-                                        Number ser_no = new Number(serialCol, row , row);
-                                        Label account_number = new Label(accountCol, row, String.valueOf(collection.getKey()));
-                                        Number amount_collected = new Number(amountCol, row , Long.parseLong(String.valueOf(collection.getValue())));
-                                        row++;
-                                        try {
-                                            sheet.addCell(account_number);
-                                            sheet.addCell(amount_collected);
-                                            sheet.addCell(ser_no);
-                                        } catch (WriteException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                }
-                            }
-                            try {
-                                workbook.write();
-                                workbook.close();
-                                Toast.makeText(getContext(),"File saved in Documents folder",Toast.LENGTH_LONG).show();
-                            } catch (IOException | WriteException e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                            Log.d(TAG, "onCancelled: " + databaseError.getDetails());
-                        }
-                    });
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-
-                }
-
-
-            }
-        });
+        final Button getReport = view.findViewById(R.id.get_report);
+        getReport.setVisibility(View.INVISIBLE);
 
 
         final FloatingActionButton fab = getActivity().findViewById(R.id.fab);
@@ -262,6 +187,10 @@ public class FragmentAccountTypeInfo extends Fragment {
                                 customer_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        final HashMap<String, AccountAmountCollect> cust_account_amount_copy = new HashMap<>();
+                                        cust_account_amount_copy.putAll(cust_account_amount);
+                                        final HashMap<String, String> account_amount_map_copy = new HashMap<>();
+                                        account_amount_map_copy.putAll(account_amount_map);
                                         for (Map.Entry<String, AccountAmountCollect> each_cust_ac_amt : cust_account_amount.entrySet()) {
                                             if (dataSnapshot.hasChild(each_cust_ac_amt.getKey())) {
                                                 Customer curr_customer = dataSnapshot.child(each_cust_ac_amt.getKey()).getValue(Customer.class);
@@ -286,8 +215,8 @@ public class FragmentAccountTypeInfo extends Fragment {
 
                                                             if (customerAmount.getCustomer().getAccounts1().get(0).getType().equals(selected_account_type))
                                                                 customer_amount_map.put(each_acc_amt.getKey(), customerAmount);
-                                                            account_amount_map.remove(each_acc_amt.getKey());
-                                                            cust_account_amount.remove(each_cust_ac_amt.getKey());
+                                                            account_amount_map_copy.remove(each_acc_amt.getKey());
+                                                            cust_account_amount_copy.remove(each_cust_ac_amt.getKey());
 //                                                                        else if (customerAmount.getCustomer().getAccounts1().get(0).getType().equals(selected_account_type))
 //                                                                            monthly_customer_amount_map.put(account.getKey(), customerAmount);
 
@@ -311,13 +240,13 @@ public class FragmentAccountTypeInfo extends Fragment {
                                             customer_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                    for (Map.Entry<String, AccountAmountCollect> each_cust_ac_amt : cust_account_amount.entrySet()) {
+                                                    for (Map.Entry<String, AccountAmountCollect> each_cust_ac_amt : cust_account_amount_copy.entrySet()) {
                                                         if (dataSnapshot.hasChild(each_cust_ac_amt.getKey())) {
                                                             Customer curr_customer = dataSnapshot.child(each_cust_ac_amt.getKey()).getValue(Customer.class);
                                                             curr_customer.setId(each_cust_ac_amt.getKey());
                                                             HashMap<String, Object> accounts = (HashMap<String, Object>) ((HashMap<String, Object>) dataSnapshot.child(each_cust_ac_amt.getKey()).getValue()).get("accounts");
                                                             if (accounts != null) {
-                                                                for (Map.Entry<String, String> each_acc_amt : account_amount_map.entrySet()) {
+                                                                for (Map.Entry<String, String> each_acc_amt : account_amount_map_copy.entrySet()) {
                                                                     if (accounts.containsKey(each_acc_amt.getKey())) {
 
                                                                         Log.d("customer_collect_daily", each_acc_amt.getValue().toString());
@@ -362,6 +291,7 @@ public class FragmentAccountTypeInfo extends Fragment {
                                                     recycler.setItemAnimator(new DefaultItemAnimator());
                                                     recycler.setAdapter(mAdapter);
                                                     progressBar.setVisibility(View.INVISIBLE);
+                                                    getReport.setVisibility(View.VISIBLE);
 
                                                 }
 
@@ -385,6 +315,8 @@ public class FragmentAccountTypeInfo extends Fragment {
                                             recycler.setItemAnimator(new DefaultItemAnimator());
                                             recycler.setAdapter(mAdapter);
                                             progressBar.setVisibility(View.INVISIBLE);
+                                            getReport.setVisibility(View.VISIBLE);
+
                                         }
 
                                     }
@@ -433,8 +365,10 @@ public class FragmentAccountTypeInfo extends Fragment {
                                     AgentAmount agentAmount = new AgentAmount();
                                     agentAmount.setAgent(agent);
                                     agentAmount.setAmount_collected(Long.parseLong(String.valueOf(each_account_amount_map.getValue())));
-                                    agentAmountHashMap.put(each_account_amount_map.getKey(), agentAmount);
+                                    if (!agentAmountHashMap.containsKey(each_account_amount_map.getKey()))
+                                        agentAmountHashMap.put(each_account_amount_map.getKey(), agentAmount);
                                 }
+//                                account_amount_map.clear();
                             }
                         }
 
@@ -576,6 +510,8 @@ public class FragmentAccountTypeInfo extends Fragment {
                                                     recycler.setItemAnimator(new DefaultItemAnimator());
                                                     recycler.setAdapter(mAdapter);
                                                     progressBar.setVisibility(View.INVISIBLE);
+                                                    getReport.setVisibility(View.VISIBLE);
+
                                                 }
 
                                                 @Override
@@ -597,6 +533,8 @@ public class FragmentAccountTypeInfo extends Fragment {
                                         recycler.setItemAnimator(new DefaultItemAnimator());
                                         recycler.setAdapter(mAdapter);
                                         progressBar.setVisibility(View.INVISIBLE);
+                                        getReport.setVisibility(View.VISIBLE);
+
 
                                     }
 
@@ -625,6 +563,77 @@ public class FragmentAccountTypeInfo extends Fragment {
 
             }
         }
+
+        getReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String state = Environment.getExternalStorageState();
+                if (Environment.MEDIA_MOUNTED.equals(state)) {
+                    Log.d(TAG, "onCreate: " + "true file");
+                } else Log.d(TAG, "onCreate: " + "not writable");
+                File root = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "MoneyLender");
+                File DocsDirectory = new File(root.getAbsolutePath(), "Reports");
+                DocsDirectory.mkdirs();
+                File actualDoc = new File(DocsDirectory.getAbsolutePath(), cal_str + ".xls");
+                try {
+
+                    final WritableWorkbook workbook = Workbook.createWorkbook(actualDoc);
+                    final WritableSheet sheet = workbook.createSheet("Test Sheet", 0);
+                    Label heading = new Label(0, row, "Report for " + cal_str);
+                    row++;
+                    int custCol = 2;
+                    Label account_label = new Label(accountCol, row, "Account No");
+                    Label cust_label = new Label(custCol, row, "Customer (ID)");
+                    Label amount_label = new Label(amountCol, row, "Amount Deposited");
+                    Label sr_number = new Label(serialCol, row, "Sr.No");
+                    row++;
+
+                    try {
+                        sheet.addCell(heading);
+                        sheet.addCell(account_label);
+                        sheet.addCell(cust_label);
+                        sheet.addCell(amount_label);
+                        sheet.addCell(sr_number);
+                    } catch (WriteException e) {
+                        e.printStackTrace();
+                    }
+                    for(CustomerAmount each_customer_amt: customer_amount_map.values()){
+                        Number ser_no = new Number(serialCol, row, row - 1);
+                        Label account_number = new Label(accountCol, row, String.valueOf(each_customer_amt.getCustomer().getAccounts1().get(0).getNo()));
+                        Label customer_label = new Label(custCol, row, String.valueOf(each_customer_amt.getCustomer().getName())+" ("+
+                                each_customer_amt.getCustomer().getId()+")");
+                        Number amount_collected = new Number(amountCol, row, Long.parseLong(String.valueOf(each_customer_amt.getAmount_collected())));
+                        row++;
+                        try {
+                            sheet.addCell(account_number);
+                            sheet.addCell(amount_collected);
+                            sheet.addCell(customer_label);
+                            sheet.addCell(ser_no);
+                        } catch (WriteException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+
+
+
+                    try {
+                        workbook.write();
+                        workbook.close();
+                        Toast.makeText(getContext(), "File saved in Documents folder", Toast.LENGTH_LONG).show();
+                    } catch (IOException | WriteException e) {
+                        e.printStackTrace();
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+
+                }
+
+
+            }
+        });
 
 
         date_button.setOnClickListener(new View.OnClickListener() {

@@ -31,6 +31,7 @@ public class FragmentDateAmount extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_PARAM3 = "param3";
     AgentAccountPaymentAdapter mAdapter;
 
     // TODO: Rename and change types of parameters
@@ -50,11 +51,12 @@ public class FragmentDateAmount extends Fragment {
      * @return A new instance of fragment FragmentDateAmount.
      */
     // TODO: Rename and change types and number of parameters
-    public static FragmentDateAmount newInstance(List<DateAmount> dateAmountList, CustomerAmount customerAmount) {
+    public static FragmentDateAmount newInstance(List<DateAmount> dateAmountList,String agent, CustomerAmount customerAmount) {
         FragmentDateAmount fragment = new FragmentDateAmount();
         Bundle args = new Bundle();
         args.putSerializable(ARG_PARAM1, (Serializable) dateAmountList);
         args.putSerializable(ARG_PARAM2, customerAmount);
+        args.putSerializable(ARG_PARAM3, agent);
         fragment.setArguments(args);
         return fragment;
     }
@@ -72,6 +74,8 @@ public class FragmentDateAmount extends Fragment {
         View view = inflater.inflate(R.layout.fragment_date_amount_recycler, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.date_amount_recycler);
         TextView date_amount_heading_field = view.findViewById(R.id.date_amount_heading_field);
+        TextView date_amount_heading1_field = view.findViewById(R.id.date_amount_heading1_field);
+        date_amount_heading1_field.setText("Agent ID: "+getArguments().getString(ARG_PARAM3));
         List<DateAmount> dateAmountList = (List<DateAmount>) getArguments().getSerializable(ARG_PARAM1);
         CustomerAmount customerAmount = (CustomerAmount) getArguments().getSerializable(ARG_PARAM2);
 

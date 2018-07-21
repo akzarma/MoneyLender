@@ -163,9 +163,9 @@ public class FragmentDashboardSpecific extends Fragment {
                         }
 
 
-                        todays_value.setText(String.valueOf(total_daily_amount));
-                        view_monthly_value_till_today.setText(String.valueOf(total_monthly_amount_till_today));
-                        total_collection_value_dashboard.setText(String.valueOf(total_collection));
+                        todays_value.setText("₹ "+String.valueOf(total_daily_amount));
+                        view_monthly_value_till_today.setText("₹ "+String.valueOf(total_monthly_amount_till_today));
+                        total_collection_value_dashboard.setText("₹ "+String.valueOf(total_collection));
                         total_daily_amount = 0L;
                         total_monthly_amount_till_today = 0L;
                         total_collection = 0L;

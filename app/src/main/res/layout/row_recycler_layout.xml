@@ -39,7 +39,9 @@
                 android:id="@+id/relative_layout_card"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="16dp">
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="16dp">
                 <TextView
                     android:id="@+id/agent_id_field"
                     android:layout_width="wrap_content"
@@ -65,8 +67,23 @@
                     android:text=""
                     android:layout_alignParentRight="true"
                     android:textColor="#FFFFFF"
-                    android:textSize="20sp"
                     android:textStyle="bold" />
+
+                <View android:background="#BDBDBD"
+                    android:layout_marginTop="5dp"
+                    android:id="@+id/hori_line"
+                    android:layout_below="@id/subject_textview"
+                    android:layout_width = "match_parent"
+                    android:layout_height="1dp"/>
+
+                <TextView
+                    android:textColor="#BDBDBD"
+                    android:layout_centerHorizontal="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/hori_line"
+                    android:textSize="12sp"
+                    android:text="Tap to view previous payments"/>
 
 
 

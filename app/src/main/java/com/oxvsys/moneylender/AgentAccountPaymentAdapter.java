@@ -47,7 +47,7 @@ public class AgentAccountPaymentAdapter extends RecyclerView.Adapter<AgentAccoun
         final DateAmount dateAmount = dateAmountList.get(position);
 
         holder.date.setText(dateAmount.getDate());
-        holder.amount_deposited.setText(String.valueOf(dateAmount.getAmount()));
+        holder.amount_deposited.setText("₹ "+String.valueOf(dateAmount.getAmount()));
     }
 
     @Override

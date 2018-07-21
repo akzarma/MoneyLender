@@ -85,7 +85,7 @@ public class CustomerDailyInfoAdapter extends RecyclerView.Adapter<CustomerDaily
 //        final String logged_agent = MainActivity.getData("user_id", context);
         holder.agent_id.setText(customerAmount.getCustomer().getAccounts1().get(0).getNo());
         holder.agent_name.setText(customerAmount.getCustomer().getName());
-        holder.total_collection.setText(String.valueOf(customerAmount.getAmount_collected()));
+        holder.total_collection.setText("₹ "+String.valueOf(customerAmount.getAmount_collected()));
 
 
         final List<DateAmount> dateAmountList = new ArrayList<>();
@@ -94,7 +94,7 @@ public class CustomerDailyInfoAdapter extends RecyclerView.Adapter<CustomerDaily
             public void onClick(View v) {
                 final Calendar o_date = customerAmount.getCustomer().getAccounts1().get(0).getO_date();
                 final Calendar c_date = customerAmount.getCustomer().getAccounts1().get(0).getC_date();
-                String curr_agent = agentAmountHashMap.get(customerAmount.getCustomer().getAccounts1().get(0).getNo()).getAgent().getId();
+                final String curr_agent = agentAmountHashMap.get(customerAmount.getCustomer().getAccounts1().get(0).getNo()).getAgent().getId();
 
                 DatabaseReference date_amount_db_ref = database.getReference("agentCollect").child(curr_agent);
                 date_amount_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -117,7 +117,7 @@ public class CustomerDailyInfoAdapter extends RecyclerView.Adapter<CustomerDaily
                             }
                         }
                         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        FragmentDateAmount fragmentDateAmount = FragmentDateAmount.newInstance(dateAmountList, customerAmount);
+                        FragmentDateAmount fragmentDateAmount = FragmentDateAmount.newInstance(dateAmountList,curr_agent, customerAmount);
                         fragmentTransaction.replace(R.id.fragment_container, fragmentDateAmount).addToBackStack(null).
                                 commit();
                     }

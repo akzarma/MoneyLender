@@ -168,7 +168,7 @@ public class FragmentCollect extends Fragment {
                             Calendar c_date_cal = Calendar.getInstance();
                             c_date_cal.setTimeInMillis(account.getC_date().getTimeInMillis());
                             loan_duration_field.setText(String.valueOf(account.getDuration()) + " days");
-                            remaining_money_field.setText(String.valueOf(account.getR_amt()));
+                            remaining_money_field.setText("₹ "+String.valueOf(account.getR_amt()));
 
 
                             days_diff = TimeUnit.MILLISECONDS.toDays(c_date_cal.getTimeInMillis() - curr_cal.getTimeInMillis());
