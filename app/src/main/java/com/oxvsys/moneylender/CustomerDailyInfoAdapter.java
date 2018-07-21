@@ -27,21 +27,26 @@ import java.util.List;
 
 import static com.oxvsys.moneylender.HomeActivity.database;
 import static com.oxvsys.moneylender.MainActivity.logged_agent;
+import static com.oxvsys.moneylender.MainActivity.logged_type;
 
 public class CustomerDailyInfoAdapter extends RecyclerView.Adapter<CustomerDailyInfoAdapter.CustomerHolder> {
 
     private HashMap<String, CustomerAmount> account_amount_map;
+    private HashMap<String, AgentAmount> agentAmountHashMap;
     private List<CustomerAmount> customerAmountList;
     private Context context;
     private Calendar sel_calendar;
     private FragmentManager fragmentManager;
 
 
-    public CustomerDailyInfoAdapter(HashMap<String, CustomerAmount> dataset, Calendar sel_calendar, Context context, FragmentManager fragmentManager) {
+    public CustomerDailyInfoAdapter(HashMap<String, CustomerAmount> dataset,
+                                    HashMap<String, AgentAmount> agentAmountHashMap,
+                                    Calendar sel_calendar, Context context, FragmentManager fragmentManager) {
         this.account_amount_map = dataset;
         this.context = context;
         this.sel_calendar = sel_calendar;
         this.fragmentManager = fragmentManager;
+        this.agentAmountHashMap = agentAmountHashMap;
 
         this.customerAmountList = new ArrayList<>(dataset.values());
         Collections.sort(this.customerAmountList, new Comparator<CustomerAmount>() {
@@ -89,7 +94,9 @@ public class CustomerDailyInfoAdapter extends RecyclerView.Adapter<CustomerDaily
             public void onClick(View v) {
                 final Calendar o_date = customerAmount.getCustomer().getAccounts1().get(0).getO_date();
                 final Calendar c_date = customerAmount.getCustomer().getAccounts1().get(0).getC_date();
-                DatabaseReference date_amount_db_ref = database.getReference("agentCollect").child(logged_agent);
+                String curr_agent = agentAmountHashMap.get(customerAmount.getCustomer().getAccounts1().get(0).getNo()).getAgent().getId();
+
+                DatabaseReference date_amount_db_ref = database.getReference("agentCollect").child(curr_agent);
                 date_amount_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -125,6 +132,7 @@ public class CustomerDailyInfoAdapter extends RecyclerView.Adapter<CustomerDaily
 
             }
         });
+
 
 //        final AgentCollect agentCollect = agentCollectList.get(position);
 //        List<AccountAmountCollect> accountAmountCollectList = agentCollect.getAccountAmountCollectList();

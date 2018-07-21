@@ -4,6 +4,7 @@ public class AgentAmount {
     private Agent agent;
     private Long amount_collected;
 
+
     public Agent getAgent() {
         return agent;
     }

@@ -110,7 +110,7 @@
             android:visibility="invisible"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="No customer under monthly basis."/>
+            android:text="No customer"/>
 
     </RelativeLayout>
 

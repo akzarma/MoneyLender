@@ -57,7 +57,7 @@ public class FragmentAccountTypeInfo extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     private static final String TAG = "FragmentAccountTypeInfo";
     HashMap<String, CustomerAmount> customer_amount_map = new HashMap<>();
-    int row = 0, accountCol = 1 , amountCol = 2;
+    int row = 0, accountCol = 1, amountCol = 2;
     int serialCol = 0;
     //    HashMap<String, CustomerAmount> monthly_customer_amount_map = new HashMap<>();
     private Calendar sel_calendar;
@@ -105,9 +105,6 @@ public class FragmentAccountTypeInfo extends Fragment {
         View view = inflater.inflate(R.layout.fragment_account_type_info, container, false);
 
 
-
-
-
         final TextView textView = view.findViewById(R.id.no_customer_under_monthly);
         textView.setVisibility(View.INVISIBLE);
         final CardView heading_card = view.findViewById(R.id.heading_card_view);
@@ -133,20 +130,20 @@ public class FragmentAccountTypeInfo extends Fragment {
                 String state = Environment.getExternalStorageState();
                 if (Environment.MEDIA_MOUNTED.equals(state)) {
                     Log.d(TAG, "onCreate: " + "true file");
-                }else Log.d(TAG, "onCreate: " + "not writable");
+                } else Log.d(TAG, "onCreate: " + "not writable");
                 File root = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "MoneyLender");
-                File DocsDirectory = new File(root.getAbsolutePath(),"Reports");
+                File DocsDirectory = new File(root.getAbsolutePath(), "Reports");
                 DocsDirectory.mkdirs();
-                File actualDoc = new File(DocsDirectory.getAbsolutePath(),cal_str+".xls");
+                File actualDoc = new File(DocsDirectory.getAbsolutePath(), cal_str + ".xls");
                 try {
 
                     final WritableWorkbook workbook = Workbook.createWorkbook(actualDoc);
-                    final WritableSheet sheet = workbook.createSheet("Test Sheet",0);
-                    Label heading = new Label(0,row,"Report for " + cal_str);
+                    final WritableSheet sheet = workbook.createSheet("Test Sheet", 0);
+                    Label heading = new Label(0, row, "Report for " + cal_str);
                     row++;
-                    Label account_label = new Label(accountCol , row , "Account No");
-                    Label amount_label = new Label(amountCol, row , "Amount Deposited");
-                    Label sr_number = new Label(serialCol, row , "Sr.No");
+                    Label account_label = new Label(accountCol, row, "Account No");
+                    Label amount_label = new Label(amountCol, row, "Amount Deposited");
+                    Label sr_number = new Label(serialCol, row, "Sr.No");
                     row++;
 
                     try {
@@ -161,13 +158,13 @@ public class FragmentAccountTypeInfo extends Fragment {
                     agentCollect.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            for (DataSnapshot agent : dataSnapshot.getChildren()){
-                                if (agent.hasChild(cal_str)){
+                            for (DataSnapshot agent : dataSnapshot.getChildren()) {
+                                if (agent.hasChild(cal_str)) {
                                     DataSnapshot date = agent.child(cal_str);
-                                    for (DataSnapshot collection : date.getChildren()){
-                                        Number ser_no = new Number(serialCol, row , row);
+                                    for (DataSnapshot collection : date.getChildren()) {
+                                        Number ser_no = new Number(serialCol, row, row);
                                         Number account_number = new Number(accountCol, row, Integer.parseInt(collection.getKey()));
-                                        Number amount_collected = new Number(amountCol, row , Integer.parseInt(collection.getValue().toString()));
+                                        Number amount_collected = new Number(amountCol, row, Integer.parseInt(collection.getValue().toString()));
                                         row++;
                                         try {
                                             sheet.addCell(account_number);
@@ -226,6 +223,7 @@ public class FragmentAccountTypeInfo extends Fragment {
         if (!logged_agent.equals("ERROR")) {
 
             if (logged_type.equals("agent")) {
+                final HashMap<String, AgentAmount> agentAmountHashMap = new HashMap<>();
                 DatabaseReference agent_collect_db_ref = database.getReference("agentCollect").child(logged_agent).child(cal_str);
                 agent_collect_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -234,7 +232,13 @@ public class FragmentAccountTypeInfo extends Fragment {
                         final HashMap<String, String> account_amount_map = new HashMap<>();
 
                         for (DataSnapshot each_account : dataSnapshot.getChildren()) {
-                            account_amount_map.put(each_account.getKey(), each_account.getValue().toString());
+                            account_amount_map.put(each_account.getKey(), String.valueOf(each_account.getValue()));
+                            Agent agent = new Agent();
+                            agent.setId(logged_agent);
+                            AgentAmount agentAmount = new AgentAmount();
+                            agentAmount.setAgent(agent);
+                            agentAmount.setAmount_collected(Long.parseLong(String.valueOf(each_account.getValue())));
+                            agentAmountHashMap.put(each_account.getKey(), agentAmount);
                         }
 
                         DatabaseReference agent_account_db_ref = database.getReference("agentAccount").child(logged_agent);
@@ -348,7 +352,9 @@ public class FragmentAccountTypeInfo extends Fragment {
                                                         heading_card.setVisibility(View.INVISIBLE);
                                                         date_button.setVisibility(View.VISIBLE);
                                                     }
-                                                    mAdapter = new CustomerDailyInfoAdapter(customer_amount_map, sel_calendar, getContext(), getFragmentManager());
+                                                    mAdapter = new CustomerDailyInfoAdapter(customer_amount_map,
+                                                            agentAmountHashMap
+                                                            , sel_calendar, getContext(), getFragmentManager());
                                                     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
                                                     recycler.setLayoutManager(mLayoutManager);
                                                     recycler.setItemAnimator(new DefaultItemAnimator());
@@ -369,7 +375,9 @@ public class FragmentAccountTypeInfo extends Fragment {
                                                 heading_card.setVisibility(View.INVISIBLE);
                                                 date_button.setVisibility(View.VISIBLE);
                                             }
-                                            mAdapter = new CustomerDailyInfoAdapter(customer_amount_map, sel_calendar, getContext(), getFragmentManager());
+                                            mAdapter = new CustomerDailyInfoAdapter(customer_amount_map,
+                                                    agentAmountHashMap,
+                                                    sel_calendar, getContext(), getFragmentManager());
                                             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
                                             recycler.setLayoutManager(mLayoutManager);
                                             recycler.setItemAnimator(new DefaultItemAnimator());
@@ -404,7 +412,6 @@ public class FragmentAccountTypeInfo extends Fragment {
             } else if (logged_type.equals("admin")) {
 
 
-
                 DatabaseReference agent_collect_db_ref = database.getReference("agentCollect");
                 agent_collect_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -413,7 +420,7 @@ public class FragmentAccountTypeInfo extends Fragment {
                         final HashMap<String, String> account_amount_map = new HashMap<>();
                         HashMap<String, Object> agent_object_map = (HashMap<String, Object>) dataSnapshot.getValue();
                         final HashMap<String, AgentAmount> agentAmountHashMap = new HashMap<>();
-                        if(agent_object_map != null) {
+                        if (agent_object_map != null) {
                             for (Map.Entry<String, Object> each_agent_map : agent_object_map.entrySet()) {
                                 HashMap<String, String> hashMap = (HashMap<String, String>) (((HashMap<String, Object>) each_agent_map.getValue()).get(cal_str));
                                 if (hashMap != null)
@@ -556,7 +563,8 @@ public class FragmentAccountTypeInfo extends Fragment {
                                                         heading_card.setVisibility(View.INVISIBLE);
                                                         date_button.setVisibility(View.VISIBLE);
                                                     }
-                                                    mAdapter = new CustomerDailyInfoAdapter(customer_amount_map, sel_calendar, getContext(), getFragmentManager());
+                                                    mAdapter = new CustomerDailyInfoAdapter(customer_amount_map, agentAmountHashMap,
+                                                            sel_calendar, getContext(), getFragmentManager());
                                                     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
                                                     recycler.setLayoutManager(mLayoutManager);
                                                     recycler.setItemAnimator(new DefaultItemAnimator());
@@ -599,8 +607,6 @@ public class FragmentAccountTypeInfo extends Fragment {
 
             }
         }
-
-
 
 
         date_button.setOnClickListener(new View.OnClickListener() {

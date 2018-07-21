@@ -40,6 +40,7 @@
         android:paddingHorizontal="14dp"
         android:src="@drawable/ic_date_range_black_24dp"
         android:text="..."
+        android:layout_marginRight="12dp"
         android:textColor="#3c3c3c"
         android:textSize="16sp"
         tools:targetApi="o" />
@@ -234,8 +235,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginRight="5dp"
+            android:layout_marginVertical="10dp"
             android:fontFamily="@font/roboto_regular"
-            android:text="From"
+            android:text="From "
             android:textColor="#3c3c3c" />
 
         <Button
@@ -261,6 +263,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
+            android:layout_marginVertical="10dp"
             android:layout_toLeftOf="@id/dashboard_to_button"
             android:fontFamily="@font/roboto_regular"
             android:text="To"
