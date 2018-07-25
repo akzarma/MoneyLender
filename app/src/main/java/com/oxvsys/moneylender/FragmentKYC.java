@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -18,8 +19,10 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -42,7 +45,7 @@ public class FragmentKYC extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    TextInputLayout name_til , aadhar_til , occupation_til , mobile_til , dob_til , address_til;
+    TextInputLayout name_til, aadhar_til, occupation_til, mobile_til, dob_til, address_til;
     Long lastCustomerId = -1L;
 
     // TODO: Rename and change types of parameters
@@ -83,7 +86,6 @@ public class FragmentKYC extends Fragment {
     }
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -97,10 +99,11 @@ public class FragmentKYC extends Fragment {
         final EditText mobile_field = view.findViewById(R.id.mobile_field);
         final EditText dob_field = view.findViewById(R.id.dob_field);
         final EditText address_field = view.findViewById(R.id.address_field);
+        final EditText customer_id_field = view.findViewById(R.id.customer_id_field);
 
-        FloatingActionButton fab = getActivity().findViewById(R.id.fab);
+        final FloatingActionButton fab = getActivity().findViewById(R.id.fab);
         fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_save_black_24dp));
-        fab.setVisibility(View.VISIBLE);
+        fab.setVisibility(View.INVISIBLE);
 
         name_til = view.findViewById(R.id.kyc_full_name_til);
         aadhar_til = view.findViewById(R.id.kyc_aadhar_til);
@@ -108,6 +111,23 @@ public class FragmentKYC extends Fragment {
         mobile_til = view.findViewById(R.id.kyc_mobile_til);
         dob_til = view.findViewById(R.id.kyc_dob_til);
         address_til = view.findViewById(R.id.kyc_address_til);
+
+
+        final DatabaseReference cust_id_ref = database.getReference("lastCustomerId");
+
+        cust_id_ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                lastCustomerId = Long.parseLong(String.valueOf(dataSnapshot.getValue()));
+                customer_id_field.setText("C" + String.valueOf(lastCustomerId + 1));
+                fab.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                fab.setVisibility(View.INVISIBLE);
+            }
+        });
 
         dob_field.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,19 +137,18 @@ public class FragmentKYC extends Fragment {
                 int mMonth = mcurrentDate.get(Calendar.MONTH);
                 int mDay = mcurrentDate.get(Calendar.DAY_OF_MONTH);
 
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                    DatePickerDialog mDatePicker = new DatePickerDialog(
-                            getActivity(), new DatePickerDialog.OnDateSetListener() {
-                        public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
-                            // TODO Auto-generated method stub
-                            int month = selectedmonth + 1;
-                            String date_gen = selectedday + "-" + month + "-" + selectedyear;
-                            dob_field.setText(date_gen);
-                        }
-                    }, mYear, mMonth, mDay);
-                    mDatePicker.setTitle("Select DOB");
-                    mDatePicker.show();
-                }
+                DatePickerDialog mDatePicker = new DatePickerDialog(
+                        getActivity(), new DatePickerDialog.OnDateSetListener() {
+                    public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
+                        // TODO Auto-generated method stub
+                        int month = selectedmonth + 1;
+                        String date_gen = selectedday + "-" + month + "-" + selectedyear;
+                        dob_field.setText(date_gen);
+                    }
+                }, mYear, mMonth, mDay);
+                mDatePicker.setTitle("Select DOB");
+                mDatePicker.show();
+
 
                 ;
             }
@@ -184,11 +203,11 @@ public class FragmentKYC extends Fragment {
 
 
                 DatabaseReference customers = database.getReference("customers");
-                String key = customers.push().getKey();
+                String key = customer_id_field.getText().toString();
                 Map<String, Object> id = new HashMap<>();
                 Map<String, String> attrs = new HashMap<>();
-
-                attrs.put("name", name_field.getText().toString());
+                String name = name_field.getText().toString();
+                attrs.put("name", name.substring(0, 1).toUpperCase() + name.substring(1));
                 attrs.put("aadhar", aadhar_field.getText().toString());
                 attrs.put("occupation", occupation_field.getText().toString());
                 attrs.put("mobile", mobile_field.getText().toString());
@@ -205,6 +224,7 @@ public class FragmentKYC extends Fragment {
                             Snackbar snackbar = Snackbar
                                     .make(rl, "Customer Added Successfully!", Snackbar.LENGTH_LONG);
                             snackbar.show();
+                            cust_id_ref.setValue(lastCustomerId + 1);
                             FragmentTransaction ft = getFragmentManager().beginTransaction();
                             FragmentKYC fd = new FragmentKYC();
                             ft.replace(R.id.fragment_container, fd).addToBackStack(null).

@@ -26,10 +26,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.oxvsys.moneylender.HomeActivity.database;
-import static com.oxvsys.moneylender.MainActivity.logged_agent;
-import static com.oxvsys.moneylender.MainActivity.logged_type;
 
-public class CustomerDailyInfoAdapter extends RecyclerView.Adapter<CustomerDailyInfoAdapter.CustomerHolder> {
+public class AdapterCustomerDailyInfo extends RecyclerView.Adapter<AdapterCustomerDailyInfo.CustomerHolder> {
 
     private HashMap<String, CustomerAmount> account_amount_map;
     private HashMap<String, AgentAmount> agentAmountHashMap;
@@ -39,7 +37,7 @@ public class CustomerDailyInfoAdapter extends RecyclerView.Adapter<CustomerDaily
     private FragmentManager fragmentManager;
 
 
-    public CustomerDailyInfoAdapter(HashMap<String, CustomerAmount> dataset,
+    public AdapterCustomerDailyInfo(HashMap<String, CustomerAmount> dataset,
                                     HashMap<String, AgentAmount> agentAmountHashMap,
                                     Calendar sel_calendar, Context context, FragmentManager fragmentManager) {
         this.account_amount_map = dataset;
@@ -64,20 +62,20 @@ public class CustomerDailyInfoAdapter extends RecyclerView.Adapter<CustomerDaily
 
             }
         });
-        Log.d("customer_daily_list", "CustomerDailyInfoAdapter: " + customerAmountList);
+        Log.d("customer_daily_list", "AdapterCustomerDailyInfo: " + customerAmountList);
 
     }
 
     @NonNull
     @Override
-    public CustomerDailyInfoAdapter.CustomerHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public AdapterCustomerDailyInfo.CustomerHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.row_recycler_layout, parent, false);
         return new CustomerHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final CustomerDailyInfoAdapter.CustomerHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final AdapterCustomerDailyInfo.CustomerHolder holder, int position) {
         final CustomerAmount customerAmount = customerAmountList.get(position);
 
 

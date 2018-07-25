@@ -9,14 +9,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -24,8 +25,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import static com.oxvsys.moneylender.HomeActivity.database;
@@ -35,19 +34,18 @@ import static com.oxvsys.moneylender.MainActivity.logged_type;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link FragmentSelectCustomer.OnFragmentInteractionListener} interface
+ * {@link FragmentShowCustomer.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link FragmentSelectCustomer#newInstance} factory method to
+ * Use the {@link FragmentShowCustomer#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentSelectCustomer extends Fragment {
+public class FragmentShowCustomer extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    Spinner spinner;
-    Customer customer_selected = new Customer();
     int fields_loaded = 0;
+    AdapterCustomer mAdapter;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -55,7 +53,7 @@ public class FragmentSelectCustomer extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public FragmentSelectCustomer() {
+    public FragmentShowCustomer() {
         // Required empty public constructor
     }
 
@@ -65,12 +63,14 @@ public class FragmentSelectCustomer extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment FragmentSelectCustomer.
+     * @return A new instance of fragment FragmentShowCustomer.
      */
     // TODO: Rename and change types and number of parameters
-    public static FragmentSelectCustomer newInstance(String param1, String param2) {
-        FragmentSelectCustomer fragment = new FragmentSelectCustomer();
+    public static FragmentShowCustomer newInstance(String param1, String param2) {
+        FragmentShowCustomer fragment = new FragmentShowCustomer();
         Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -78,32 +78,31 @@ public class FragmentSelectCustomer extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        fields_loaded = 0;
-        View view = inflater.inflate(R.layout.fragment_select_customer, container, false);
-
-        final ProgressBar progressBar = view.findViewById(R.id.select_customer_progress);
+        fields_loaded =0;
+        View view = inflater.inflate(R.layout.fragment_show_customer, container, false);
+        final ProgressBar progressBar = view.findViewById(R.id.show_cust_progress);
         progressBar.setVisibility(View.VISIBLE);
+
+        final RecyclerView recycler = view.findViewById(R.id.show_cust_recycler);
 
 //        final String agent_id = getData("user_id", getContext());
 //        final String logged_type = getData("user_type", getContext());
 
-
         DatabaseReference customers_db_ref = database.getReference("customers");
-
-        spinner = view.findViewById(R.id.customer_spinner);
-        spinner.setAdapter(null);
 
 //        final Button next_button = view.findViewById(R.id.customer_next_button);
         final FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_chevron_right_black_24dp));
         fab.setVisibility(View.INVISIBLE);
-        final List<String> customers = new ArrayList<>();
         final List<Customer> customerList = new ArrayList<>();
 
 //        fab.setOnClickListener(new View.OnClickListener() {
@@ -121,20 +120,27 @@ public class FragmentSelectCustomer extends Fragment {
                     for (DataSnapshot customer : dataSnapshot.getChildren()) {
                         Customer customer1 = customer.getValue(Customer.class);
                         customer1.setId(customer.getKey());
+                        ArrayList<Account> accounts = new ArrayList<>();
+                        for(DataSnapshot each_account:customer.child("accounts").getChildren()){
+                            Account account = new Account(each_account.getValue());
+                            account.setNo(each_account.getKey());
+                            accounts.add(account);
+                        }
+                        customer1.setAccounts1(accounts);
                         if (!containsId(customerList, customer1.getId())) {
                             customerList.add(customer1);
-                            customers.add(customer1.getName().split(" ")[0] + " (" + customer1.getId() + ")");
                         }
                     }
                     //customerList and customers list are in sync do not operate them individually
 
                     fields_loaded += 1;
                     if (fields_loaded == 2) {
-                        fab.setVisibility(View.VISIBLE);
+                        mAdapter = new AdapterCustomer(customerList, getContext(), getFragmentManager());
+                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+                        recycler.setLayoutManager(mLayoutManager);
+                        recycler.setItemAnimator(new DefaultItemAnimator());
+                        recycler.setAdapter(mAdapter);
                         progressBar.setVisibility(View.INVISIBLE);
-                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, customers);
-                        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        spinner.setAdapter(spinnerAdapter);
                     }
                 }
 
@@ -154,24 +160,28 @@ public class FragmentSelectCustomer extends Fragment {
                     for (DataSnapshot customer : dataSnapshot.getChildren()) {
                         Customer customer1 = customer.getValue(Customer.class);
                         customer1.setId(customer.getKey());
+                        ArrayList<Account> accounts = new ArrayList<>();
+                        for(DataSnapshot each_account:customer.child("accounts").getChildren()){
+                            Account account = new Account(each_account.getValue());
+                            account.setNo(each_account.getKey());
+                            accounts.add(account);
+                        }
+                        customer1.setAccounts1(accounts);
                         if (!containsId(customerList, customer1.getId())) {
                             customerList.add(customer1);
-                            customers.add(customer1.getName().split(" ")[0] + " (" + customer1.getId() + ")");
                         }
                     }
 
                     //customerList and customers list are in sync do not operate them individually
 
-                    ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, customers);
-                    spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    spinner.setAdapter(spinnerAdapter);
                     fields_loaded += 1;
                     if (fields_loaded == 2) {
-                        fab.setVisibility(View.VISIBLE);
+                        mAdapter = new AdapterCustomer(customerList, getContext(), getFragmentManager());
+                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+                        recycler.setLayoutManager(mLayoutManager);
+                        recycler.setItemAnimator(new DefaultItemAnimator());
+                        recycler.setAdapter(mAdapter);
                         progressBar.setVisibility(View.INVISIBLE);
-                        ArrayAdapter<String> spinnerAdapter1 = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, customers);
-                        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        spinner.setAdapter(spinnerAdapter1);
                     }
                 }
 
@@ -181,35 +191,8 @@ public class FragmentSelectCustomer extends Fragment {
                 }
             });
 
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
 
-                    FragmentManager fragmentManager = getFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    FragmentLoanGrant fragmentLoanGrant = FragmentLoanGrant.newInstance(customer_selected);
-                    fragmentTransaction.replace(R.id.fragment_container, fragmentLoanGrant).addToBackStack(null).commit();
-
-                }
-            });
-
-
-            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
-
-            {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    customer_selected = customerList.get(position);
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-                    customer_selected = customerList.get(0);
-                }
-            });
         }
-
-
         return view;
     }
 
@@ -219,8 +202,6 @@ public class FragmentSelectCustomer extends Fragment {
             mListener.onFragmentInteraction(uri);
         }
     }
-
-
 
     @Override
     public void onAttach(Context context) {
@@ -250,12 +231,12 @@ public class FragmentSelectCustomer extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-    public boolean containsId(List<Customer> list, String id){
-        for(Customer each:list){
-            if(each.getId().equals(id))
+
+    public boolean containsId(List<Customer> list, String id) {
+        for (Customer each : list) {
+            if (each.getId().equals(id))
                 return true;
         }
         return false;
     }
-
 }

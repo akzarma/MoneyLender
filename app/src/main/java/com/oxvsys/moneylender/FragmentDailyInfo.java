@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,7 +33,7 @@ public class FragmentDailyInfo extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private RecyclerView recyclerView;
-    private AgentAdapter mAdapter;
+    private AdapterAgent mAdapter;
 //    private TextView currentDay_textView;
     Calendar sel_calendar;
 
@@ -116,7 +115,7 @@ public class FragmentDailyInfo extends Fragment {
 
                 }
 
-                mAdapter = new AgentAdapter(agentCollectList, sel_calendar, getContext());
+                mAdapter = new AdapterAgent(agentCollectList, sel_calendar, getContext());
                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
                 recyclerView.setLayoutManager(mLayoutManager);
                 recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -173,7 +172,7 @@ public class FragmentDailyInfo extends Fragment {
 //        selected_cal.set(Calendar.SECOND, 0);
 //        selected_cal.set(Calendar.MILLISECOND, 0);
 //
-//        mAdapter = new AgentAdapter(agentCollectList, selected_cal, getContext());
+//        mAdapter = new AdapterAgent(agentCollectList, selected_cal, getContext());
 //        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
 //        recyclerView.setLayoutManager(mLayoutManager);
 //        recyclerView.setItemAnimator(new DefaultItemAnimator());

@@ -10,24 +10,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 
-import static com.oxvsys.moneylender.HomeActivity.database;
-
-public class AgentAccountPaymentAdapter extends RecyclerView.Adapter<AgentAccountPaymentAdapter.AgentAccountPaymentHolder> {
+public class AdapterAgentAccountPayment extends RecyclerView.Adapter<AdapterAgentAccountPayment.AgentAccountPaymentHolder> {
 
     private List<DateAmount> dateAmountList;
     private CustomerAmount customerAmount;
     private Context context;
 
-    public AgentAccountPaymentAdapter(List<DateAmount> dataset, Context context, CustomerAmount customerAmount){
+    public AdapterAgentAccountPayment(List<DateAmount> dataset, Context context, CustomerAmount customerAmount){
         this.customerAmount = customerAmount;
         this.dateAmountList = dataset;
         this.context = context;

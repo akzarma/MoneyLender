@@ -12,6 +12,7 @@ public class Account implements Serializable {
     private Calendar o_date;
     private Calendar c_date;
     private Calendar last_int_calc;
+    private String info;
     private Long r_amt;
 
 
@@ -34,6 +35,7 @@ public class Account implements Serializable {
         attrs.put("type", this.type);
         attrs.put("duration", String.valueOf(this.duration));
         attrs.put("lf_no", this.lf_no);
+        attrs.put("info", this.info);
         if (this.r_amt != null)
             attrs.put("r_amt", String.valueOf(this.r_amt));
         return attrs;
@@ -46,6 +48,8 @@ public class Account implements Serializable {
             this.setO_date(value1.get("o_date").toString());
             MainActivity.CaltoStringDate(this.o_date);
         }
+        if (value1.get("info") != null)
+            this.info = value1.get("info").toString();
         if (!value1.get("c_date").equals("")) {
             this.setC_date(value1.get("c_date").toString());
             MainActivity.CaltoStringDate(this.c_date);
@@ -73,6 +77,14 @@ public class Account implements Serializable {
             this.setLast_int_calc(value1.get("last_int_calc").toString());
             MainActivity.CaltoStringDate(this.last_int_calc);
         }
+    }
+
+    public String getInfo() {
+        return info;
+    }
+
+    public void setInfo(String info) {
+        this.info = info;
     }
 
     public Long getFile_amt() {

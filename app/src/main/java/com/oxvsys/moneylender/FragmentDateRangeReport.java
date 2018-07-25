@@ -1,6 +1,5 @@
 package com.oxvsys.moneylender;
 
-import android.Manifest;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -57,7 +56,7 @@ public class FragmentDateRangeReport extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private DateRangeAdapter mAdapter;
+    private AdapterDateRange mAdapter;
     private RecyclerView recyclerView;
     private List<DateAmount> dateAmountList;
 
@@ -142,7 +141,7 @@ public class FragmentDateRangeReport extends Fragment {
                             }
                         }
                     dateAmountList = new ArrayList<>(calendarDateAmountHashMap.values());
-                    mAdapter = new DateRangeAdapter(dateAmountList, getContext());
+                    mAdapter = new AdapterDateRange(dateAmountList, getContext());
                     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
                     recyclerView.setLayoutManager(mLayoutManager);
                     recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -182,7 +181,7 @@ public class FragmentDateRangeReport extends Fragment {
                             }
                         }
                     dateAmountList = new ArrayList<>(calendarDateAmountHashMap.values());
-                    mAdapter = new DateRangeAdapter(dateAmountList, getContext());
+                    mAdapter = new AdapterDateRange(dateAmountList, getContext());
                     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
                     recyclerView.setLayoutManager(mLayoutManager);
                     recyclerView.setItemAnimator(new DefaultItemAnimator());

@@ -20,6 +20,14 @@
             android:id="@+id/nav_agent_register"
             android:icon="@drawable/ic_person_add_black_24dp"
             android:title="Register Agent" />
+        <item
+            android:id="@+id/nav_show_customer"
+            android:icon="@drawable/ic_person_add_black_24dp"
+            android:title="Show Customer" />
+        <item
+            android:id="@+id/nav_acc_agent"
+            android:icon="@drawable/ic_person_add_black_24dp"
+            android:title="Show Account-Agent Link" />
 
         <!--<item-->
             <!--android:id="@+id/nav_customer_daily"-->

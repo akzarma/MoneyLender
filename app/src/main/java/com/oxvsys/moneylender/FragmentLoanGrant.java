@@ -137,7 +137,7 @@ public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragme
                 if (months_field.getText().toString().length() != 0) {
                     int months = Integer.parseInt(months_field.getText().toString());
                     Calendar o_cal = MainActivity.StringDateToCal(edit_o_date.getText().toString());
-                    o_cal.add(Calendar.DAY_OF_YEAR, 30*months);
+                    o_cal.add(Calendar.DAY_OF_YEAR, 30 * months);
                     edit_c_date.setText(MainActivity.CaltoStringDate(o_cal));
                 }
                 return false;
@@ -211,30 +211,30 @@ public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragme
                 int mMonth = mcurrentDate.get(Calendar.MONTH);
                 int mDay = mcurrentDate.get(Calendar.DAY_OF_MONTH);
 
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                    DatePickerDialog mDatePicker = new DatePickerDialog(
-                            getActivity(), new DatePickerDialog.OnDateSetListener() {
-                        public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
-                            // TODO Auto-generated method stub
-                            int month = selectedmonth + 1;
-                            String date_gen = selectedday + "-" + month + "-" + selectedyear;
-                            edit_o_date.setText(date_gen);
-                            Calendar o_cal = MainActivity.StringDateToCal(edit_o_date.getText().toString());
-                            if (account_type_selected.equals("0")) {
-                                o_cal.add(Calendar.DAY_OF_YEAR, Integer.parseInt(selected_days));
-                                edit_c_date.setText(MainActivity.CaltoStringDate(o_cal));
-                            } else if (account_type_selected.equals("1")) {
-                                if (months_field.getText().length() != 0) {
-                                    o_cal.add(Calendar.DAY_OF_YEAR, 30*Integer.parseInt(months_field.getText().toString()));
-                                    edit_c_date.setText(MainActivity.CaltoStringDate(o_cal));
-                                }
-                            }
 
+                DatePickerDialog mDatePicker = new DatePickerDialog(
+                        getActivity(), new DatePickerDialog.OnDateSetListener() {
+                    public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
+                        // TODO Auto-generated method stub
+                        int month = selectedmonth + 1;
+                        String date_gen = selectedday + "-" + month + "-" + selectedyear;
+                        edit_o_date.setText(date_gen);
+                        Calendar o_cal = MainActivity.StringDateToCal(edit_o_date.getText().toString());
+                        if (account_type_selected.equals("0")) {
+                            o_cal.add(Calendar.DAY_OF_YEAR, Integer.parseInt(selected_days));
+                            edit_c_date.setText(MainActivity.CaltoStringDate(o_cal));
+                        } else if (account_type_selected.equals("1")) {
+                            if (months_field.getText().length() != 0) {
+                                o_cal.add(Calendar.DAY_OF_YEAR, 30 * Integer.parseInt(months_field.getText().toString()));
+                                edit_c_date.setText(MainActivity.CaltoStringDate(o_cal));
+                            }
                         }
-                    }, mYear, mMonth, mDay);
-                    mDatePicker.setTitle("Select date");
-                    mDatePicker.show();
-                }
+
+                    }
+                }, mYear, mMonth, mDay);
+                mDatePicker.setTitle("Select date");
+                mDatePicker.show();
+
 
                 ;
             }
@@ -250,18 +250,18 @@ public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragme
                 int mMonth = mcurrentDate.get(Calendar.MONTH);
                 int mDay = mcurrentDate.get(Calendar.DAY_OF_MONTH);
 
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                    DatePickerDialog mDatePicker = new DatePickerDialog(
-                            getActivity(), new DatePickerDialog.OnDateSetListener() {
-                        public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
-                            int month = selectedmonth + 1;
-                            String date_gen = selectedday + "-" + month + "-" + selectedyear;
-                            edit_c_date.setText(date_gen);
-                        }
-                    }, mYear, mMonth, mDay);
-                    mDatePicker.setTitle("Select date");
-                    mDatePicker.show();
-                }
+
+                DatePickerDialog mDatePicker = new DatePickerDialog(
+                        getActivity(), new DatePickerDialog.OnDateSetListener() {
+                    public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
+                        int month = selectedmonth + 1;
+                        String date_gen = selectedday + "-" + month + "-" + selectedyear;
+                        edit_c_date.setText(date_gen);
+                    }
+                }, mYear, mMonth, mDay);
+                mDatePicker.setTitle("Select date");
+                mDatePicker.show();
+
 
                 ;
             }
@@ -304,7 +304,7 @@ public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragme
                 });
                 List<String> agents = new ArrayList<>();
                 for (Agent each : agentList) {
-                    agents.add(each.getId() + " - " + each.getName().split(" ")[0]);
+                    agents.add(each.getName().split(" ")[0] + " (" + each.getId() + ")");
                 }
                 ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, agents);
                 spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

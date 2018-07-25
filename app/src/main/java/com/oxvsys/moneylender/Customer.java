@@ -7,7 +7,7 @@ public class Customer implements Serializable,Cloneable {
     private String id;
     private String name;
     private String occupation;
-    private String aadhar_id;
+    private String aadhar;
     private String mobile;
     private String DOB;
     private String address;
@@ -63,12 +63,12 @@ public class Customer implements Serializable,Cloneable {
         this.occupation = occupation;
     }
 
-    public String getAadhar_id() {
-        return aadhar_id;
+    public String getAadhar() {
+        return aadhar;
     }
 
-    public void setAadhar_id(String aadhar_id) {
-        this.aadhar_id = aadhar_id;
+    public void setAadhar(String aadhar) {
+        this.aadhar = aadhar;
     }
 
     public String getMobile() {

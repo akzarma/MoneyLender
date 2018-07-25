@@ -105,7 +105,6 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
@@ -288,6 +287,18 @@ public class MainActivity extends AppCompatActivity
             FragmentAgentRegister far = new FragmentAgentRegister();
             fragmentTransaction.replace(R.id.fragment_container, far).addToBackStack(null).
                     commit();
+        } else if (id == R.id.nav_show_customer) {
+            if (getSupportActionBar() != null)
+                getSupportActionBar().setTitle("Customers");
+            FragmentShowCustomer far = new FragmentShowCustomer();
+            fragmentTransaction.replace(R.id.fragment_container, far).addToBackStack(null).
+                    commit();
+        }else if (id == R.id.nav_acc_agent) {
+            if (getSupportActionBar() != null)
+                getSupportActionBar().setTitle("Account Agent");
+            FragmentAccountAgent far = new FragmentAccountAgent();
+            fragmentTransaction.replace(R.id.fragment_container, far).addToBackStack(null).
+                    commit();
         }
 //        else if (id == R.id.nav_customer_daily) {
 //            if (getSupportActionBar() != null)
@@ -353,4 +364,5 @@ public class MainActivity extends AppCompatActivity
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         return preferences.getString(key, "ERROR");
     }
+
 }

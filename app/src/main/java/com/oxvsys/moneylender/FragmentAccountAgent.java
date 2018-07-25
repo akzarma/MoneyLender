@@ -3,6 +3,7 @@ package com.oxvsys.moneylender;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,37 +11,41 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.Comparator;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 import java.util.List;
+
+import static com.oxvsys.moneylender.HomeActivity.database;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link FragmentDateAmount.OnFragmentInteractionListener} interface
+ * {@link FragmentAccountAgent.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link FragmentDateAmount#newInstance} factory method to
+ * Use the {@link FragmentAccountAgent#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentDateAmount extends Fragment {
+public class FragmentAccountAgent extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private static final String ARG_PARAM3 = "param3";
-    AdapterAgentAccountPayment mAdapter;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    List<AccountAgent> accountAgentList = new ArrayList<>();
+    AdapterAccountAgent mAdapter;
 
     private OnFragmentInteractionListener mListener;
 
-    public FragmentDateAmount() {
+    public FragmentAccountAgent() {
         // Required empty public constructor
     }
 
@@ -48,15 +53,16 @@ public class FragmentDateAmount extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @return A new instance of fragment FragmentDateAmount.
+     * @param param1 Parameter 1.
+     * @param param2 Parameter 2.
+     * @return A new instance of fragment FragmentAccountAgent.
      */
     // TODO: Rename and change types and number of parameters
-    public static FragmentDateAmount newInstance(List<DateAmount> dateAmountList,String agent, CustomerAmount customerAmount) {
-        FragmentDateAmount fragment = new FragmentDateAmount();
+    public static FragmentAccountAgent newInstance(String param1, String param2) {
+        FragmentAccountAgent fragment = new FragmentAccountAgent();
         Bundle args = new Bundle();
-        args.putSerializable(ARG_PARAM1, (Serializable) dateAmountList);
-        args.putSerializable(ARG_PARAM2, customerAmount);
-        args.putSerializable(ARG_PARAM3, agent);
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -64,37 +70,50 @@ public class FragmentDateAmount extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        if (getArguments() != null) {
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_date_amount_recycler, container, false);
-        RecyclerView recyclerView = view.findViewById(R.id.date_amount_recycler);
-        TextView date_amount_heading_field = view.findViewById(R.id.date_amount_heading_field);
-        TextView date_amount_heading1_field = view.findViewById(R.id.date_amount_heading1_field);
-        date_amount_heading1_field.setText("Agent ID: "+getArguments().getString(ARG_PARAM3));
-        List<DateAmount> dateAmountList = (List<DateAmount>) getArguments().getSerializable(ARG_PARAM1);
-        CustomerAmount customerAmount = (CustomerAmount) getArguments().getSerializable(ARG_PARAM2);
+        View view = inflater.inflate(R.layout.fragment_account_agent, container, false);
+        final RecyclerView recyclerView = view.findViewById(R.id.acc_agent_recycler);
 
-        Collections.sort(dateAmountList, new Comparator<DateAmount>() {
+
+        DatabaseReference agent_account = database.getReference("agentAccount");
+
+        agent_account.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public int compare(DateAmount o1, DateAmount o2) {
-                return MainActivity.StringDateToCal(o1.getDate()).compareTo(MainActivity.StringDateToCal(o2.getDate()));
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot agent:dataSnapshot.getChildren()){
+                    for(DataSnapshot account:agent.getChildren()){
+                        Account account1 = new Account();
+                        account1.setNo(account.getKey());
+                        Agent agent1 = new Agent();
+                        agent1.setId(agent.getKey());
+                        AccountAgent accountAgent = new AccountAgent();
+                        accountAgent.setAccount(account1);
+                        accountAgent.setAgent(agent1);
+                        accountAgentList.add(accountAgent);
+                    }
+                }
+                mAdapter = new AdapterAccountAgent(accountAgentList);
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+                recyclerView.setLayoutManager(mLayoutManager);
+                recyclerView.setItemAnimator(new DefaultItemAnimator());
+                recyclerView.setAdapter(mAdapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
 
-        date_amount_heading_field.setText(customerAmount.getCustomer().getName().split(" ")[0] + " (A/C: " +
-                customerAmount.getCustomer().getAccounts1().get(0).getNo()+")");
-
-
-        mAdapter = new AdapterAgentAccountPayment(dateAmountList, getContext(), customerAmount);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(mAdapter);
         return view;
     }
 

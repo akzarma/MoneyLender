@@ -9,7 +9,22 @@
     tools:context=".LoginActivity">
 
 
+    <ImageView
+        android:layout_above="@id/login_relative"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:contentDescription="@string/logo"
+        android:alpha=".8"
+        android:adjustViewBounds="true"
+        android:scaleX="0.7"
+        android:scaleY="0.7"
+        android:src="@drawable/icon"
+        android:layout_centerHorizontal="true"/>
+
+
     <RelativeLayout
+        android:id="@+id/login_relative"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true">

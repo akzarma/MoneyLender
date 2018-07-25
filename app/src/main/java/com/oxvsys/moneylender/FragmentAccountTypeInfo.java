@@ -66,7 +66,7 @@ public class FragmentAccountTypeInfo extends Fragment {
     private int loop_count = 0;
     private boolean inactive_cust_required = false;
 
-    private CustomerDailyInfoAdapter mAdapter;
+    private AdapterCustomerDailyInfo mAdapter;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -283,7 +283,7 @@ public class FragmentAccountTypeInfo extends Fragment {
                                                         heading_card.setVisibility(View.INVISIBLE);
                                                         date_button.setVisibility(View.VISIBLE);
                                                     }
-                                                    mAdapter = new CustomerDailyInfoAdapter(customer_amount_map,
+                                                    mAdapter = new AdapterCustomerDailyInfo(customer_amount_map,
                                                             agentAmountHashMap
                                                             , sel_calendar, getContext(), getFragmentManager());
                                                     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
@@ -307,7 +307,7 @@ public class FragmentAccountTypeInfo extends Fragment {
                                                 heading_card.setVisibility(View.INVISIBLE);
                                                 date_button.setVisibility(View.VISIBLE);
                                             }
-                                            mAdapter = new CustomerDailyInfoAdapter(customer_amount_map,
+                                            mAdapter = new AdapterCustomerDailyInfo(customer_amount_map,
                                                     agentAmountHashMap,
                                                     sel_calendar, getContext(), getFragmentManager());
                                             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
@@ -503,7 +503,7 @@ public class FragmentAccountTypeInfo extends Fragment {
                                                         heading_card.setVisibility(View.INVISIBLE);
                                                         date_button.setVisibility(View.VISIBLE);
                                                     }
-                                                    mAdapter = new CustomerDailyInfoAdapter(customer_amount_map, agentAmountHashMap,
+                                                    mAdapter = new AdapterCustomerDailyInfo(customer_amount_map, agentAmountHashMap,
                                                             sel_calendar, getContext(), getFragmentManager());
                                                     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
                                                     recycler.setLayoutManager(mLayoutManager);
@@ -525,7 +525,7 @@ public class FragmentAccountTypeInfo extends Fragment {
                                             heading_card.setVisibility(View.INVISIBLE);
                                             date_button.setVisibility(View.VISIBLE);
                                         }
-                                        mAdapter = new CustomerDailyInfoAdapter(customer_amount_map,
+                                        mAdapter = new AdapterCustomerDailyInfo(customer_amount_map,
                                                 agentAmountHashMap,
                                                 sel_calendar, getContext(), getFragmentManager());
                                         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());

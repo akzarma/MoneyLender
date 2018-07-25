@@ -56,7 +56,7 @@
 //    int row = 0, accountCol = 0 , amountCollected = 1;
 //
 //    private RecyclerView recyclerView;
-//    private CustomerDailyInfoAdapter mAdapter;
+//    private AdapterCustomerDailyInfo mAdapter;
 //    private TextView currentDay_textView, customer_daily_info_title;
 //    Calendar sel_calendar;
 //    HashMap<String, CustomerAmount> customer_amount_map;
@@ -196,7 +196,7 @@
 //
 ////                                Log.d("customer_daily", "onDataChange: " + accounts.get("3").toString());
 //                            }
-//                            mAdapter = new CustomerDailyInfoAdapter(customer_amount_map,
+//                            mAdapter = new AdapterCustomerDailyInfo(customer_amount_map,
 //
 //                                    sel_calendar, getContext(), getFragmentManager());
 //                            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());

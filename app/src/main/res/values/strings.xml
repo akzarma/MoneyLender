@@ -23,6 +23,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="logo">Logo</string>
     <string-array name="account_type_items">
         <item>Daily basis</item>
         <item>Monthly basis</item>

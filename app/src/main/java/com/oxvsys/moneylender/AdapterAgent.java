@@ -1,14 +1,8 @@
 package com.oxvsys.moneylender;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.Application;
-import android.app.Fragment;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -27,13 +21,13 @@ import java.util.List;
 
 import static com.oxvsys.moneylender.HomeActivity.database;
 
-public class AgentAdapter extends RecyclerView.Adapter<AgentAdapter.AgentHolder> {
+public class AdapterAgent extends RecyclerView.Adapter<AdapterAgent.AgentHolder> {
 
     private List<AgentCollect> agentCollectList;
     private Context context;
     private Calendar selected_cal;
 
-    public AgentAdapter(List<AgentCollect> dataset, Calendar selected_cal, Context context){
+    public AdapterAgent(List<AgentCollect> dataset, Calendar selected_cal, Context context){
         this.agentCollectList = dataset;
         this.selected_cal = selected_cal;
         this.context = context;

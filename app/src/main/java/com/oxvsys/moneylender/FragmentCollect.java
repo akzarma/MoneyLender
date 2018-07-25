@@ -178,7 +178,7 @@ public class FragmentCollect extends Fragment {
                             Calendar last_pay_date = selected_customer.getAccounts1().get(0).getLast_pay_date();
 
                             if (last_pay_date != null) {
-                                days_diff = TimeUnit.MILLISECONDS.toDays(curr_cal.getTimeInMillis() - last_pay_date.getTimeInMillis());
+//                                days_diff = TimeUnit.MILLISECONDS.toDays(curr_cal.getTimeInMillis() - last_pay_date.getTimeInMillis());
                                 info_field.setText("Last Payment received on " + MainActivity.CaltoStringDate(last_pay_date));
                                 if (days_diff < 1) {
                                     inr_sign.setText("");
@@ -253,7 +253,7 @@ public class FragmentCollect extends Fragment {
                             Calendar last_pay_date = selected_customer.getAccounts1().get(0).getLast_pay_date();
 
                             if (last_pay_date != null) {
-                                days_diff = TimeUnit.MILLISECONDS.toDays(curr_cal.getTimeInMillis() - last_pay_date.getTimeInMillis());
+//                                days_diff = TimeUnit.MILLISECONDS.toDays(curr_cal.getTimeInMillis() - last_pay_date.getTimeInMillis());
                                 info_field.setText("Last Payment received on " + MainActivity.CaltoStringDate(last_pay_date));
                                 int months_passed = (int) (days_diff / 30);
                                 if (months_passed < 1) {
@@ -268,51 +268,6 @@ public class FragmentCollect extends Fragment {
                         fields_loaded += 1;
                         if (fields_loaded == 1) {
                             fab.setVisibility(View.VISIBLE);
-                        }
-//                        file_amt = account.getFile_amt();
-
-
-                        if (account.getType().equals("0")) {
-//                            if (last_pay_date == null) {
-//                                expected_amount_view.setText("Expected Amount   ₹ " + String.valueOf(amt_left / days_diff));
-//                            } else {
-//                                if (!curr_date.equals(MainActivity.CaltoStringDate(last_pay_date))) {
-//                                    expected_amount_view.setText("Expected Amount   ₹ " + String.valueOf(amt_left / days_diff));
-//                                }
-//                                if (last_pay_date != null && MainActivity.CaltoStringDate(last_pay_date).equals(curr_date)) {
-//                                    DatabaseReference agent_collect_date_db_ref = database.getReference("agentCollect").child(logged_agent)
-//                                            .child(MainActivity.CaltoStringDate(last_pay_date));
-//                                    agent_collect_date_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
-//                                        @Override
-//                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                                            if (dataSnapshot.hasChild(selected_account.getNo())) {
-//
-//                                                Long last_amt = ((HashMap<String, Long>) dataSnapshot.getValue()).get(selected_account.getNo());
-//                                                if (last_amt != null) {
-//                                                    expected_amount_view.setText("");
-//                                                    inr_sign.setText("");
-//                                                    amount_field.setText("");
-//                                                    amount_field.setHint("");
-//                                                    info_field.setText("Last Amount of ₹ " + last_amt + " received on " + MainActivity.CaltoStringDate(last_pay_date));
-//                                                } else {
-//                                                    amount_field.setText("0");
-//                                                }
-//                                                fab.setVisibility(View.INVISIBLE);
-//                                                amount_field.setEnabled(false);
-//
-//                                            }
-//                                        }
-//
-//                                        @Override
-//                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                                        }
-//                                    });
-//                                }
-//                            }
-                        } else if (account.getType().equals("1")) {
-
-
                         }
                     }
 
@@ -438,7 +393,7 @@ public class FragmentCollect extends Fragment {
                                                                             Map<String, String> account_attrs = selected_customer.getAccounts1().get(0).getMap();
 
                                                                             attrs.put("name", selected_customer.getName());
-                                                                            attrs.put("aadhar", selected_customer.getAadhar_id());
+                                                                            attrs.put("aadhar", selected_customer.getAadhar());
                                                                             attrs.put("occupation", selected_customer.getOccupation());
                                                                             attrs.put("mobile", selected_customer.getMobile());
                                                                             attrs.put("dob", selected_customer.getDOB());
