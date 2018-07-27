@@ -386,20 +386,22 @@ public class FragmentAccountTypeInfo extends Fragment {
 
                                 HashMap<String, Object> agent_account_obj_map = (HashMap<String, Object>) dataSnapshot.getValue();
 //                                HashMap<String, AccountAmountCollect> cust_ac_amt_map = new HashMap<>();
-                                for (Map.Entry<String, Object> each_agent_ac_obj_map : agent_account_obj_map.entrySet()) {
-                                    HashMap<String, String> ac_cust_map = ((HashMap<String, String>) each_agent_ac_obj_map.getValue());
-                                    for (Map.Entry<String, String> each_ac_cust_map : ac_cust_map.entrySet()) {
-                                        if (agentAmountHashMap.containsKey(each_ac_cust_map.getKey())) {
-                                            Long amt = agentAmountHashMap.get(each_ac_cust_map.getKey()).getAmount_collected();
-                                            String cust_id = each_ac_cust_map.getValue();
+                                if(agent_account_obj_map!=null) {
+                                    for (Map.Entry<String, Object> each_agent_ac_obj_map : agent_account_obj_map.entrySet()) {
+                                        HashMap<String, String> ac_cust_map = ((HashMap<String, String>) each_agent_ac_obj_map.getValue());
+                                        for (Map.Entry<String, String> each_ac_cust_map : ac_cust_map.entrySet()) {
+                                            if (agentAmountHashMap.containsKey(each_ac_cust_map.getKey())) {
+                                                Long amt = agentAmountHashMap.get(each_ac_cust_map.getKey()).getAmount_collected();
+                                                String cust_id = each_ac_cust_map.getValue();
 //                                           String account_no = each_ac_cust_map.getKey();
-                                            Account account = new Account();
-                                            account.setNo(each_ac_cust_map.getKey());
-                                            AccountAmountCollect accountAmountCollect = new AccountAmountCollect(account, amt);
-                                            cust_account_amount.put(cust_id, accountAmountCollect);
+                                                Account account = new Account();
+                                                account.setNo(each_ac_cust_map.getKey());
+                                                AccountAmountCollect accountAmountCollect = new AccountAmountCollect(account, amt);
+                                                cust_account_amount.put(cust_id, accountAmountCollect);
+                                            }
                                         }
-                                    }
 
+                                    }
                                 }
 
                                 DatabaseReference customer_db_ref = database.getReference("customers");

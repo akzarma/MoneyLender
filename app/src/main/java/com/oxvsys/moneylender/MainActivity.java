@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
 
+
         logged_agent = getData("user_id", getApplicationContext());
         logged_type = getData("user_type", getApplicationContext());
         user_pwd = getData("user_pwd", getApplicationContext());
@@ -68,8 +69,11 @@ public class MainActivity extends AppCompatActivity
             nav_menu.findItem(R.id.nav_kyc).setVisible(false);
             nav_menu.findItem(R.id.nav_agent_register).setVisible(false);
             nav_menu.findItem(R.id.nav_send).setVisible(false);
+            nav_menu.findItem(R.id.nav_agent_pass).setVisible(false);
+            nav_menu.findItem(R.id.nav_acc_agent).setVisible(false);
             if (user_pwd.equals("1234")) {
                 nav_menu.findItem(R.id.nav_gallery).setVisible(false);
+                nav_menu.findItem(R.id.nav_show_customer).setVisible(false);
 //                nav_menu.findItem(R.id.toolbar).setVisible(false);
             }
 
@@ -78,10 +82,9 @@ public class MainActivity extends AppCompatActivity
 
         View hView = navigationView.getHeaderView(0);
         TextView nav_user = hView.findViewById(R.id.nav_header_username);
-        TextView info_user = hView.findViewById(R.id.nav_header_info);
+//        TextView info_user = hView.findViewById(R.id.nav_header_info);
 
         nav_user.setText(getData("user_id", getApplicationContext()));
-        info_user.setText("");
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.bottom_nav_view);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -299,7 +302,14 @@ public class MainActivity extends AppCompatActivity
             FragmentAccountAgent far = new FragmentAccountAgent();
             fragmentTransaction.replace(R.id.fragment_container, far).addToBackStack(null).
                     commit();
+        }else if (id == R.id.nav_agent_pass) {
+            if (getSupportActionBar() != null)
+                getSupportActionBar().setTitle("Agent Credentials");
+            FragmentAgentsDetail far = new FragmentAgentsDetail();
+            fragmentTransaction.replace(R.id.fragment_container, far).addToBackStack(null).
+                    commit();
         }
+
 //        else if (id == R.id.nav_customer_daily) {
 //            if (getSupportActionBar() != null)
 //                getSupportActionBar().setTitle("Customer Report");

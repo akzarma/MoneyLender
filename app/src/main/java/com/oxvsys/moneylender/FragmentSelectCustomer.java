@@ -123,7 +123,15 @@ public class FragmentSelectCustomer extends Fragment {
                         customer1.setId(customer.getKey());
                         if (!containsId(customerList, customer1.getId())) {
                             customerList.add(customer1);
-                            customers.add(customer1.getName().split(" ")[0] + " (" + customer1.getId() + ")");
+                            int name_len = customer1.getName().split(" ").length;
+                            String cust_name = "No Name";
+                            if(name_len>1) {
+                                cust_name = customer1.getName().split(" ")[0] + ' ' +
+                                        customer1.getName().split(" ")[name_len - 1];
+                            }else if(name_len==1){
+                                cust_name = customer1.getName().split(" ")[0];
+                            }
+                            customers.add(cust_name+ " (" + customer1.getId() + ")");
                         }
                     }
                     //customerList and customers list are in sync do not operate them individually
@@ -156,7 +164,15 @@ public class FragmentSelectCustomer extends Fragment {
                         customer1.setId(customer.getKey());
                         if (!containsId(customerList, customer1.getId())) {
                             customerList.add(customer1);
-                            customers.add(customer1.getName().split(" ")[0] + " (" + customer1.getId() + ")");
+                            int name_len = customer1.getName().split(" ").length;
+                            String cust_name = "No Name";
+                            if(name_len>1) {
+                                cust_name = customer1.getName().split(" ")[0] + ' ' +
+                                        customer1.getName().split(" ")[name_len - 1];
+                            }else if(name_len==1){
+                                cust_name = customer1.getName().split(" ")[0];
+                            }
+                            customers.add(cust_name+ " (" + customer1.getId() + ")");
                         }
                     }
 
@@ -167,7 +183,8 @@ public class FragmentSelectCustomer extends Fragment {
                     spinner.setAdapter(spinnerAdapter);
                     fields_loaded += 1;
                     if (fields_loaded == 2) {
-                        fab.setVisibility(View.VISIBLE);
+                        if(!customers.isEmpty())
+                            fab.setVisibility(View.VISIBLE);
                         progressBar.setVisibility(View.INVISIBLE);
                         ArrayAdapter<String> spinnerAdapter1 = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, customers);
                         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

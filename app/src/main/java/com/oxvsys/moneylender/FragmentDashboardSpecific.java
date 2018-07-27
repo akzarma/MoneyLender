@@ -103,7 +103,7 @@ public class FragmentDashboardSpecific extends Fragment {
         date_button.setText(sel_date);
         final FloatingActionButton fab = getActivity().findViewById(R.id.fab);
         fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.get_cash_96));
-//        fab.setVisibility(View.INVISIBLE);
+        fab.setVisibility(View.VISIBLE);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -122,15 +122,13 @@ public class FragmentDashboardSpecific extends Fragment {
 //        DateTimeComparator d = DateTimeComparator.getDateOnlyInstance();
 //        int comp = d.compare(sel_calendar , sel_calendar);
 
-        DatabaseReference ref = database.getReference("agentCollect");
+        DatabaseReference ref = database.getReference("agentCollect").child(logged_agent);
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 final List<AccountAmountCollect> accountAmountCollectList = new ArrayList<>();
-                for (DataSnapshot agents : dataSnapshot.getChildren()) {
-                    if (Objects.requireNonNull(agents.getKey()).equals(logged_agent)) {
 //                        List<AgentCollect> agentCollectList = new ArrayList<>();
-                        for (DataSnapshot date : agents.getChildren()) {
+                        for (DataSnapshot date : dataSnapshot.getChildren()) {
                             if (Objects.requireNonNull(date.getKey()).equals(sel_date)) {
                                 for (DataSnapshot account : date.getChildren()) {
                                     Account account_temp = new Account();
@@ -139,8 +137,7 @@ public class FragmentDashboardSpecific extends Fragment {
                                             Long.parseLong(Objects.requireNonNull(account.getValue()).toString())));
                                 }
                             }
-                        }
-                    }
+
                 }
                 DatabaseReference account_type_db_ref = database.getReference("accountType");
                 account_type_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -230,7 +227,7 @@ public class FragmentDashboardSpecific extends Fragment {
                         selected_cal.set(Calendar.SECOND, 0);
                         selected_cal.set(Calendar.MILLISECOND, 0);
                         FragmentTransaction ft = getFragmentManager().beginTransaction();
-                        FragmentDashboard fd = FragmentDashboard.newInstance(selected_cal);
+                        FragmentDashboardSpecific fd = FragmentDashboardSpecific.newInstance(selected_cal);
                         ft.replace(R.id.fragment_container, fd).addToBackStack(null).
                                 commit();
                     }

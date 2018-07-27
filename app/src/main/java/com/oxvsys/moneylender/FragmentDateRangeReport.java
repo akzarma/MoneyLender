@@ -1,11 +1,15 @@
 package com.oxvsys.moneylender;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -113,7 +117,7 @@ public class FragmentDateRangeReport extends Fragment {
         fragment_textV_day.setText(from_date + " to " + to_date);
         final HashMap<String, DateAmount> calendarDateAmountHashMap = new HashMap<>();
 
-        if(MainActivity.logged_type.equals("admin")) {
+        if (MainActivity.logged_type.equals("admin")) {
             DatabaseReference agent_collect_db_ref = database.getReference("agentCollect");
             agent_collect_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -154,32 +158,32 @@ public class FragmentDateRangeReport extends Fragment {
 
                 }
             });
-        }else if(logged_type.equals("agent")){
+        } else if (logged_type.equals("agent")) {
             DatabaseReference agent_collect_db_ref = database.getReference("agentCollect").child(logged_agent);
             agent_collect_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                        for (DataSnapshot date : dataSnapshot.getChildren()) {
+                    for (DataSnapshot date : dataSnapshot.getChildren()) {
 
-                            Calendar date_cal = StringDateToCal(date.getKey());
-                            String date_str = CaltoStringDate(date_cal);
-                            if ((date_cal.after(from_cal) && date_cal.before(to_cal)) ||
-                                    (date_cal.equals(from_cal) || date_cal.equals(to_cal))) {
-                                for (DataSnapshot account : date.getChildren()) {
-                                    DateAmount dateAmount = new DateAmount();
-                                    dateAmount.setAmount(Long.parseLong(String.valueOf(account.getValue())));
-                                    dateAmount.setDate(date.getKey());
-                                    if (calendarDateAmountHashMap.containsKey(date_str)) {
-                                        Long amount = calendarDateAmountHashMap.get(date_str).getAmount() + dateAmount.getAmount();
-                                        dateAmount.setAmount(amount);
-                                        calendarDateAmountHashMap.put(date_str, dateAmount);
-                                    } else {
-                                        calendarDateAmountHashMap.put(date_str, dateAmount);
-                                    }
+                        Calendar date_cal = StringDateToCal(date.getKey());
+                        String date_str = CaltoStringDate(date_cal);
+                        if ((date_cal.after(from_cal) && date_cal.before(to_cal)) ||
+                                (date_cal.equals(from_cal) || date_cal.equals(to_cal))) {
+                            for (DataSnapshot account : date.getChildren()) {
+                                DateAmount dateAmount = new DateAmount();
+                                dateAmount.setAmount(Long.parseLong(String.valueOf(account.getValue())));
+                                dateAmount.setDate(date.getKey());
+                                if (calendarDateAmountHashMap.containsKey(date_str)) {
+                                    Long amount = calendarDateAmountHashMap.get(date_str).getAmount() + dateAmount.getAmount();
+                                    dateAmount.setAmount(amount);
+                                    calendarDateAmountHashMap.put(date_str, dateAmount);
+                                } else {
+                                    calendarDateAmountHashMap.put(date_str, dateAmount);
                                 }
                             }
                         }
+                    }
                     dateAmountList = new ArrayList<>(calendarDateAmountHashMap.values());
                     mAdapter = new AdapterDateRange(dateAmountList, getContext());
                     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
@@ -242,7 +246,7 @@ public class FragmentDateRangeReport extends Fragment {
                             ser_no = new Number(serialCol, row, row - 1);
                             date_label = new Label(dateCol, row, curr_date);
                             if (calendarDateAmountHashMap.containsKey(curr_date)) {
-                                total_amount+= calendarDateAmountHashMap.get(curr_date).getAmount();
+                                total_amount += calendarDateAmountHashMap.get(curr_date).getAmount();
                                 amount_collected = new Number(collectionCol, row, calendarDateAmountHashMap.get(curr_date).getAmount());
                             } else {
                                 amount_collected = new Number(collectionCol, row, 0);
@@ -274,7 +278,10 @@ public class FragmentDateRangeReport extends Fragment {
                     e.printStackTrace();
                 }
             }
+
+
         });
+
         return view;
     }
 

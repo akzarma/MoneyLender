@@ -65,7 +65,7 @@ public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragme
     Spinner spinner;
     Long lastAccountNo;
     String account_type_selected;
-    String selected_days;
+    String selected_days ="100";
     int fields_loaded = 0;
     Calendar curr_cal;
 
@@ -130,6 +130,8 @@ public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragme
 
         curr_cal = Calendar.getInstance();
         edit_o_date.setText(MainActivity.CaltoStringDate(curr_cal));
+
+
 
         months_field.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -355,11 +357,20 @@ public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragme
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
                     account_type_selected = "0";  //daily basis
+                    Calendar o_cal = MainActivity.StringDateToCal(edit_o_date.getText().toString());
+                    o_cal.add(Calendar.DAY_OF_YEAR, Integer.parseInt(selected_days));
+                    edit_c_date.setText(MainActivity.CaltoStringDate(o_cal));
                     loan_grant_roi_til.setVisibility(View.INVISIBLE);
                     loan_grant_duration_til.setVisibility(View.INVISIBLE);
                     payment_duration_spinner.setVisibility(View.VISIBLE);
                 } else if (position == 1) {
                     account_type_selected = "1"; //monthly
+                    if (months_field.getText().toString().length() != 0) {
+                        int months = Integer.parseInt(months_field.getText().toString());
+                        Calendar o_cal = MainActivity.StringDateToCal(edit_o_date.getText().toString());
+                        o_cal.add(Calendar.DAY_OF_YEAR, 30 * months);
+                        edit_c_date.setText(MainActivity.CaltoStringDate(o_cal));
+                    }
                     loan_grant_roi_til.setVisibility(View.VISIBLE);
                     loan_grant_duration_til.setVisibility(View.VISIBLE);
                     payment_duration_spinner.setVisibility(View.INVISIBLE);

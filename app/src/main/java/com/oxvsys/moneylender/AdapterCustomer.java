@@ -48,7 +48,15 @@ public class AdapterCustomer extends RecyclerView.Adapter<AdapterCustomer.Custom
     public void onBindViewHolder(@NonNull AdapterCustomer.CustomerHolder holder, int position) {
         final Customer customer = customerList.get(position);
         holder.cust_id_field.setText(customer.getId());
-        holder.cust_name_field.setText(customer.getName());
+        int name_len = customer.getName().split(" ").length;
+        String cust_name = "No Name";
+        if(name_len>1) {
+            cust_name = customer.getName().split(" ")[0] + ' '+
+                    customer.getName().split(" ")[name_len - 1];
+        }else if(name_len==1){
+            cust_name = customer.getName().split(" ")[0];
+        }
+        holder.cust_name_field.setText(cust_name);
 
         holder.customer_card.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -45,7 +45,8 @@ public class FragmentKYC extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    TextInputLayout name_til, aadhar_til, occupation_til, mobile_til, dob_til, address_til;
+    TextInputLayout name_til, aadhar_til, occupation_til, mobile_til, dob_til, address_til,
+            g_name_til, g_address_til, g_mobile_til;
     Long lastCustomerId = -1L;
 
     // TODO: Rename and change types of parameters
@@ -91,14 +92,17 @@ public class FragmentKYC extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        final View view = inflater.inflate(R.layout.fragment_fragment_kyc, container, false);
+        final View view = inflater.inflate(R.layout.fragment_kyc, container, false);
 
         final EditText name_field = view.findViewById(R.id.name_field);
+        final EditText g_name_field = view.findViewById(R.id.guarantor_name_field);
         final EditText aadhar_field = view.findViewById(R.id.aadhar_field);
         final EditText occupation_field = view.findViewById(R.id.occupation_field);
         final EditText mobile_field = view.findViewById(R.id.mobile_field);
+        final EditText g_mobile_field = view.findViewById(R.id.g_mobile_field);
         final EditText dob_field = view.findViewById(R.id.dob_field);
         final EditText address_field = view.findViewById(R.id.address_field);
+        final EditText g_address_field = view.findViewById(R.id.g_address_field);
         final EditText customer_id_field = view.findViewById(R.id.customer_id_field);
 
         final FloatingActionButton fab = getActivity().findViewById(R.id.fab);
@@ -106,11 +110,14 @@ public class FragmentKYC extends Fragment {
         fab.setVisibility(View.INVISIBLE);
 
         name_til = view.findViewById(R.id.kyc_full_name_til);
+        g_name_til = view.findViewById(R.id.guarantor_full_name_til);
         aadhar_til = view.findViewById(R.id.kyc_aadhar_til);
         occupation_til = view.findViewById(R.id.kyc_occupation_til);
         mobile_til = view.findViewById(R.id.kyc_mobile_til);
+        g_mobile_til = view.findViewById(R.id.g_mobile_til);
         dob_til = view.findViewById(R.id.kyc_dob_til);
         address_til = view.findViewById(R.id.kyc_address_til);
+        g_address_til = view.findViewById(R.id.g_address_til);
 
 
         final DatabaseReference cust_id_ref = database.getReference("lastCustomerId");
@@ -198,7 +205,20 @@ public class FragmentKYC extends Fragment {
                     dob_til.setErrorEnabled(false);
                     address_til.setError("Address is required.");
                     return;
+                }else if (g_address_field.getText().toString().isEmpty()) {
+                    address_til.setErrorEnabled(false);
+                    g_address_til.setError("Address is required.");
+                    return;
+                }else if (g_mobile_field.getText().toString().isEmpty()) {
+                    g_address_til.setErrorEnabled(false);
+                    g_mobile_til.setError("Mobile is required.");
+                    return;
+                }else if (g_name_field.getText().toString().isEmpty()) {
+                    g_mobile_til.setErrorEnabled(false);
+                    g_name_til.setError("Name is required.");
+                    return;
                 }
+                fab.setVisibility(View.INVISIBLE);
 //                else address_til.setErrorEnabled(false);
 
 
@@ -213,6 +233,9 @@ public class FragmentKYC extends Fragment {
                 attrs.put("mobile", mobile_field.getText().toString());
                 attrs.put("dob", dob_field.getText().toString());
                 attrs.put("address", address_field.getText().toString());
+                attrs.put("g_name", g_name_field.getText().toString());
+                attrs.put("g_mobile", g_mobile_field.getText().toString());
+                attrs.put("g_address", g_address_field.getText().toString());
 
                 id.put(key, attrs);
                 final RelativeLayout rl = view.findViewById(R.id.kyc_relative_layout);

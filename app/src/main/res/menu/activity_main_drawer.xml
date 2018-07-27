@@ -7,7 +7,7 @@
         <item
             android:id="@+id/nav_kyc"
             android:icon="@drawable/add_customer_96"
-            android:title="KYC" />
+            android:title="Customer KYC" />
         <item
             android:id="@+id/nav_gallery"
             android:icon="@drawable/get_cash_96"
@@ -28,6 +28,10 @@
             android:id="@+id/nav_acc_agent"
             android:icon="@drawable/ic_person_add_black_24dp"
             android:title="Show Account-Agent Link" />
+        <item
+            android:id="@+id/nav_agent_pass"
+            android:icon="@drawable/ic_person_add_black_24dp"
+            android:title="Agent Credentials" />
 
         <!--<item-->
             <!--android:id="@+id/nav_customer_daily"-->
