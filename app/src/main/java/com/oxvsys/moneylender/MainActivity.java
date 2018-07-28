@@ -72,7 +72,8 @@ public class MainActivity extends AppCompatActivity
             nav_menu.findItem(R.id.nav_acc_agent).setVisible(false);
             if (user_pwd.equals("1234")) {
                 nav_menu.findItem(R.id.nav_gallery).setVisible(false);
-                nav_menu.findItem(R.id.nav_show_customer).setVisible(false);
+                nav_menu.findItem(R.id.nav_show_customer_daily).setVisible(false);
+                nav_menu.findItem(R.id.nav_show_customer_monthly).setVisible(false);
 //                nav_menu.findItem(R.id.toolbar).setVisible(false);
             }
 
@@ -289,10 +290,16 @@ public class MainActivity extends AppCompatActivity
             FragmentAgentRegister far = new FragmentAgentRegister();
             fragmentTransaction.replace(R.id.fragment_container, far).addToBackStack(null).
                     commit();
-        } else if (id == R.id.nav_show_customer) {
+        } else if (id == R.id.nav_show_customer_daily) {
             if (getSupportActionBar() != null)
-                getSupportActionBar().setTitle("Customers");
-            FragmentShowCustomer far = new FragmentShowCustomer();
+                getSupportActionBar().setTitle("Daily-basis Customers");
+            FragmentShowCustomer far = FragmentShowCustomer.newInstance("0");
+            fragmentTransaction.replace(R.id.fragment_container, far).addToBackStack(null).
+                    commit();
+        } else if (id == R.id.nav_show_customer_monthly) {
+            if (getSupportActionBar() != null)
+                getSupportActionBar().setTitle("Monthly-basis Customers");
+            FragmentShowCustomer far = FragmentShowCustomer.newInstance("1");
             fragmentTransaction.replace(R.id.fragment_container, far).addToBackStack(null).
                     commit();
         } else if (id == R.id.nav_acc_agent) {

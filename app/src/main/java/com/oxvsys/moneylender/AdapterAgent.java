@@ -37,7 +37,7 @@ public class AdapterAgent extends RecyclerView.Adapter<AdapterAgent.AgentHolder>
         TextView tap_text = itemView.findViewById(R.id.tap_text);
         View bar = itemView.findViewById(R.id.hori_line);
         tap_text.setVisibility(View.INVISIBLE);
-        bar.setVisibility(View.GONE);
+        bar.setVisibility(View.INVISIBLE);
         return new AgentHolder(itemView);
     }
 

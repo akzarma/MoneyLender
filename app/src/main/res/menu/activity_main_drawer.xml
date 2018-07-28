@@ -21,13 +21,17 @@
             android:icon="@drawable/ic_person_add_black_24dp"
             android:title="Register Agent" />
         <item
-            android:id="@+id/nav_show_customer"
+            android:id="@+id/nav_show_customer_daily"
             android:icon="@drawable/ic_person_add_black_24dp"
-            android:title="Show Customer" />
+            android:title="Daily-basis Customers" />
+        <item
+            android:id="@+id/nav_show_customer_monthly"
+            android:icon="@drawable/ic_person_add_black_24dp"
+            android:title="Monthly-basis Customers" />
         <item
             android:id="@+id/nav_acc_agent"
             android:icon="@drawable/ic_person_add_black_24dp"
-            android:title="Show Account-Agent Link" />
+            android:title="Account-Agent Link" />
         <item
             android:id="@+id/nav_agent_pass"
             android:icon="@drawable/ic_person_add_black_24dp"

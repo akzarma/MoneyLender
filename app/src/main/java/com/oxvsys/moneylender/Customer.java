@@ -11,6 +11,9 @@ public class Customer implements Serializable, Cloneable {
     private String mobile;
     private String DOB;
     private String address;
+    private String g_name = "";
+    private String g_mobile = "";
+    private String g_address = "";
 
     private List<Account> accounts1;
 
@@ -21,6 +24,30 @@ public class Customer implements Serializable, Cloneable {
         } catch (CloneNotSupportedException e) {
             throw new Error("Could not clone customer.");
         }
+    }
+
+    public String getG_name() {
+        return g_name;
+    }
+
+    public void setG_name(String g_name) {
+        this.g_name = g_name;
+    }
+
+    public String getG_mobile() {
+        return g_mobile;
+    }
+
+    public void setG_mobile(String g_mobile) {
+        this.g_mobile = g_mobile;
+    }
+
+    public String getG_address() {
+        return g_address;
+    }
+
+    public void setG_address(String g_address) {
+        this.g_address = g_address;
     }
 
     public List<Account> getAccounts1() {

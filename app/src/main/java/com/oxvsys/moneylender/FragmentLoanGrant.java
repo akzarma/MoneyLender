@@ -527,7 +527,7 @@ public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragme
         Map<String, String> account_number_details = new HashMap<>();
 
 //                account_number_details.put("no", final_account_no);
-//                account_number_details.put("customer", selected_customer.getId());
+//                account_number_details.put("customer", selected_customer_to_update.getId());
         account_number_details.put("disb_amt", grant_info.get("amount"));
         account_number_details.put("o_date", grant_info.get("o_date"));
         account_number_details.put("c_date", grant_info.get("c_date"));
@@ -575,7 +575,7 @@ public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragme
                 //Update accountCustomer
 //                        DatabaseReference account_customer_db_ref = database.getReference("accountCustomer");
 //                        Map<String, Object> account_customer_map = new HashMap<>();
-//                        account_type_map.put(final_account_no, selected_customer.getId());
+//                        account_type_map.put(final_account_no, selected_customer_to_update.getId());
 //                        account_customer_db_ref.updateChildren(account_customer_map, new DatabaseReference.CompletionListener() {
 //                            @Override
 //                            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {

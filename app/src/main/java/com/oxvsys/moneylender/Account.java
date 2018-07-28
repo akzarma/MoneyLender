@@ -19,7 +19,7 @@ public class Account implements Serializable {
     private Calendar last_pay_date;
     private int roi = 0;
     private String type; //    "0" or  "1"
-    private Long duration;
+    private Long duration =0L;
     private String lf_no = "";
 
     public HashMap<String, String> getMap() {
@@ -29,15 +29,18 @@ public class Account implements Serializable {
         attrs.put("deposited", String.valueOf(this.deposited));
         attrs.put("o_date", MainActivity.CaltoStringDate(this.o_date));
         attrs.put("c_date", MainActivity.CaltoStringDate(this.c_date));
-        if (this.last_pay_date != null)
+        if (this.last_int_calc !=null)
+            attrs.put("last_int_calc", MainActivity.CaltoStringDate(this.last_int_calc));
+        attrs.put("info", this.info);
+        if (this.r_amt != null)
+            attrs.put("r_amt", String.valueOf(this.r_amt));
+        if (this.last_pay_date != null) {
             attrs.put("last_pay_date", MainActivity.CaltoStringDate(this.last_pay_date));
+        }
         attrs.put("roi", String.valueOf(this.roi));
         attrs.put("type", this.type);
         attrs.put("duration", String.valueOf(this.duration));
         attrs.put("lf_no", this.lf_no);
-        attrs.put("info", this.info);
-        if (this.r_amt != null)
-            attrs.put("r_amt", String.valueOf(this.r_amt));
         return attrs;
     }
 

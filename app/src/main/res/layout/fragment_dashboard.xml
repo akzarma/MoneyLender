@@ -1,252 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="0dp"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".FragmentDashboard">
 
-    <ProgressBar
-        android:id="@+id/dashboard_progress"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:theme="@style/LinearProgress"
-        android:visibility="visible" />
+        android:padding="0dp">
 
-    <TextView
-        android:id="@+id/dashboard_today_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="12dp"
-        android:fontFamily="@font/roboto_bold"
-        android:text="Day Statistics"
-        android:textAllCaps="true"
-        android:textColor="#3c3c3c" />
-
-    <Button
-        android:id="@+id/dashboard_select_date"
-        android:layout_width="140dp"
-        android:layout_height="40dp"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="12dp"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/rounded_button"
-        android:drawableEnd="@drawable/ic_date_range_black_24dp"
-        android:fontFamily="@font/roboto_regular"
-        android:paddingHorizontal="14dp"
-        android:src="@drawable/ic_date_range_black_24dp"
-        android:text="..."
-        android:layout_marginRight="12dp"
-        android:textColor="#3c3c3c"
-        android:textSize="16sp"
-        tools:targetApi="o" />
-
-    <!--<Button-->
-    <!--android:id="@+id/dashboard_title_button"-->
-    <!--android:layout_width="140dp"-->
-    <!--android:layout_height="40dp"-->
-    <!--android:layout_centerHorizontal="true"-->
-    <!--android:layout_marginBottom="8dp"-->
-    <!--android:background="@drawable/rounded_button"-->
-    <!--android:drawableEnd="@drawable/ic_date_range_black_24dp"-->
-    <!--android:paddingHorizontal="14dp"-->
-    <!--android:src="@drawable/ic_date_range_black_24dp"-->
-    <!--android:text="..."-->
-    <!--android:textColor="#fff"-->
-    <!--android:textSize="16sp"-->
-    <!--tools:targetApi="o" />-->
-
-
-    <LinearLayout
-        android:id="@+id/dashboard_top_layout"
-        android:layout_width="match_parent"
-
-        android:layout_height="wrap_content"
-        android:layout_below="@id/dashboard_select_date"
-        android:weightSum="2">
-
-        <android.support.v7.widget.CardView
-            android:layout_width="0dp"
-            android:layout_height="160dp"
-
-            android:layout_marginBottom="4dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="12dp"
-            android:layout_weight="1"
-            app:cardCornerRadius="10dp">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/colorPrimary"
-                android:paddingTop="8dp">
-
-                <TextView
-                    android:id="@+id/todays_collection_dashboard"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:fontFamily="@font/roboto_regular"
-                    android:text="Daily Basis Account"
-                    android:textAllCaps="false"
-                    android:textColor="#fff"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/todays_collection_value_dashboard"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_below="@id/todays_collection_dashboard"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginLeft="8dp"
-                    android:fontFamily="@font/roboto_black"
-                    android:paddingTop="30dp"
-                    android:text="..."
-                    android:textColor="#fff"
-                    android:textSize="25dp" />
-            </RelativeLayout>
-
-        </android.support.v7.widget.CardView>
-
-        <android.support.v7.widget.CardView
-            android:layout_width="0dp"
-            android:layout_height="160dp"
-            android:layout_marginEnd="12dp"
-            android:layout_weight="1"
-            app:cardCornerRadius="10dp">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/colorPrimary"
-                android:paddingTop="8dp">
-
-                <TextView
-                    android:id="@+id/monthly_collection_dashboard"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:fontFamily="@font/roboto_regular"
-                    android:text="Monthly basis Account"
-                    android:textAllCaps="false"
-                    android:textColor="#fff"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/monthly_collection_value_dashboard"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_below="@id/monthly_collection_dashboard"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="8dp"
-                    android:fontFamily="@font/roboto_black"
-                    android:paddingTop="30dp"
-                    android:text="..."
-                    android:textColor="#fff"
-                    android:textSize="25dp" />
-            </RelativeLayout>
-
-        </android.support.v7.widget.CardView>
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/dashboard_total_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/dashboard_top_layout"
-
-        android:weightSum="1">
-
-        <android.support.v7.widget.CardView
-            android:layout_width="0dp"
-            android:layout_height="160dp"
-            android:layout_marginEnd="12dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="4dp"
-            android:layout_weight="1"
-            app:cardCornerRadius="10dp">
-
-            <RelativeLayout
-                android:id="@+id/totat_collection_card_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/colorPrimary"
-                android:paddingTop="8dp">
-
-                <TextView
-                    android:id="@+id/total_collection_dashboard"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:fontFamily="@font/roboto_regular"
-                    android:text="Today's Total Collection"
-                    android:textAllCaps="false"
-                    android:textColor="#fff"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/total_collection_value_dashboard"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_below="@id/total_collection_dashboard"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginLeft="8dp"
-                    android:fontFamily="@font/roboto_bold"
-                    android:paddingTop="30dp"
-                    android:text="..."
-                    android:textColor="#fff"
-                    android:textSize="36dp" />
-            </RelativeLayout>
-
-        </android.support.v7.widget.CardView>
-
-
-    </LinearLayout>
-
-
-    <TextView
-        android:id="@+id/select_range_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/dashboard_total_layout"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="16dp"
-        android:fontFamily="@font/roboto_bold"
-        android:text="Select Range (Generate Excel)"
-        android:textAllCaps="true"
-        android:textColor="#3c3c3c" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/select_range_text"
-        android:layout_marginTop="16dp">
+        <ProgressBar
+            android:id="@+id/dashboard_progress"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:theme="@style/LinearProgress"
+            android:visibility="visible" />
 
         <TextView
-            android:id="@+id/dashboard_from_label"
+            android:id="@+id/dashboard_today_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginVertical="10dp"
-            android:fontFamily="@font/roboto_regular"
-            android:text="From "
+            android:layout_marginTop="12dp"
+            android:fontFamily="@font/roboto_bold"
+            android:text="Day Statistics"
+            android:textAllCaps="true"
             android:textColor="#3c3c3c" />
 
         <Button
-            android:id="@+id/dashboard_from_button"
+            android:id="@+id/dashboard_select_date"
             android:layout_width="140dp"
             android:layout_height="40dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="8dp"
-            android:layout_toRightOf="@id/dashboard_from_label"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="12dp"
             android:background="@drawable/rounded_button"
             android:drawableEnd="@drawable/ic_date_range_black_24dp"
             android:fontFamily="@font/roboto_regular"
@@ -257,38 +49,252 @@
             android:textSize="16sp"
             tools:targetApi="o" />
 
+        <!--<Button-->
+        <!--android:id="@+id/dashboard_title_button"-->
+        <!--android:layout_width="140dp"-->
+        <!--android:layout_height="40dp"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_marginBottom="8dp"-->
+        <!--android:background="@drawable/rounded_button"-->
+        <!--android:drawableEnd="@drawable/ic_date_range_black_24dp"-->
+        <!--android:paddingHorizontal="14dp"-->
+        <!--android:src="@drawable/ic_date_range_black_24dp"-->
+        <!--android:text="..."-->
+        <!--android:textColor="#fff"-->
+        <!--android:textSize="16sp"-->
+        <!--tools:targetApi="o" />-->
+
+
+        <LinearLayout
+            android:id="@+id/dashboard_top_layout"
+            android:layout_width="match_parent"
+
+            android:layout_height="wrap_content"
+            android:layout_below="@id/dashboard_select_date"
+            android:weightSum="2">
+
+            <android.support.v7.widget.CardView
+                app:cardCornerRadius="10dp"
+                android:layout_width="0dp"
+
+                android:layout_height="160dp"
+                android:layout_marginBottom="4dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorPrimary"
+                    android:paddingTop="8dp">
+
+                    <TextView
+                        android:id="@+id/todays_collection_dashboard"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:fontFamily="@font/roboto_regular"
+                        android:text="Daily Basis Account"
+                        android:textAllCaps="false"
+                        android:textColor="#fff"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/todays_collection_value_dashboard"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/todays_collection_dashboard"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginLeft="8dp"
+                        android:fontFamily="@font/roboto_black"
+                        android:paddingTop="30dp"
+                        android:text="..."
+                        android:textColor="#fff"
+                        android:textSize="25dp" />
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                app:cardCornerRadius="10dp"
+                android:layout_width="0dp"
+                android:layout_height="160dp"
+                android:layout_marginEnd="12dp"
+                android:layout_weight="1">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorPrimary"
+                    android:paddingTop="8dp">
+
+                    <TextView
+                        android:id="@+id/monthly_collection_dashboard"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:fontFamily="@font/roboto_regular"
+                        android:text="Monthly basis Account"
+                        android:textAllCaps="false"
+                        android:textColor="#fff"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/monthly_collection_value_dashboard"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/monthly_collection_dashboard"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="8dp"
+                        android:fontFamily="@font/roboto_black"
+                        android:paddingTop="30dp"
+                        android:text="..."
+                        android:textColor="#fff"
+                        android:textSize="25dp" />
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/dashboard_total_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/dashboard_top_layout"
+
+            android:weightSum="1">
+
+            <android.support.v7.widget.CardView
+                app:cardCornerRadius="10dp"
+                android:layout_width="0dp"
+                android:layout_height="160dp"
+                android:layout_marginEnd="12dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="4dp"
+                android:layout_weight="1">
+
+                <RelativeLayout
+                    android:id="@+id/totat_collection_card_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorPrimary"
+                    android:paddingTop="8dp">
+
+                    <TextView
+                        android:id="@+id/total_collection_dashboard"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:fontFamily="@font/roboto_regular"
+                        android:text="Today's Total Collection"
+                        android:textAllCaps="false"
+                        android:textColor="#fff"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/total_collection_value_dashboard"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/total_collection_dashboard"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginLeft="8dp"
+                        android:fontFamily="@font/roboto_bold"
+                        android:paddingTop="30dp"
+                        android:text="..."
+                        android:textColor="#fff"
+                        android:textSize="36dp" />
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+
+
+        </LinearLayout>
+
+
         <TextView
-            android:id="@+id/dashboard_to_label"
+            android:id="@+id/select_range_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginVertical="10dp"
-            android:layout_toLeftOf="@id/dashboard_to_button"
-            android:fontFamily="@font/roboto_regular"
-            android:text="To"
+            android:layout_below="@id/dashboard_total_layout"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/roboto_bold"
+            android:text="Select Range (Generate Excel)"
+            android:textAllCaps="true"
             android:textColor="#3c3c3c" />
 
-        <Button
-            android:id="@+id/dashboard_to_button"
-            android:layout_width="140dp"
-            android:layout_height="40dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginEnd="12dp"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/rounded_button"
-            android:drawableEnd="@drawable/ic_date_range_black_24dp"
-            android:fontFamily="@font/roboto_regular"
-            android:paddingHorizontal="14dp"
-            android:src="@drawable/ic_date_range_black_24dp"
-            android:text="..."
-            android:textColor="#3c3c3c"
-            android:textSize="16sp"
-            tools:targetApi="o" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/select_range_text"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                android:id="@+id/dashboard_from_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginVertical="10dp"
+                android:fontFamily="@font/roboto_regular"
+                android:text="From "
+                android:textColor="#3c3c3c" />
+
+            <Button
+                android:id="@+id/dashboard_from_button"
+                android:layout_width="140dp"
+                android:layout_height="40dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="8dp"
+                android:layout_toRightOf="@id/dashboard_from_label"
+                android:background="@drawable/rounded_button"
+                android:drawableEnd="@drawable/ic_date_range_black_24dp"
+                android:fontFamily="@font/roboto_regular"
+                android:paddingHorizontal="14dp"
+                android:src="@drawable/ic_date_range_black_24dp"
+                android:text="..."
+                android:textColor="#3c3c3c"
+                android:textSize="16sp"
+                tools:targetApi="o" />
+
+            <TextView
+                android:id="@+id/dashboard_to_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginVertical="10dp"
+                android:layout_toLeftOf="@id/dashboard_to_button"
+                android:fontFamily="@font/roboto_regular"
+                android:text="To"
+                android:textColor="#3c3c3c" />
+
+            <Button
+                android:id="@+id/dashboard_to_button"
+                android:layout_width="140dp"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="12dp"
+                android:background="@drawable/rounded_button"
+                android:drawableEnd="@drawable/ic_date_range_black_24dp"
+                android:fontFamily="@font/roboto_regular"
+                android:paddingHorizontal="14dp"
+                android:src="@drawable/ic_date_range_black_24dp"
+                android:text="..."
+                android:textColor="#3c3c3c"
+                android:textSize="16sp"
+                tools:targetApi="o" />
+
+
+        </RelativeLayout>
 
 
     </RelativeLayout>
 
-
-</RelativeLayout>
+</ScrollView>

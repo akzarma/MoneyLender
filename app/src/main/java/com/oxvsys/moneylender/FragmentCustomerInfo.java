@@ -5,15 +5,20 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.util.Objects;
 
 
 /**
@@ -67,15 +72,21 @@ public class FragmentCustomerInfo extends Fragment {
         assert getArguments() != null;
         selected_customer = (Customer) getArguments().getSerializable(ARG_PARAM1);
         RecyclerView recyclerView = view.findViewById(R.id.accounts_cust_recycler);
-
+        final FloatingActionButton fab = (FloatingActionButton) Objects.requireNonNull(getActivity()).findViewById(R.id.fab);
+        fab.setVisibility(View.INVISIBLE);
         TextView name_field = view.findViewById(R.id.name_field);
+        TextView g_name_field = view.findViewById(R.id.g_name_field);
         TextView aadhar_field = view.findViewById(R.id.aadhar_field);
         TextView dob_field = view.findViewById(R.id.dob_field);
         TextView id_field = view.findViewById(R.id.id_field);
         TextView occupation_field = view.findViewById(R.id.occupation_field);
         TextView address_field = view.findViewById(R.id.address_field);
-        final TextView mobile_field = view.findViewById(R.id.mobile_field);
+        TextView g_address_field = view.findViewById(R.id.g_address_field);
+        TextView mobile_field = view.findViewById(R.id.mobile_field);
+        TextView g_mobile_field = view.findViewById(R.id.g_mobile_field);
         ImageView dialer_view = view.findViewById(R.id.dialer_view);
+        ImageView g_dialer_view = view.findViewById(R.id.g_dialer_view);
+        Button edit_cust_button = view.findViewById(R.id.edit_cust_button);
 
         name_field.setText(selected_customer.getName());
         aadhar_field.setText(selected_customer.getAadhar());
@@ -84,6 +95,19 @@ public class FragmentCustomerInfo extends Fragment {
         occupation_field.setText(selected_customer.getOccupation());
         address_field.setText(selected_customer.getAddress());
         mobile_field.setText(selected_customer.getMobile());
+        g_name_field.setText(selected_customer.getG_name());
+        g_mobile_field.setText(selected_customer.getG_mobile());
+        g_address_field.setText(selected_customer.getG_address());
+
+        edit_cust_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                FragmentKYC far = FragmentKYC.newInstance(selected_customer);
+                fragmentTransaction.replace(R.id.fragment_container, far).addToBackStack(null).
+                        commit();
+            }
+        });
 
         dialer_view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,8 +119,18 @@ public class FragmentCustomerInfo extends Fragment {
             }
         });
 
+        g_dialer_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                callIntent.setData(Uri.parse("tel:" + selected_customer.getG_mobile()));
+                callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(callIntent);
+            }
+        });
 
-        AdapterAccount mAdapter = new AdapterAccount(selected_customer.getAccounts1(), getContext());
+
+        AdapterAccount mAdapter = new AdapterAccount(selected_customer, getFragmentManager(), getContext());
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());

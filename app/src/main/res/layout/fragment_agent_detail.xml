@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingRight="8dp"
+    android:paddingLeft="8dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".FragmentAgentsDetail">
 
@@ -16,10 +18,8 @@
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/login_password_til"
             android:indeterminate="true"
-            android:theme="@style/LinearProgress"
-            android:visibility="invisible" />
+            android:theme="@style/LinearProgress" />
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"

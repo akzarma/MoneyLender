@@ -25,7 +25,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="8dp">
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="8dp">
 
 
             <RelativeLayout
@@ -52,6 +54,24 @@
                     android:textStyle="bold" />
                 <!-- Subject -->
 
+
+                <View
+                    android:background="#BDBDBD"
+                    android:layout_marginTop="5dp"
+                    android:id="@+id/hori_line"
+                    android:layout_below="@id/cust_id_field"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp" />
+
+                <TextView
+                    android:textColor="#BDBDBD"
+                    android:id="@+id/tap_text"
+                    android:layout_centerHorizontal="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/hori_line"
+                    android:textSize="12sp"
+                    android:text="Tap to view" />
 
             </RelativeLayout>
 

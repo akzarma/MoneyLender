@@ -1,5 +1,6 @@
 package com.oxvsys.moneylender;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.net.Uri;
@@ -19,6 +20,8 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,6 +30,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static com.oxvsys.moneylender.HomeActivity.database;
 
@@ -48,10 +52,12 @@ public class FragmentKYC extends Fragment {
     TextInputLayout name_til, aadhar_til, occupation_til, mobile_til, dob_til, address_til,
             g_name_til, g_address_til, g_mobile_til;
     Long lastCustomerId = -1L;
+    Customer selected_customer_to_update;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
 
     private OnFragmentInteractionListener mListener;
 
@@ -64,15 +70,13 @@ public class FragmentKYC extends Fragment {
      * this fragment using the provided parameters.
      *
      * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment FragmentKYC.
      */
     // TODO: Rename and change types and number of parameters
-    public static FragmentKYC newInstance(String param1, String param2) {
+    public static FragmentKYC newInstance(Customer param1) {
         FragmentKYC fragment = new FragmentKYC();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putSerializable(ARG_PARAM1, param1);
         fragment.setArguments(args);
         return fragment;
     }
@@ -88,7 +92,7 @@ public class FragmentKYC extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
@@ -105,8 +109,8 @@ public class FragmentKYC extends Fragment {
         final EditText g_address_field = view.findViewById(R.id.g_address_field);
         final EditText customer_id_field = view.findViewById(R.id.customer_id_field);
 
-        final FloatingActionButton fab = getActivity().findViewById(R.id.fab);
-        fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_save_black_24dp));
+        final FloatingActionButton fab = Objects.requireNonNull(getActivity()).findViewById(R.id.fab);
+        fab.setImageDrawable(ContextCompat.getDrawable(Objects.requireNonNull(getContext()), R.drawable.ic_save_black_24dp));
         fab.setVisibility(View.INVISIBLE);
 
         name_til = view.findViewById(R.id.kyc_full_name_til);
@@ -119,22 +123,40 @@ public class FragmentKYC extends Fragment {
         address_til = view.findViewById(R.id.kyc_address_til);
         g_address_til = view.findViewById(R.id.g_address_til);
 
+        if (getArguments() != null) {
+            selected_customer_to_update = (Customer) getArguments().getSerializable(ARG_PARAM1);
+        }
 
         final DatabaseReference cust_id_ref = database.getReference("lastCustomerId");
+        if (selected_customer_to_update == null) {
 
-        cust_id_ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                lastCustomerId = Long.parseLong(String.valueOf(dataSnapshot.getValue()));
-                customer_id_field.setText("C" + String.valueOf(lastCustomerId + 1));
-                fab.setVisibility(View.VISIBLE);
-            }
+            cust_id_ref.addValueEventListener(new ValueEventListener() {
+                @SuppressLint("SetTextI18n")
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    lastCustomerId = Long.parseLong(String.valueOf(dataSnapshot.getValue()));
+                    customer_id_field.setText("C" + String.valueOf(lastCustomerId + 1));
+                    fab.setVisibility(View.VISIBLE);
+                }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                fab.setVisibility(View.INVISIBLE);
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    fab.setVisibility(View.INVISIBLE);
+                }
+            });
+        } else {
+            customer_id_field.setText(selected_customer_to_update.getId());
+            name_field.setText(selected_customer_to_update.getName());
+            aadhar_field.setText(selected_customer_to_update.getAadhar());
+            occupation_field.setText(selected_customer_to_update.getOccupation());
+            mobile_field.setText(selected_customer_to_update.getMobile());
+            dob_field.setText(selected_customer_to_update.getDOB());
+            address_field.setText(selected_customer_to_update.getAddress());
+            g_name_field.setText(selected_customer_to_update.getG_name());
+            g_mobile_field.setText(selected_customer_to_update.getG_mobile());
+            g_address_field.setText(selected_customer_to_update.getG_address());
+            fab.setVisibility(View.VISIBLE);
+        }
 
         dob_field.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -160,7 +182,7 @@ public class FragmentKYC extends Fragment {
                 ;
             }
         });
-
+        final RelativeLayout rl = view.findViewById(R.id.kyc_relative_layout);
 
 //        Button save_button = view.findViewById(R.id.deposit_button);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -221,44 +243,69 @@ public class FragmentKYC extends Fragment {
                 fab.setVisibility(View.INVISIBLE);
 //                else address_til.setErrorEnabled(false);
 
+                if (selected_customer_to_update == null) {
+                    DatabaseReference customers = database.getReference("customers");
+                    String key = customer_id_field.getText().toString();
+                    Map<String, Object> id = new HashMap<>();
+                    Map<String, Object> attrs = new HashMap<>();
+                    String name = name_field.getText().toString();
+                    attrs.put("name", name.substring(0, 1).toUpperCase() + name.substring(1));
+                    attrs.put("aadhar", aadhar_field.getText().toString());
+                    attrs.put("occupation", occupation_field.getText().toString());
+                    attrs.put("mobile", mobile_field.getText().toString());
+                    attrs.put("dob", dob_field.getText().toString());
+                    attrs.put("address", address_field.getText().toString());
+                    attrs.put("g_name", g_name_field.getText().toString());
+                    attrs.put("g_mobile", g_mobile_field.getText().toString());
+                    attrs.put("g_address", g_address_field.getText().toString());
 
-                DatabaseReference customers = database.getReference("customers");
-                String key = customer_id_field.getText().toString();
-                Map<String, Object> id = new HashMap<>();
-                Map<String, String> attrs = new HashMap<>();
-                String name = name_field.getText().toString();
-                attrs.put("name", name.substring(0, 1).toUpperCase() + name.substring(1));
-                attrs.put("aadhar", aadhar_field.getText().toString());
-                attrs.put("occupation", occupation_field.getText().toString());
-                attrs.put("mobile", mobile_field.getText().toString());
-                attrs.put("dob", dob_field.getText().toString());
-                attrs.put("address", address_field.getText().toString());
-                attrs.put("g_name", g_name_field.getText().toString());
-                attrs.put("g_mobile", g_mobile_field.getText().toString());
-                attrs.put("g_address", g_address_field.getText().toString());
+                    id.put(key, attrs);
 
-                id.put(key, attrs);
-                final RelativeLayout rl = view.findViewById(R.id.kyc_relative_layout);
-                customers.updateChildren(id, new DatabaseReference.CompletionListener() {
-                    @Override
-                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                        if (databaseError == null) {
+                    customers.updateChildren(id, new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                            if (databaseError == null) {
+                                Snackbar snackbar = Snackbar
+                                        .make(rl, "Customer Added Successfully!", Snackbar.LENGTH_LONG);
+                                snackbar.show();
+                                cust_id_ref.setValue(lastCustomerId + 1);
+                                assert getFragmentManager() != null;
+                                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                                FragmentKYC fd = new FragmentKYC();
+                                ft.replace(R.id.fragment_container, fd).addToBackStack(null).
+                                        commit();
 
+                            } else {
+                                Toast.makeText(getContext(), "There is some error in saving the details.", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                } else {
+                    DatabaseReference cust_ref = database.getReference("customers").child(selected_customer_to_update.getId());
+                    cust_ref.child("name").setValue(name_field.getText().toString());
+                    cust_ref.child("aadhar").setValue(aadhar_field.getText().toString());
+                    cust_ref.child("occupation").setValue(occupation_field.getText().toString());
+                    cust_ref.child("mobile").setValue(mobile_field.getText().toString());
+                    cust_ref.child("dob").setValue(dob_field.getText().toString());
+                    cust_ref.child("address").setValue(address_field.getText().toString());
+                    cust_ref.child("g_name").setValue(g_name_field.getText().toString());
+                    cust_ref.child("g_mobile").setValue(g_mobile_field.getText().toString());
+                    cust_ref.child("g_address").setValue(g_address_field.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
                             Snackbar snackbar = Snackbar
-                                    .make(rl, "Customer Added Successfully!", Snackbar.LENGTH_LONG);
+                                    .make(rl, "Customer Updated Successfully!", Snackbar.LENGTH_LONG);
                             snackbar.show();
-                            cust_id_ref.setValue(lastCustomerId + 1);
+                            assert getFragmentManager() != null;
                             FragmentTransaction ft = getFragmentManager().beginTransaction();
                             FragmentKYC fd = new FragmentKYC();
                             ft.replace(R.id.fragment_container, fd).addToBackStack(null).
                                     commit();
-
-                        } else {
-                            Toast.makeText(getContext(), "There is some error in saving the details.", Toast.LENGTH_SHORT).show();
                         }
-                    }
-                });
+                    });
 
+
+                }
 
 //                customers.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
 //                    @Override

@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 import static com.oxvsys.moneylender.HomeActivity.database;
 import static com.oxvsys.moneylender.MainActivity.logged_agent;
@@ -44,7 +45,9 @@ public class FragmentShowCustomer extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     int fields_loaded = 0;
     AdapterCustomer mAdapter;
+    String account_type = "0";
     RecyclerView recycler;
+    List<Customer> customerList = new ArrayList<>();
 
 
     // TODO: Rename and change types of parameters
@@ -62,16 +65,13 @@ public class FragmentShowCustomer extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment FragmentShowCustomer.
      */
     // TODO: Rename and change types and number of parameters
-    public static FragmentShowCustomer newInstance(String param1, String param2) {
+    public static FragmentShowCustomer newInstance(String acc_type) {
         FragmentShowCustomer fragment = new FragmentShowCustomer();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_PARAM1, acc_type);
         fragment.setArguments(args);
         return fragment;
     }
@@ -94,6 +94,8 @@ public class FragmentShowCustomer extends Fragment {
         progressBar = view.findViewById(R.id.show_cust_progress);
         progressBar.setVisibility(View.VISIBLE);
 
+        assert getArguments() != null;
+        account_type = getArguments().getString(ARG_PARAM1);
         recycler = view.findViewById(R.id.show_cust_recycler);
 
 //        final String agent_id = getData("user_id", getContext());
@@ -101,26 +103,35 @@ public class FragmentShowCustomer extends Fragment {
 
 
 //        final Button next_button = view.findViewById(R.id.customer_next_button);
-        final FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        final FloatingActionButton fab = (FloatingActionButton) Objects.requireNonNull(getActivity()).findViewById(R.id.fab);
         fab.setVisibility(View.INVISIBLE);
-        final List<Customer> customerList = new ArrayList<>();
 
         DatabaseReference customers_db_ref = database.getReference("customers");
         customers_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
                 for (DataSnapshot customer : dataSnapshot.getChildren()) {
                     Customer customer1 = customer.getValue(Customer.class);
+                    assert customer1 != null;
                     customer1.setId(customer.getKey());
+                    boolean contains_monthly = false;
                     ArrayList<Account> accounts = new ArrayList<>();
                     for (DataSnapshot each_account : customer.child("accounts").getChildren()) {
                         Account account = new Account(each_account.getValue());
                         account.setNo(each_account.getKey());
                         accounts.add(account);
+                        if (account.getType().equals("1")) {
+                            contains_monthly = true;
+                        }
                     }
                     customer1.setAccounts1(accounts);
                     if (!containsId(customerList, customer1.getId())) {
-                        customerList.add(customer1);
+                        if (account_type.equals("1") && contains_monthly) {
+                            customerList.add(customer1);
+                        } else if (account_type.equals("0") && !contains_monthly) {
+                            customerList.add(customer1);
+                        }
                     }
                 }
                 //customerList and customers list are in sync do not operate them individually
@@ -146,16 +157,26 @@ public class FragmentShowCustomer extends Fragment {
 
                 for (DataSnapshot customer : dataSnapshot.getChildren()) {
                     Customer customer1 = customer.getValue(Customer.class);
+                    assert customer1 != null;
                     customer1.setId(customer.getKey());
+                    boolean contains_monthly = false;
                     ArrayList<Account> accounts = new ArrayList<>();
                     for (DataSnapshot each_account : customer.child("accounts").getChildren()) {
                         Account account = new Account(each_account.getValue());
                         account.setNo(each_account.getKey());
                         accounts.add(account);
+                        if (account.getType().equals("1")) {
+                            contains_monthly = true;
+                        }
                     }
                     customer1.setAccounts1(accounts);
-                    if (!containsId(customerList, customer1.getId())) {
-                        customerList.add(customer1);
+                    if (!containsId(customerList
+                            , customer1.getId())) {
+                        if (account_type.equals("1") && contains_monthly) {
+                            customerList.add(customer1);
+                        } else if (account_type.equals("0") && !contains_monthly) {
+                            customerList.add(customer1);
+                        }
                     }
                 }
 

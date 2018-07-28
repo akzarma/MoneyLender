@@ -20,6 +20,7 @@
     <color name="colorPrimary">#2196f3</color>
     <color name="colorAccent">#6ec6ff</color>
     <color name="colorPrimaryDark">#0069c0</color>
+    <color name="colorIndigo">#7B1FA2</color>
 
     <color name="colorWhiteText">#fff</color>
 

@@ -12,24 +12,41 @@
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/login_password_til"
         android:indeterminate="true"
         android:theme="@style/LinearProgress"
         android:visibility="invisible" />
+    <Button
+        android:id="@+id/edit_cust_button"
+        android:layout_width="125dp"
+        android:layout_height="35dp"
+        android:layout_below="@+id/info_cust_progress"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/rounded_button"
+        android:fontFamily="@font/roboto_regular"
+        android:paddingHorizontal="10dp"
+        android:text="Edit Details"
+        android:layout_marginRight="15dp"
+        android:textColor="#3c3c3c"
+        android:textSize="14sp"
+        tools:targetApi="o" />
+
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/edit_cust_button">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <android.support.v7.widget.CardView
-                android:id="@+id/customer_info_card"
+                android:id="@+id/account_info_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
+                android:layout_margin="10dp"
                 app:cardBackgroundColor="#fff"
                 app:cardCornerRadius="4dp">
 
@@ -219,6 +236,79 @@
                         android:adjustViewBounds="true"
                         android:maxWidth="20dp"
                         android:src="@drawable/dialer" />
+                    <TextView
+                        android:id="@+id/g_name_key"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:fontFamily="@font/roboto_light"
+                        android:layout_below="@+id/mobile_key"
+                        android:text="Guarantor Name"
+                        android:textColor="@color/colorWhiteText" />
+
+                    <TextView
+                        android:id="@+id/g_name_field"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_below="@id/mobile_field"
+                        android:layout_toEndOf="@id/g_name_key"
+                        android:fontFamily="@font/roboto_medium"
+                        android:textColor="@color/colorWhiteText" />
+
+                    <TextView
+                        android:id="@+id/g_address_key"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/g_name_key"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/roboto_light"
+                        android:text="Guarantor Address"
+                        android:textColor="@color/colorWhiteText" />
+
+                    <TextView
+                        android:id="@+id/g_address_field"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/g_name_field"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_toEndOf="@id/g_address_key"
+                        android:fontFamily="@font/roboto_medium"
+                        android:textColor="@color/colorWhiteText" />
+
+                    <TextView
+                        android:id="@+id/g_mobile_key"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/g_address_key"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/roboto_light"
+                        android:text="Guarantor Mobile"
+                        android:textColor="@color/colorWhiteText" />
+
+                    <TextView
+                        android:id="@+id/g_mobile_field"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/g_address_field"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_toEndOf="@id/g_mobile_key"
+                        android:fontFamily="@font/roboto_medium"
+                        android:textColor="@color/colorWhiteText" />
+
+                    <ImageView
+                        android:id="@+id/g_dialer_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/g_address_field"
+                        android:layout_marginTop="7dp"
+                        android:layout_toEndOf="@id/g_mobile_field"
+                        android:adjustViewBounds="true"
+                        android:maxWidth="20dp"
+                        android:src="@drawable/dialer" />
 
                     <!--<TextView-->
                     <!--android:id="@+id/collect_mobile_key"-->
@@ -236,7 +326,7 @@
                 android:id="@+id/accounts_cust_recycler"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/customer_info_card"
+                android:layout_below="@id/account_info_card"
                 android:layout_marginBottom="40dp"
                 android:layout_marginTop="@dimen/activity_vertical_margin">
 

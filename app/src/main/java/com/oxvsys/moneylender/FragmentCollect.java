@@ -170,17 +170,19 @@ public class FragmentCollect extends Fragment {
                             c_date_cal.setTimeInMillis(account.getC_date().getTimeInMillis());
                             loan_duration_field.setText(String.valueOf(account.getDuration()) + " days");
                             remaining_money_field.setText("₹ " + String.valueOf(account.getR_amt()));
+                            Calendar last_pay_date = selected_customer.getAccounts1().get(0).getLast_pay_date();
 
 
-                            days_diff = TimeUnit.MILLISECONDS.toDays(c_date_cal.getTimeInMillis() - curr_cal.getTimeInMillis());
 
 //                            final_file_amount_interest = file_amt;
 
-                            Calendar last_pay_date = selected_customer.getAccounts1().get(0).getLast_pay_date();
 
                             if (last_pay_date != null) {
+                                days_diff = TimeUnit.MILLISECONDS.toDays(curr_cal.getTimeInMillis() - last_pay_date.getTimeInMillis());
+
 //                                days_diff = TimeUnit.MILLISECONDS.toDays(curr_cal.getTimeInMillis() - last_pay_date.getTimeInMillis());
                                 info_field.setText("Last Payment received on " + MainActivity.CaltoStringDate(last_pay_date));
+
                                 if (days_diff < 1) {
                                     inr_sign.setText("");
                                     amount_field.setText("");
@@ -189,6 +191,7 @@ public class FragmentCollect extends Fragment {
                                     amount_field.setEnabled(false);
                                 }
                             }
+                            days_diff = TimeUnit.MILLISECONDS.toDays(c_date_cal.getTimeInMillis() - curr_cal.getTimeInMillis());
 
                             last_date_field.setText(String.valueOf(MainActivity.CaltoStringDate(account.getC_date())) + " (" + days_diff + " days left)");
                             start_date_field.setText(MainActivity.CaltoStringDate(account.getO_date()));
@@ -234,12 +237,6 @@ public class FragmentCollect extends Fragment {
                                 }
 
 
-                                if (months_passed < 1) {
-                                    fab.setVisibility(View.INVISIBLE);
-                                    fields_loaded -= 1;
-                                    inr_sign.setVisibility(View.INVISIBLE);
-                                    amount_field.setVisibility(View.INVISIBLE);
-                                }
 
 
                             } else {
@@ -257,7 +254,9 @@ public class FragmentCollect extends Fragment {
 //                                days_diff = TimeUnit.MILLISECONDS.toDays(curr_cal.getTimeInMillis() - last_pay_date.getTimeInMillis());
                                 info_field.setText("Last Payment received on " + MainActivity.CaltoStringDate(last_pay_date));
                                 int months_passed = (int) (days_diff / 30);
-                                if (months_passed < 1) {
+                                days_diff = TimeUnit.MILLISECONDS.toDays(curr_cal.getTimeInMillis() - last_pay_date.getTimeInMillis());
+
+                                if (days_diff < 1) {
                                     inr_sign.setText("");
                                     amount_field.setText("");
                                     amount_field.setHint("");
