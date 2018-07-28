@@ -22,6 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 import static com.oxvsys.moneylender.HomeActivity.database;
 
@@ -80,14 +81,14 @@ public class FragmentAgentsDetail extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_agent_detail, container, false);
         progressBar = view.findViewById(R.id.show_cust_progress);
         progressBar.setVisibility(View.VISIBLE);
-        FloatingActionButton fab = (android.support.design.widget.FloatingActionButton) getActivity().findViewById(R.id.fab);
-        fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_save_black_24dp));
+        FloatingActionButton fab = Objects.requireNonNull(getActivity()).findViewById(R.id.fab);
+        fab.setImageDrawable(ContextCompat.getDrawable(Objects.requireNonNull(getContext()), R.drawable.ic_save_black_24dp));
         fab.setVisibility(View.INVISIBLE);
         final RecyclerView recyclerView = view.findViewById(R.id.agent_pass_recycler);
         DatabaseReference user_db_ref = database.getReference("users");
@@ -95,10 +96,10 @@ public class FragmentAgentsDetail extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 ArrayList<ArrayList<String>> agentPassList = new ArrayList<>();
-                for(DataSnapshot each:dataSnapshot.getChildren()){
+                for (DataSnapshot each : dataSnapshot.getChildren()) {
                     ArrayList<String> agentPass = new ArrayList<>();
                     agentPass.add(each.getKey());
-                    agentPass.add(((HashMap<String, String>)each.getValue()).get("pwd"));
+                    agentPass.add(((HashMap<String, String>) Objects.requireNonNull(each.getValue())).get("pwd"));
                     agentPassList.add(agentPass);
                 }
                 mAdapter = new AdapterAgentPassword(agentPassList);

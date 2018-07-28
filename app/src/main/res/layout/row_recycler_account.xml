@@ -17,6 +17,7 @@
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
             android:padding="16dp">
+
             <TextView
                 android:id="@+id/collect_account_key"
                 android:layout_width="wrap_content"
@@ -34,13 +35,14 @@
                 android:fontFamily="@font/roboto_medium"
                 android:textColor="@color/colorWhiteText" />
 
-            <View android:background="#BDBDBD"
+            <View
+                android:background="#BDBDBD"
                 android:layout_marginTop="3dp"
                 android:id="@+id/hori_line"
                 android:layout_marginBottom="10dp"
                 android:layout_below="@id/customer_account_field"
-                android:layout_width = "match_parent"
-                android:layout_height="1dp"/>
+                android:layout_width="match_parent"
+                android:layout_height="1dp" />
 
             <TextView
                 android:id="@+id/collect_loan_amt_key"
@@ -108,9 +110,6 @@
                 android:textColor="@color/colorWhiteText" />
 
 
-
-
-
             <TextView
                 android:id="@+id/loan_duration_key"
                 android:layout_width="wrap_content"
@@ -152,7 +151,6 @@
                 android:layout_toEndOf="@id/start_date_key"
                 android:fontFamily="@font/roboto_medium"
                 android:textColor="@color/colorWhiteText" />
-
 
 
             <TextView
@@ -197,6 +195,7 @@
                 android:layout_toEndOf="@id/collect_type_key"
                 android:fontFamily="@font/roboto_medium"
                 android:textColor="@color/colorWhiteText" />
+
             <TextView
                 android:id="@+id/info_key"
                 android:layout_width="wrap_content"
@@ -217,7 +216,6 @@
                 android:layout_toEndOf="@id/info_key"
                 android:fontFamily="@font/roboto_medium"
                 android:textColor="@color/colorWhiteText" />
-
 
 
         </RelativeLayout>

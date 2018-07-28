@@ -1,5 +1,6 @@
 package com.oxvsys.moneylender;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -15,7 +16,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -34,6 +34,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import static com.oxvsys.moneylender.HomeActivity.database;
@@ -50,10 +51,6 @@ public class FragmentCollect extends Fragment {
     int months_passed;
     int months_left = 0;
     int months_duration;
-    Long final_file_amount_interest;
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private OnFragmentInteractionListener mListener;
 
@@ -82,7 +79,7 @@ public class FragmentCollect extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_collect_daily, container, false);
@@ -105,11 +102,13 @@ public class FragmentCollect extends Fragment {
         final TextView start_date_field = view.findViewById(R.id.start_date_field);
         final TextView inr_sign = view.findViewById(R.id.inr_sign);
 //        final Button deposit_button = view.findViewById(R.id.deposit_button);
+        assert getArguments() != null;
         final Account selected_account = (Account) getArguments().getSerializable(ARG_PARAM1);
 
-        final FloatingActionButton fab = getActivity().findViewById(R.id.fab);
-        fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_chevron_right_black_24dp));
+        final FloatingActionButton fab = Objects.requireNonNull(getActivity()).findViewById(R.id.fab);
+        fab.setImageDrawable(ContextCompat.getDrawable(Objects.requireNonNull(getContext()), R.drawable.ic_chevron_right_black_24dp));
         fab.setVisibility(View.INVISIBLE);
+        assert selected_account != null;
         customer_account_field.setText(selected_account.getNo());
 
 
@@ -136,11 +135,12 @@ public class FragmentCollect extends Fragment {
                 progressBar.setVisibility(View.VISIBLE);
                 DatabaseReference customers_db_ref = database.getReference("customers").child(String.valueOf(dataSnapshot.getValue()));
                 customers_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @SuppressLint("SetTextI18n")
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         selected_customer = dataSnapshot.getValue(Customer.class);
                         selected_customer.setId(dataSnapshot.getKey());
-                        HashMap<String, Object> accounts = (HashMap<String, Object>) ((HashMap<String, Object>) dataSnapshot.getValue()).get("accounts");
+                        HashMap<String, Object> accounts = (HashMap<String, Object>) ((HashMap<String, Object>) Objects.requireNonNull(dataSnapshot.getValue())).get("accounts");
 
                         Account account = new Account(accounts.get(selected_account.getNo()));
                         account.setNo(selected_account.getNo());
@@ -169,7 +169,7 @@ public class FragmentCollect extends Fragment {
                             Calendar c_date_cal = Calendar.getInstance();
                             c_date_cal.setTimeInMillis(account.getC_date().getTimeInMillis());
                             loan_duration_field.setText(String.valueOf(account.getDuration()) + " days");
-                            remaining_money_field.setText("₹ "+String.valueOf(account.getR_amt()));
+                            remaining_money_field.setText("₹ " + String.valueOf(account.getR_amt()));
 
 
                             days_diff = TimeUnit.MILLISECONDS.toDays(c_date_cal.getTimeInMillis() - curr_cal.getTimeInMillis());
@@ -373,7 +373,7 @@ public class FragmentCollect extends Fragment {
                                                                                         @Override
                                                                                         public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
                                                                                             Log.d("inactive: ", "The customer is transferred with A/C: " + selected_account.getNo());
-                                                                                            if (((HashMap<String, String>) (((HashMap<String, Object>) selected_customer_dataSnapshot.getValue()).get("accounts"))).entrySet().size() <= 1) {
+                                                                                            if (((HashMap<String, String>) (((HashMap<String, Object>) Objects.requireNonNull(selected_customer_dataSnapshot.getValue())).get("accounts"))).entrySet().size() <= 1) {
                                                                                                 //only one or zero account is there which has deposited == file_amount
                                                                                                 //so move the whole customer object to another tree which has path "inactive/customer_id"
                                                                                                 selected_customer_dataSnapshot.getRef().removeValue();
@@ -437,6 +437,7 @@ public class FragmentCollect extends Fragment {
                                                         });
                                                     }
                                                     FragmentManager fragmentManager = getFragmentManager();
+                                                    assert fragmentManager != null;
                                                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
                                                     FragmentAccountTypeInfo fragmentAccountTypeInfo = FragmentAccountTypeInfo.newInstance(Calendar.getInstance(), selected_customer.getAccounts1().get(0).getType());
@@ -462,7 +463,6 @@ public class FragmentCollect extends Fragment {
                 } else {
                     amount_field.setError("Amount Money should be less than remaing amount!");
                     progressBar.setVisibility(View.INVISIBLE);
-                    return;
                 }
             }
         });
@@ -488,9 +488,6 @@ public class FragmentCollect extends Fragment {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
-        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
         }
     }
 

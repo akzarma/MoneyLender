@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,11 +28,8 @@ public class FragmentCustomerInfo extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
     Customer selected_customer;
 
 
@@ -62,10 +60,11 @@ public class FragmentCustomerInfo extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_customer_info, container, false);
+        assert getArguments() != null;
         selected_customer = (Customer) getArguments().getSerializable(ARG_PARAM1);
         RecyclerView recyclerView = view.findViewById(R.id.accounts_cust_recycler);
 
@@ -95,8 +94,6 @@ public class FragmentCustomerInfo extends Fragment {
                 startActivity(callIntent);
             }
         });
-
-
 
 
         AdapterAccount mAdapter = new AdapterAccount(selected_customer.getAccounts1(), getContext());

@@ -15,13 +15,9 @@ import java.util.List;
 public class AdapterAgentAccountPayment extends RecyclerView.Adapter<AdapterAgentAccountPayment.AgentAccountPaymentHolder> {
 
     private List<DateAmount> dateAmountList;
-    private CustomerAmount customerAmount;
-    private Context context;
 
-    public AdapterAgentAccountPayment(List<DateAmount> dataset, Context context, CustomerAmount customerAmount){
-        this.customerAmount = customerAmount;
+    public AdapterAgentAccountPayment(List<DateAmount> dataset) {
         this.dateAmountList = dataset;
-        this.context = context;
     }
 
     @NonNull
@@ -38,7 +34,7 @@ public class AdapterAgentAccountPayment extends RecyclerView.Adapter<AdapterAgen
         final DateAmount dateAmount = dateAmountList.get(position);
 
         holder.date.setText(dateAmount.getDate());
-        holder.amount_deposited.setText("₹ "+String.valueOf(dateAmount.getAmount()));
+        holder.amount_deposited.setText("₹ " + String.valueOf(dateAmount.getAmount()));
     }
 
     @Override

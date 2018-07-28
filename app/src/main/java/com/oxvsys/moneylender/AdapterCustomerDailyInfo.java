@@ -1,5 +1,6 @@
 package com.oxvsys.moneylender;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
@@ -29,20 +30,13 @@ import static com.oxvsys.moneylender.HomeActivity.database;
 
 public class AdapterCustomerDailyInfo extends RecyclerView.Adapter<AdapterCustomerDailyInfo.CustomerHolder> {
 
-    private HashMap<String, CustomerAmount> account_amount_map;
     private HashMap<String, AgentAmount> agentAmountHashMap;
     private List<CustomerAmount> customerAmountList;
-    private Context context;
-    private Calendar sel_calendar;
     private FragmentManager fragmentManager;
 
 
-    public AdapterCustomerDailyInfo(HashMap<String, CustomerAmount> dataset,
-                                    HashMap<String, AgentAmount> agentAmountHashMap,
-                                    Calendar sel_calendar, Context context, FragmentManager fragmentManager) {
-        this.account_amount_map = dataset;
-        this.context = context;
-        this.sel_calendar = sel_calendar;
+    AdapterCustomerDailyInfo(HashMap<String, CustomerAmount> dataset,
+                             HashMap<String, AgentAmount> agentAmountHashMap, FragmentManager fragmentManager) {
         this.fragmentManager = fragmentManager;
         this.agentAmountHashMap = agentAmountHashMap;
 
@@ -74,6 +68,7 @@ public class AdapterCustomerDailyInfo extends RecyclerView.Adapter<AdapterCustom
         return new CustomerHolder(itemView);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull final AdapterCustomerDailyInfo.CustomerHolder holder, int position) {
         final CustomerAmount customerAmount = customerAmountList.get(position);
@@ -83,7 +78,7 @@ public class AdapterCustomerDailyInfo extends RecyclerView.Adapter<AdapterCustom
 //        final String logged_agent = MainActivity.getData("user_id", context);
         holder.agent_id.setText(customerAmount.getCustomer().getAccounts1().get(0).getNo());
         holder.agent_name.setText(customerAmount.getCustomer().getName());
-        holder.total_collection.setText("₹ "+String.valueOf(customerAmount.getAmount_collected()));
+        holder.total_collection.setText("₹ " + String.valueOf(customerAmount.getAmount_collected()));
 
 
         final List<DateAmount> dateAmountList = new ArrayList<>();
@@ -115,7 +110,7 @@ public class AdapterCustomerDailyInfo extends RecyclerView.Adapter<AdapterCustom
                             }
                         }
                         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        FragmentDateAmount fragmentDateAmount = FragmentDateAmount.newInstance(dateAmountList,curr_agent, customerAmount);
+                        FragmentDateAmount fragmentDateAmount = FragmentDateAmount.newInstance(dateAmountList, curr_agent, customerAmount);
                         fragmentTransaction.replace(R.id.fragment_container, fragmentDateAmount).addToBackStack(null).
                                 commit();
                     }
@@ -166,13 +161,13 @@ public class AdapterCustomerDailyInfo extends RecyclerView.Adapter<AdapterCustom
     }
 
 
-    public class CustomerHolder extends RecyclerView.ViewHolder {
+    class CustomerHolder extends RecyclerView.ViewHolder {
         TextView agent_id;
         TextView agent_name;
         TextView total_collection;
         CardView cardView;
 
-        public CustomerHolder(View view) {
+        CustomerHolder(View view) {
             super(view);
             cardView = view.findViewById(R.id.fragment_day_cardview);
             agent_id = view.findViewById(R.id.agent_id_field);

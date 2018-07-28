@@ -26,10 +26,11 @@ public class GrantLoanDialogFragment extends DialogFragment {
     }
 
 
-
     NoticeDialogListener callback;
+
     public interface NoticeDialogListener {
         public void onDialogPositiveClick(HashMap<String, String> finalGrant_info);
+
         public void onDialogNegativeClick(DialogFragment dialog);
     }
 
@@ -52,8 +53,8 @@ public class GrantLoanDialogFragment extends DialogFragment {
         // Get the layout inflater
         LayoutInflater inflater = Objects.requireNonNull(getActivity()).getLayoutInflater();
 
-        View view = inflater.inflate(R.layout.grant_loan_confirm_dialog,null);
-        HashMap<String , String> grant_info = new HashMap<>();
+        View view = inflater.inflate(R.layout.grant_loan_confirm_dialog, null);
+        HashMap<String, String> grant_info = new HashMap<>();
         assert getArguments() != null;
         grant_info = (HashMap<String, String>) getArguments().getSerializable(GRANT_INFO);
 

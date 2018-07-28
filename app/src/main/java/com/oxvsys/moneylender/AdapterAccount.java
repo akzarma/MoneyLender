@@ -1,30 +1,23 @@
 package com.oxvsys.moneylender;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-
-import static com.oxvsys.moneylender.MainActivity.StringDateToCal;
 
 public class AdapterAccount extends RecyclerView.Adapter<AdapterAccount.AccountHolder> {
 
-    List<Account> accountList;
+    private List<Account> accountList;
     Context context;
 
-    public AdapterAccount(List<Account> accountList, Context context) {
+    AdapterAccount(List<Account> accountList, Context context) {
         this.accountList = accountList;
         this.context = context;
     }
@@ -38,6 +31,7 @@ public class AdapterAccount extends RecyclerView.Adapter<AdapterAccount.AccountH
         return new AccountHolder(itemView);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull AdapterAccount.AccountHolder holder, int position) {
         final Account account = accountList.get(position);
@@ -49,7 +43,7 @@ public class AdapterAccount extends RecyclerView.Adapter<AdapterAccount.AccountH
         holder.loan_duration_field.setText(String.valueOf(account.getDuration()));
         holder.start_date_field.setText(MainActivity.CaltoStringDate(account.getO_date()));
         holder.end_date_field.setText(MainActivity.CaltoStringDate(account.getC_date()));
-        holder.customer_deposited_field.setText("₹ " +String.valueOf(account.getDeposited()));
+        holder.customer_deposited_field.setText("₹ " + String.valueOf(account.getDeposited()));
         if (account.getType().equals("0")) {
             holder.customer_account_type_field.setText("Daily Basis");
 
@@ -68,7 +62,7 @@ public class AdapterAccount extends RecyclerView.Adapter<AdapterAccount.AccountH
         return accountList.size();
     }
 
-    public class AccountHolder extends RecyclerView.ViewHolder {
+    class AccountHolder extends RecyclerView.ViewHolder {
         TextView lf_field;
         TextView info_field;
         TextView customer_loan_amount_field;

@@ -1,5 +1,6 @@
 package com.oxvsys.moneylender;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -16,10 +17,10 @@ import static com.oxvsys.moneylender.MainActivity.StringDateToCal;
 
 public class AdapterDateRange extends RecyclerView.Adapter<AdapterDateRange.DateRangeHolder> {
 
-    List<DateAmount> dateAmountList;
+    private List<DateAmount> dateAmountList;
     Context context;
 
-    public AdapterDateRange(List<DateAmount> dateAmountList, Context context) {
+    AdapterDateRange(List<DateAmount> dateAmountList, Context context) {
         Collections.sort(dateAmountList, new Comparator<DateAmount>() {
             @Override
             public int compare(DateAmount o1, DateAmount o2) {
@@ -39,11 +40,12 @@ public class AdapterDateRange extends RecyclerView.Adapter<AdapterDateRange.Date
         return new AdapterDateRange.DateRangeHolder(itemView);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull AdapterDateRange.DateRangeHolder holder, int position) {
         DateAmount dateAmount = dateAmountList.get(position);
         holder.date_date_range_textview.setText(dateAmount.getDate());
-        holder.collection_date_range_textview.setText("₹ "+String.valueOf(dateAmount.getAmount()));
+        holder.collection_date_range_textview.setText("₹ " + String.valueOf(dateAmount.getAmount()));
     }
 
 
@@ -52,7 +54,7 @@ public class AdapterDateRange extends RecyclerView.Adapter<AdapterDateRange.Date
         return dateAmountList.size();
     }
 
-    public class DateRangeHolder extends RecyclerView.ViewHolder {
+    class DateRangeHolder extends RecyclerView.ViewHolder {
         TextView date_date_range_textview;
         TextView collection_date_range_textview;
 

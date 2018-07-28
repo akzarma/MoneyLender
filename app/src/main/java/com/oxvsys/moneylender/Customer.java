@@ -3,7 +3,7 @@ package com.oxvsys.moneylender;
 import java.io.Serializable;
 import java.util.List;
 
-public class Customer implements Serializable,Cloneable {
+public class Customer implements Serializable, Cloneable {
     private String id;
     private String name;
     private String occupation;
@@ -13,15 +13,16 @@ public class Customer implements Serializable,Cloneable {
     private String address;
 
     private List<Account> accounts1;
+
     @Override
     public Object clone() {
         try {
             return super.clone();
-        }
-        catch (CloneNotSupportedException e) {
+        } catch (CloneNotSupportedException e) {
             throw new Error("Could not clone customer.");
         }
     }
+
     public List<Account> getAccounts1() {
         return accounts1;
     }

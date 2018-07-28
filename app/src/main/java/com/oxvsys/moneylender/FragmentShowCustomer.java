@@ -6,17 +6,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
 
 import com.google.firebase.database.DataSnapshot;
@@ -205,7 +200,7 @@ public class FragmentShowCustomer extends Fragment {
                                     break;
                                 }
                             }
-                            if(remove){
+                            if (remove) {
                                 acc_idx_to_remove.add(each_cust.getAccounts1().indexOf(each_acc));
                             }
                         }
@@ -215,11 +210,11 @@ public class FragmentShowCustomer extends Fragment {
                                 return b.compareTo(a);
                             }
                         });
-                        for(int idx:acc_idx_to_remove){
-                            if(idx!=-1)
+                        for (int idx : acc_idx_to_remove) {
+                            if (idx != -1)
                                 each_cust.getAccounts1().remove(idx);
                         }
-                        if(each_cust.getAccounts1().isEmpty()){
+                        if (each_cust.getAccounts1().isEmpty()) {
                             cust_idx_to_remove.add(customerList.indexOf(each_cust));
                         }
 
@@ -231,8 +226,8 @@ public class FragmentShowCustomer extends Fragment {
                             return b.compareTo(a);
                         }
                     });
-                    for(int idx:cust_idx_to_remove){
-                        if(idx!=-1)
+                    for (int idx : cust_idx_to_remove) {
+                        if (idx != -1)
                             customerList.remove(idx);
                     }
 

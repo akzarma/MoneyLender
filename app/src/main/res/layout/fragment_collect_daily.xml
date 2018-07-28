@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".FragmentCollect">
+
     <ProgressBar
         android:id="@+id/collect_money_progress"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
@@ -78,6 +79,7 @@
                 android:fontFamily="@font/roboto_light"
                 android:text="Remaining Balance "
                 android:textColor="@color/colorWhiteText" />
+
             <TextView
                 android:id="@+id/remaining_money_field"
                 android:layout_width="match_parent"
@@ -174,6 +176,7 @@
                 android:layout_toEndOf="@id/loan_duration_key"
                 android:fontFamily="@font/roboto_medium"
                 android:textColor="@color/colorWhiteText" />
+
             <TextView
                 android:id="@+id/start_date_key"
                 android:layout_width="wrap_content"
@@ -194,6 +197,7 @@
                 android:layout_toEndOf="@id/start_date_key"
                 android:fontFamily="@font/roboto_medium"
                 android:textColor="@color/colorWhiteText" />
+
             <TextView
                 android:id="@+id/last_date_key"
                 android:layout_width="wrap_content"
@@ -214,7 +218,6 @@
                 android:layout_toEndOf="@id/last_date_key"
                 android:fontFamily="@font/roboto_medium"
                 android:textColor="@color/colorWhiteText" />
-
 
 
             <TextView
@@ -259,6 +262,7 @@
 
                 android:fontFamily="@font/roboto_medium"
                 android:textColor="@color/colorWhiteText" />
+
             <ImageView
                 android:id="@+id/dialer_view"
                 android:layout_toRightOf="@id/customer_mobile_field"
@@ -268,8 +272,7 @@
                 android:layout_marginTop="7dp"
                 android:adjustViewBounds="true"
                 android:maxWidth="20dp"
-                android:src="@drawable/dialer"
-                />
+                android:src="@drawable/dialer" />
 
             <!--<TextView-->
             <!--android:id="@+id/collect_mobile_key"-->
@@ -312,8 +315,6 @@
             android:textStyle="bold" />
 
 
-
-
     </RelativeLayout>
 
     <TextView
@@ -322,7 +323,7 @@
         android:layout_height="wrap_content"
         android:text=""
         android:layout_below="@id/amount_relative_layout"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true" />
 
     <!-- TODO: Update blank fragment layout -->
 

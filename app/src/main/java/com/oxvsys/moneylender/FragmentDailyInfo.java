@@ -34,7 +34,7 @@ public class FragmentDailyInfo extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     private RecyclerView recyclerView;
     private AdapterAgent mAdapter;
-//    private TextView currentDay_textView;
+    //    private TextView currentDay_textView;
     Calendar sel_calendar;
 
 
@@ -115,7 +115,7 @@ public class FragmentDailyInfo extends Fragment {
 
                 }
 
-                mAdapter = new AdapterAgent(agentCollectList, sel_calendar, getContext());
+                mAdapter = new AdapterAgent(agentCollectList);
                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
                 recyclerView.setLayoutManager(mLayoutManager);
                 recyclerView.setItemAnimator(new DefaultItemAnimator());

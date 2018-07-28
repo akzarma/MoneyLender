@@ -1,8 +1,10 @@
 package com.oxvsys.moneylender;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -34,9 +36,6 @@ public class FragmentDateAmount extends Fragment {
     private static final String ARG_PARAM3 = "param3";
     AdapterAgentAccountPayment mAdapter;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private OnFragmentInteractionListener mListener;
 
@@ -51,7 +50,7 @@ public class FragmentDateAmount extends Fragment {
      * @return A new instance of fragment FragmentDateAmount.
      */
     // TODO: Rename and change types and number of parameters
-    public static FragmentDateAmount newInstance(List<DateAmount> dateAmountList,String agent, CustomerAmount customerAmount) {
+    public static FragmentDateAmount newInstance(List<DateAmount> dateAmountList, String agent, CustomerAmount customerAmount) {
         FragmentDateAmount fragment = new FragmentDateAmount();
         Bundle args = new Bundle();
         args.putSerializable(ARG_PARAM1, (Serializable) dateAmountList);
@@ -67,18 +66,21 @@ public class FragmentDateAmount extends Fragment {
 
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_date_amount_recycler, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.date_amount_recycler);
         TextView date_amount_heading_field = view.findViewById(R.id.date_amount_heading_field);
         TextView date_amount_heading1_field = view.findViewById(R.id.date_amount_heading1_field);
-        date_amount_heading1_field.setText("Agent ID: "+getArguments().getString(ARG_PARAM3));
+        assert getArguments() != null;
+        date_amount_heading1_field.setText("Agent ID: " + getArguments().getString(ARG_PARAM3));
         List<DateAmount> dateAmountList = (List<DateAmount>) getArguments().getSerializable(ARG_PARAM1);
         CustomerAmount customerAmount = (CustomerAmount) getArguments().getSerializable(ARG_PARAM2);
 
+        assert dateAmountList != null;
         Collections.sort(dateAmountList, new Comparator<DateAmount>() {
             @Override
             public int compare(DateAmount o1, DateAmount o2) {
@@ -86,11 +88,12 @@ public class FragmentDateAmount extends Fragment {
             }
         });
 
+        assert customerAmount != null;
         date_amount_heading_field.setText(customerAmount.getCustomer().getName().split(" ")[0] + " (A/C: " +
-                customerAmount.getCustomer().getAccounts1().get(0).getNo()+")");
+                customerAmount.getCustomer().getAccounts1().get(0).getNo() + ")");
 
 
-        mAdapter = new AdapterAgentAccountPayment(dateAmountList, getContext(), customerAmount);
+        mAdapter = new AdapterAgentAccountPayment(dateAmountList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());

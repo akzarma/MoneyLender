@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class DateAmount implements Serializable {
     String date;
-    Long amount;
+    private Long amount;
 
     public Long getAmount() {
         return amount;

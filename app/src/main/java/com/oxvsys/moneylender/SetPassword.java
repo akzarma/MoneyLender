@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -14,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,8 +21,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.HashMap;
 
 import static com.oxvsys.moneylender.HomeActivity.database;
 import static com.oxvsys.moneylender.MainActivity.getData;
@@ -59,9 +55,9 @@ public class SetPassword extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @return A new instance of fragment SetPassword.
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
+     * @return A new instance of fragment SetPassword.
      */
     // TODO: Rename and change types and number of parameters
     public static SetPassword newInstance(String param1, String param2) {
@@ -91,7 +87,6 @@ public class SetPassword extends Fragment {
         final EditText new_pass1_field = view.findViewById(R.id.new_pass1_field);
 
 
-
         final String logged_user = getData("user_id", getContext());
 
 
@@ -102,13 +97,12 @@ public class SetPassword extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!new_pass_field.getText().toString().equals(new_pass1_field.getText().toString())){
+                if (!new_pass_field.getText().toString().equals(new_pass1_field.getText().toString())) {
                     new_pass_til.setError("Password didn't match");
                     new_pass1_til.setError("Password didn't match");
-                }else if(new_pass_field.getText().toString().length()<6){
+                } else if (new_pass_field.getText().toString().length() < 6) {
                     new_pass_til.setError("Password length must be greater than 6");
-                }
-                else {
+                } else {
                     new_pass_til.setErrorEnabled(false);
                     new_pass1_til.setErrorEnabled(false);
 

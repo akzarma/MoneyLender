@@ -15,15 +15,13 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import static com.oxvsys.moneylender.MainActivity.StringDateToCal;
-
 public class AdapterCustomer extends RecyclerView.Adapter<AdapterCustomer.CustomerHolder> {
 
-    List<Customer> customerList;
+    private List<Customer> customerList;
     Context context;
     private FragmentManager fragmentManager;
 
-    public AdapterCustomer(List<Customer> customerList, Context context, FragmentManager fragmentManager) {
+    AdapterCustomer(List<Customer> customerList, Context context, FragmentManager fragmentManager) {
         Collections.sort(customerList, new Comparator<Customer>() {
             @Override
             public int compare(Customer o1, Customer o2) {
@@ -50,10 +48,10 @@ public class AdapterCustomer extends RecyclerView.Adapter<AdapterCustomer.Custom
         holder.cust_id_field.setText(customer.getId());
         int name_len = customer.getName().split(" ").length;
         String cust_name = "No Name";
-        if(name_len>1) {
-            cust_name = customer.getName().split(" ")[0] + ' '+
+        if (name_len > 1) {
+            cust_name = customer.getName().split(" ")[0] + ' ' +
                     customer.getName().split(" ")[name_len - 1];
-        }else if(name_len==1){
+        } else if (name_len == 1) {
             cust_name = customer.getName().split(" ")[0];
         }
         holder.cust_name_field.setText(cust_name);

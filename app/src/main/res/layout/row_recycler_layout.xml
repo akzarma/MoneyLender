@@ -6,13 +6,13 @@
     android:orientation="vertical">
 
     <!--<TextView-->
-        <!--android:id="@+id/date_group_text"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:visibility="invisible"-->
-        <!--android:textSize="14dp"-->
-        <!--android:fontFamily="@font/roboto_black"-->
-        <!--android:text="5 June 2018"/>-->
+    <!--android:id="@+id/date_group_text"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:visibility="invisible"-->
+    <!--android:textSize="14dp"-->
+    <!--android:fontFamily="@font/roboto_black"-->
+    <!--android:text="5 June 2018"/>-->
 
     <android.support.v7.widget.CardView
         android:id="@+id/fragment_day_cardview"
@@ -34,7 +34,6 @@
             android:padding="8dp">
 
 
-
             <RelativeLayout
                 android:id="@+id/relative_layout_card"
                 android:layout_width="match_parent"
@@ -42,6 +41,7 @@
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
                 android:paddingTop="16dp">
+
                 <TextView
                     android:id="@+id/agent_id_field"
                     android:layout_width="wrap_content"
@@ -69,12 +69,13 @@
                     android:textColor="#FFFFFF"
                     android:textStyle="bold" />
 
-                <View android:background="#BDBDBD"
+                <View
+                    android:background="#BDBDBD"
                     android:layout_marginTop="5dp"
                     android:id="@+id/hori_line"
                     android:layout_below="@id/subject_textview"
-                    android:layout_width = "match_parent"
-                    android:layout_height="1dp"/>
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp" />
 
                 <TextView
                     android:textColor="#BDBDBD"
@@ -84,10 +85,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/hori_line"
                     android:textSize="12sp"
-                    android:text="Tap to view previous payments"/>
-
-
-
+                    android:text="Tap to view previous payments" />
 
 
             </RelativeLayout>

@@ -236,7 +236,7 @@
                     android:layout_below="@id/account_type_field"
                     android:fontFamily="@font/roboto_regular"
                     android:hint="Rate of Interest (Annual)"
-                    android:inputType="number"/>
+                    android:inputType="number" />
             </android.support.design.widget.TextInputLayout>
         </RelativeLayout>
     </ScrollView>

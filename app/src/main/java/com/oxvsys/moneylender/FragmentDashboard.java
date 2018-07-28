@@ -1,5 +1,6 @@
 package com.oxvsys.moneylender;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.net.Uri;
@@ -105,7 +106,6 @@ public class FragmentDashboard extends Fragment {
         fab.setVisibility(View.INVISIBLE);
 
 
-
         DatabaseReference ref = database.getReference("agentCollect");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -115,13 +115,13 @@ public class FragmentDashboard extends Fragment {
                 for (DataSnapshot agents : dataSnapshot.getChildren()) {
                     List<AgentCollect> agentCollectList = new ArrayList<>();
                     for (DataSnapshot date : agents.getChildren()) {
-                        if (date.getKey().equals(sel_date)) {
+                        if (Objects.equals(date.getKey(), sel_date)) {
 
                             for (DataSnapshot account : date.getChildren()) {
                                 Account account_temp = new Account();
                                 account_temp.setNo(account.getKey());
                                 accountAmountCollectList.add(new AccountAmountCollect(account_temp,
-                                        Long.parseLong(account.getValue().toString())));
+                                        Long.parseLong(Objects.requireNonNull(account.getValue()).toString())));
 //                                total_daily_amount += Long.parseLong(account.getValue().toString());
 //                                Log.d("------", "onDataChange: " + total_daily_amount);
                             }
@@ -130,10 +130,11 @@ public class FragmentDashboard extends Fragment {
                 }
                 DatabaseReference account_type_db_ref = database.getReference("accountType");
                 account_type_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @SuppressLint("SetTextI18n")
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (AccountAmountCollect each_account_amount : accountAmountCollectList) {
-                            String type = ((HashMap<String, String>) dataSnapshot.getValue()).get(each_account_amount.getAccount().getNo());
+                            String type = ((HashMap<String, String>) Objects.requireNonNull(dataSnapshot.getValue())).get(each_account_amount.getAccount().getNo());
                             if (type == null) {
                                 type = "";
                             }
@@ -149,9 +150,9 @@ public class FragmentDashboard extends Fragment {
                         }
 
 
-                        todays_value.setText("₹ "+String.valueOf(total_daily_amount));
-                        view_monthly_value_till_today.setText("₹ "+String.valueOf(total_monthly_amount_till_today));
-                        total_collection_value_dashboard.setText("₹ "+String.valueOf(total_collection));
+                        todays_value.setText("₹ " + String.valueOf(total_daily_amount));
+                        view_monthly_value_till_today.setText("₹ " + String.valueOf(total_monthly_amount_till_today));
+                        total_collection_value_dashboard.setText("₹ " + String.valueOf(total_collection));
                         total_daily_amount = 0L;
                         total_monthly_amount_till_today = 0L;
                         total_collection = 0L;
@@ -201,7 +202,6 @@ public class FragmentDashboard extends Fragment {
         date_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Calendar mcurrentDate = Calendar.getInstance();
                 int mYear = sel_calendar.get(Calendar.YEAR);
                 int mMonth = sel_calendar.get(Calendar.MONTH);
                 int mDay = sel_calendar.get(Calendar.DAY_OF_MONTH);
@@ -215,6 +215,7 @@ public class FragmentDashboard extends Fragment {
                         selected_cal.set(Calendar.MINUTE, 0);
                         selected_cal.set(Calendar.SECOND, 0);
                         selected_cal.set(Calendar.MILLISECOND, 0);
+                        assert getFragmentManager() != null;
                         FragmentTransaction ft = getFragmentManager().beginTransaction();
                         FragmentDashboard fd = FragmentDashboard.newInstance(selected_cal);
                         ft.replace(R.id.fragment_container, fd).addToBackStack(null).
@@ -229,7 +230,6 @@ public class FragmentDashboard extends Fragment {
         from_date_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Calendar mcurrentDate = Calendar.getInstance();
                 int mYear = sel_calendar.get(Calendar.YEAR);
                 int mMonth = sel_calendar.get(Calendar.MONTH);
                 int mDay = sel_calendar.get(Calendar.DAY_OF_MONTH);
@@ -261,7 +261,6 @@ public class FragmentDashboard extends Fragment {
         to_date_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Calendar mcurrentDate = Calendar.getInstance();
                 int mYear = sel_calendar.get(Calendar.YEAR);
                 int mMonth = sel_calendar.get(Calendar.MONTH);
                 int mDay = sel_calendar.get(Calendar.DAY_OF_MONTH);
@@ -281,6 +280,7 @@ public class FragmentDashboard extends Fragment {
                         to_cal.set(Calendar.MINUTE, 0);
                         to_cal.set(Calendar.SECOND, 0);
                         to_cal.set(Calendar.MILLISECOND, 0);
+                        assert getFragmentManager() != null;
                         FragmentTransaction ft = getFragmentManager().beginTransaction();
                         FragmentDateRangeReport fragmentDateRangeReport = FragmentDateRangeReport.newInstance(from_calendar, to_cal);
                         ft.replace(R.id.fragment_container, fragmentDateRangeReport).addToBackStack(null).

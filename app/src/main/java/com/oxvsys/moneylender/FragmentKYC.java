@@ -205,15 +205,15 @@ public class FragmentKYC extends Fragment {
                     dob_til.setErrorEnabled(false);
                     address_til.setError("Address is required.");
                     return;
-                }else if (g_address_field.getText().toString().isEmpty()) {
+                } else if (g_address_field.getText().toString().isEmpty()) {
                     address_til.setErrorEnabled(false);
                     g_address_til.setError("Address is required.");
                     return;
-                }else if (g_mobile_field.getText().toString().isEmpty()) {
+                } else if (g_mobile_field.getText().toString().isEmpty()) {
                     g_address_til.setErrorEnabled(false);
                     g_mobile_til.setError("Mobile is required.");
                     return;
-                }else if (g_name_field.getText().toString().isEmpty()) {
+                } else if (g_name_field.getText().toString().isEmpty()) {
                     g_mobile_til.setErrorEnabled(false);
                     g_name_til.setError("Name is required.");
                     return;

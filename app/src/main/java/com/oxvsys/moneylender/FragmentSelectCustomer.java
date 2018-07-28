@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +23,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import static com.oxvsys.moneylender.HomeActivity.database;
@@ -125,13 +122,13 @@ public class FragmentSelectCustomer extends Fragment {
                             customerList.add(customer1);
                             int name_len = customer1.getName().split(" ").length;
                             String cust_name = "No Name";
-                            if(name_len>1) {
+                            if (name_len > 1) {
                                 cust_name = customer1.getName().split(" ")[0] + ' ' +
                                         customer1.getName().split(" ")[name_len - 1];
-                            }else if(name_len==1){
+                            } else if (name_len == 1) {
                                 cust_name = customer1.getName().split(" ")[0];
                             }
-                            customers.add(cust_name+ " (" + customer1.getId() + ")");
+                            customers.add(cust_name + " (" + customer1.getId() + ")");
                         }
                     }
                     //customerList and customers list are in sync do not operate them individually
@@ -166,13 +163,13 @@ public class FragmentSelectCustomer extends Fragment {
                             customerList.add(customer1);
                             int name_len = customer1.getName().split(" ").length;
                             String cust_name = "No Name";
-                            if(name_len>1) {
+                            if (name_len > 1) {
                                 cust_name = customer1.getName().split(" ")[0] + ' ' +
                                         customer1.getName().split(" ")[name_len - 1];
-                            }else if(name_len==1){
+                            } else if (name_len == 1) {
                                 cust_name = customer1.getName().split(" ")[0];
                             }
-                            customers.add(cust_name+ " (" + customer1.getId() + ")");
+                            customers.add(cust_name + " (" + customer1.getId() + ")");
                         }
                     }
 
@@ -183,7 +180,7 @@ public class FragmentSelectCustomer extends Fragment {
                     spinner.setAdapter(spinnerAdapter);
                     fields_loaded += 1;
                     if (fields_loaded == 2) {
-                        if(!customers.isEmpty())
+                        if (!customers.isEmpty())
                             fab.setVisibility(View.VISIBLE);
                         progressBar.setVisibility(View.INVISIBLE);
                         ArrayAdapter<String> spinnerAdapter1 = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, customers);
@@ -238,7 +235,6 @@ public class FragmentSelectCustomer extends Fragment {
     }
 
 
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -267,9 +263,10 @@ public class FragmentSelectCustomer extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-    public boolean containsId(List<Customer> list, String id){
-        for(Customer each:list){
-            if(each.getId().equals(id))
+
+    public boolean containsId(List<Customer> list, String id) {
+        for (Customer each : list) {
+            if (each.getId().equals(id))
                 return true;
         }
         return false;

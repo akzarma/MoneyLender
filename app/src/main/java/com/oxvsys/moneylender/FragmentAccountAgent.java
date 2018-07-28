@@ -22,6 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static com.oxvsys.moneylender.HomeActivity.database;
 
@@ -40,9 +41,6 @@ public class FragmentAccountAgent extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
     List<AccountAgent> accountAgentList = new ArrayList<>();
     AdapterAccountAgent mAdapter;
     ProgressBar progressBar;
@@ -74,20 +72,16 @@ public class FragmentAccountAgent extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_account_agent, container, false);
         final RecyclerView recyclerView = view.findViewById(R.id.acc_agent_recycler);
-        FloatingActionButton fab = (android.support.design.widget.FloatingActionButton) getActivity().findViewById(R.id.fab);
-        fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_save_black_24dp));
+        FloatingActionButton fab = (android.support.design.widget.FloatingActionButton) Objects.requireNonNull(getActivity()).findViewById(R.id.fab);
+        fab.setImageDrawable(ContextCompat.getDrawable(Objects.requireNonNull(getContext()), R.drawable.ic_save_black_24dp));
         fab.setVisibility(View.INVISIBLE);
         progressBar = view.findViewById(R.id.show_cust_progress);
         progressBar.setVisibility(View.VISIBLE);
@@ -96,8 +90,8 @@ public class FragmentAccountAgent extends Fragment {
         agent_account.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot agent:dataSnapshot.getChildren()){
-                    for(DataSnapshot account:agent.getChildren()){
+                for (DataSnapshot agent : dataSnapshot.getChildren()) {
+                    for (DataSnapshot account : agent.getChildren()) {
                         Account account1 = new Account();
                         account1.setNo(account.getKey());
                         Agent agent1 = new Agent();

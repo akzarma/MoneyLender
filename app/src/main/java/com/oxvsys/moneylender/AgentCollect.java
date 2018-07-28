@@ -19,11 +19,7 @@ public class AgentCollect {
     }
 
 
-
-
-
-
-    public AgentCollect(Agent agent, String type, Calendar date, List<AccountAmountCollect> accountAmountCollectList) {
+    AgentCollect(Agent agent, String type, Calendar date, List<AccountAmountCollect> accountAmountCollectList) {
         this.agent = agent;
         this.type = type;
         this.date = date;
@@ -61,7 +57,6 @@ public class AgentCollect {
     public void setAccountAmountCollectList(List<AccountAmountCollect> accountAmountCollectList) {
         this.accountAmountCollectList = accountAmountCollectList;
     }
-
 
 
 }

@@ -1,14 +1,11 @@
 package com.oxvsys.moneylender;
 
-import java.io.Serializable;
-import java.io.SerializablePermission;
-
 public class Agent {
     String id;
     String name;
-    String aadhar_id;
-    String mobile;
-    String email;
+    private String aadhar_id;
+    private String mobile;
+    private String email;
 
     public String getId() {
         return id;

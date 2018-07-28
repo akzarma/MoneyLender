@@ -1,10 +1,10 @@
 package com.oxvsys.moneylender;
 
-public class AccountAmountCollect{
+public class AccountAmountCollect {
     private Account account;
     private Long amount_collected;
 
-    AccountAmountCollect(Account account, Long amount){
+    AccountAmountCollect(Account account, Long amount) {
         this.account = account;
         this.amount_collected = amount;
     }

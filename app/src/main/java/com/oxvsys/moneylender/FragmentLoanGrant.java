@@ -37,6 +37,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static com.oxvsys.moneylender.HomeActivity.database;
 
@@ -65,7 +66,7 @@ public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragme
     Spinner spinner;
     Long lastAccountNo;
     String account_type_selected;
-    String selected_days ="100";
+    String selected_days = "100";
     int fields_loaded = 0;
     Calendar curr_cal;
 
@@ -109,6 +110,7 @@ public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragme
         final EditText disb_amount_field = view.findViewById(R.id.disbursement_amount_field);
         final EditText file_amount_field = view.findViewById(R.id.file_amount_field);
         final EditText discount_amount_field = view.findViewById(R.id.discount_amount_field);
+        final TextInputLayout discount_amount_til = view.findViewById(R.id.discount_amount_til);
         final EditText edit_o_date = view.findViewById(R.id.start_date_monthly_grant);
         final EditText edit_c_date = view.findViewById(R.id.end_date_monthly_grant);
         final EditText edit_roi = view.findViewById(R.id.rate_of_interest_grant);
@@ -123,14 +125,14 @@ public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragme
         final EditText months_field = view.findViewById(R.id.file_duration_monthly_grant);
         final EditText lf_number_field = view.findViewById(R.id.lf_number_field);
 
-        final FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_save_black_24dp));
+        final FloatingActionButton fab = (FloatingActionButton) Objects.requireNonNull(getActivity()).findViewById(R.id.fab);
+        fab.setImageDrawable(ContextCompat.getDrawable(Objects.requireNonNull(getContext()), R.drawable.ic_save_black_24dp));
         fab.setVisibility(View.INVISIBLE);
+        assert getArguments() != null;
         final Customer selected_customer = (Customer) getArguments().getSerializable(ARG_PARAM1);
 
         curr_cal = Calendar.getInstance();
         edit_o_date.setText(MainActivity.CaltoStringDate(curr_cal));
-
 
 
         months_field.setOnKeyListener(new View.OnKeyListener() {
@@ -425,6 +427,10 @@ public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragme
                         edit_roi.setError("Rate of interest is required for Monthly basis account!");
                         return;
                     }
+                }
+                if(Long.parseLong(disb_amount_field.getText().toString()) < Long.parseLong(discount_amount_field.getText().toString()) ){
+                    discount_amount_til.setError("Must be less than disbursement amt");
+                    return;
                 }
                 final String final_account_no;
                 if (account_no.getText().toString().equals("")) {

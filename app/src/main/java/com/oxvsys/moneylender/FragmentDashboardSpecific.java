@@ -1,5 +1,6 @@
 package com.oxvsys.moneylender;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.net.Uri;
@@ -38,11 +39,7 @@ public class FragmentDashboardSpecific extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     Button date_button, from_date_button, to_date_button;
     Long total_daily_amount = 0L;
@@ -78,7 +75,7 @@ public class FragmentDashboardSpecific extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
@@ -89,32 +86,34 @@ public class FragmentDashboardSpecific extends Fragment {
         final ProgressBar progressBar = view.findViewById(R.id.dashboard_progress);
         progressBar.setVisibility(View.VISIBLE);
         to_date_button = view.findViewById(R.id.dashboard_to_button);
-        todays_value = (TextView) view.findViewById(R.id.todays_collection_value_dashboard);
-        view_monthly_value_till_today = (TextView) view.findViewById(R.id.monthly_collection_value_dashboard);
+        todays_value = view.findViewById(R.id.todays_collection_value_dashboard);
+        view_monthly_value_till_today = view.findViewById(R.id.monthly_collection_value_dashboard);
         total_collection_value_dashboard = view.findViewById(R.id.total_collection_value_dashboard);
         totat_collection_card_layout = view.findViewById(R.id.totat_collection_card_layout);
+        assert getArguments() != null;
         sel_calendar = (Calendar) getArguments().getSerializable(ARG_PARAM1);
 
+        assert sel_calendar != null;
         int month = sel_calendar.get(Calendar.MONTH) + 1;
         final String sel_date = sel_calendar.get(Calendar.DAY_OF_MONTH) + "-" +
                 month + "-" +
                 sel_calendar.get(Calendar.YEAR);
 
         date_button.setText(sel_date);
-        final FloatingActionButton fab = getActivity().findViewById(R.id.fab);
-        fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.get_cash_96));
+        final FloatingActionButton fab = Objects.requireNonNull(getActivity()).findViewById(R.id.fab);
+        fab.setImageDrawable(ContextCompat.getDrawable(Objects.requireNonNull(getContext()), R.drawable.get_cash_96));
         fab.setVisibility(View.VISIBLE);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentManager fragmentManager = getFragmentManager();
+                assert fragmentManager != null;
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 FragmentSelectAccount fragmentSelectAccount = new FragmentSelectAccount();
                 fragmentTransaction.replace(R.id.fragment_container, fragmentSelectAccount).addToBackStack(null).
                         commit();
             }
         });
-
 
 
 //        final String logged_in = getData("user_id", getContext());
@@ -128,23 +127,24 @@ public class FragmentDashboardSpecific extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 final List<AccountAmountCollect> accountAmountCollectList = new ArrayList<>();
 //                        List<AgentCollect> agentCollectList = new ArrayList<>();
-                        for (DataSnapshot date : dataSnapshot.getChildren()) {
-                            if (Objects.requireNonNull(date.getKey()).equals(sel_date)) {
-                                for (DataSnapshot account : date.getChildren()) {
-                                    Account account_temp = new Account();
-                                    account_temp.setNo(account.getKey());
-                                    accountAmountCollectList.add(new AccountAmountCollect(account_temp,
-                                            Long.parseLong(Objects.requireNonNull(account.getValue()).toString())));
-                                }
-                            }
+                for (DataSnapshot date : dataSnapshot.getChildren()) {
+                    if (Objects.requireNonNull(date.getKey()).equals(sel_date)) {
+                        for (DataSnapshot account : date.getChildren()) {
+                            Account account_temp = new Account();
+                            account_temp.setNo(account.getKey());
+                            accountAmountCollectList.add(new AccountAmountCollect(account_temp,
+                                    Long.parseLong(Objects.requireNonNull(account.getValue()).toString())));
+                        }
+                    }
 
                 }
                 DatabaseReference account_type_db_ref = database.getReference("accountType");
                 account_type_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @SuppressLint("SetTextI18n")
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (AccountAmountCollect each_account_amount : accountAmountCollectList) {
-                            String type = ((HashMap<String, String>) dataSnapshot.getValue()).get(each_account_amount.getAccount().getNo());
+                            String type = ((HashMap<String, String>) Objects.requireNonNull(dataSnapshot.getValue())).get(each_account_amount.getAccount().getNo());
                             if (type == null) {
                                 type = "";
                             }
@@ -160,9 +160,9 @@ public class FragmentDashboardSpecific extends Fragment {
                         }
 
 
-                        todays_value.setText("₹ "+String.valueOf(total_daily_amount));
-                        view_monthly_value_till_today.setText("₹ "+String.valueOf(total_monthly_amount_till_today));
-                        total_collection_value_dashboard.setText("₹ "+String.valueOf(total_collection));
+                        todays_value.setText("₹ " + String.valueOf(total_daily_amount));
+                        view_monthly_value_till_today.setText("₹ " + String.valueOf(total_monthly_amount_till_today));
+                        total_collection_value_dashboard.setText("₹ " + String.valueOf(total_collection));
                         total_daily_amount = 0L;
                         total_monthly_amount_till_today = 0L;
                         total_collection = 0L;
@@ -212,7 +212,6 @@ public class FragmentDashboardSpecific extends Fragment {
         date_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Calendar mcurrentDate = Calendar.getInstance();
                 int mYear = sel_calendar.get(Calendar.YEAR);
                 int mMonth = sel_calendar.get(Calendar.MONTH);
                 int mDay = sel_calendar.get(Calendar.DAY_OF_MONTH);
@@ -226,6 +225,7 @@ public class FragmentDashboardSpecific extends Fragment {
                         selected_cal.set(Calendar.MINUTE, 0);
                         selected_cal.set(Calendar.SECOND, 0);
                         selected_cal.set(Calendar.MILLISECOND, 0);
+                        assert getFragmentManager() != null;
                         FragmentTransaction ft = getFragmentManager().beginTransaction();
                         FragmentDashboardSpecific fd = FragmentDashboardSpecific.newInstance(selected_cal);
                         ft.replace(R.id.fragment_container, fd).addToBackStack(null).
@@ -240,7 +240,6 @@ public class FragmentDashboardSpecific extends Fragment {
         from_date_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Calendar mcurrentDate = Calendar.getInstance();
                 int mYear = sel_calendar.get(Calendar.YEAR);
                 int mMonth = sel_calendar.get(Calendar.MONTH);
                 int mDay = sel_calendar.get(Calendar.DAY_OF_MONTH);
@@ -272,7 +271,6 @@ public class FragmentDashboardSpecific extends Fragment {
         to_date_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Calendar mcurrentDate = Calendar.getInstance();
                 int mYear = sel_calendar.get(Calendar.YEAR);
                 int mMonth = sel_calendar.get(Calendar.MONTH);
                 int mDay = sel_calendar.get(Calendar.DAY_OF_MONTH);
@@ -292,6 +290,7 @@ public class FragmentDashboardSpecific extends Fragment {
                         to_cal.set(Calendar.MINUTE, 0);
                         to_cal.set(Calendar.SECOND, 0);
                         to_cal.set(Calendar.MILLISECOND, 0);
+                        assert getFragmentManager() != null;
                         FragmentTransaction ft = getFragmentManager().beginTransaction();
                         FragmentDateRangeReport fragmentDateRangeReport = FragmentDateRangeReport.newInstance(from_calendar, to_cal);
                         ft.replace(R.id.fragment_container, fragmentDateRangeReport).addToBackStack(null).

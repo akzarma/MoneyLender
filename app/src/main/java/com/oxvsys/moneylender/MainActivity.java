@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
 
-
         logged_agent = getData("user_id", getApplicationContext());
         logged_type = getData("user_type", getApplicationContext());
         user_pwd = getData("user_pwd", getApplicationContext());
@@ -296,13 +295,13 @@ public class MainActivity extends AppCompatActivity
             FragmentShowCustomer far = new FragmentShowCustomer();
             fragmentTransaction.replace(R.id.fragment_container, far).addToBackStack(null).
                     commit();
-        }else if (id == R.id.nav_acc_agent) {
+        } else if (id == R.id.nav_acc_agent) {
             if (getSupportActionBar() != null)
                 getSupportActionBar().setTitle("Account Agent");
             FragmentAccountAgent far = new FragmentAccountAgent();
             fragmentTransaction.replace(R.id.fragment_container, far).addToBackStack(null).
                     commit();
-        }else if (id == R.id.nav_agent_pass) {
+        } else if (id == R.id.nav_agent_pass) {
             if (getSupportActionBar() != null)
                 getSupportActionBar().setTitle("Agent Credentials");
             FragmentAgentsDetail far = new FragmentAgentsDetail();

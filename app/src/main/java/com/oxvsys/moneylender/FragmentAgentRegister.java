@@ -23,6 +23,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 import static com.oxvsys.moneylender.HomeActivity.database;
 
@@ -32,10 +33,6 @@ public class FragmentAgentRegister extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    EditText name_view;
 
     private OnFragmentInteractionListener mListener;
 
@@ -58,7 +55,7 @@ public class FragmentAgentRegister extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_agent_register, container, false);
         final TextInputLayout name_til, aadhaar_til, mobile_til, address_til;
@@ -76,8 +73,8 @@ public class FragmentAgentRegister extends Fragment {
 
         final RelativeLayout rl = view.findViewById(R.id.agent_register_relative_layout);
 
-        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_save_black_24dp));
+        FloatingActionButton fab = Objects.requireNonNull(getActivity()).findViewById(R.id.fab);
+        fab.setImageDrawable(ContextCompat.getDrawable(Objects.requireNonNull(getContext()), R.drawable.ic_save_black_24dp));
         fab.setVisibility(View.VISIBLE);
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -101,7 +98,7 @@ public class FragmentAgentRegister extends Fragment {
                     return;
                 }
 
-                if (mobile_view.getText().toString().length()!=10) {
+                if (mobile_view.getText().toString().length() != 10) {
                     address_til.setErrorEnabled(false);
                     mobile_til.setError("Enter a valid Mobile No.");
                     return;
@@ -144,6 +141,7 @@ public class FragmentAgentRegister extends Fragment {
                                             Snackbar snackbar = Snackbar
                                                     .make(rl, "Agent added with Password 1234", Snackbar.LENGTH_LONG);
                                             snackbar.show();
+                                            assert getFragmentManager() != null;
                                             FragmentTransaction ft = getFragmentManager().beginTransaction();
                                             FragmentAgentRegister fd = new FragmentAgentRegister();
                                             ft.replace(R.id.fragment_container, fd).addToBackStack(null).

@@ -24,13 +24,9 @@ import static com.oxvsys.moneylender.HomeActivity.database;
 public class AdapterAgent extends RecyclerView.Adapter<AdapterAgent.AgentHolder> {
 
     private List<AgentCollect> agentCollectList;
-    private Context context;
-    private Calendar selected_cal;
 
-    public AdapterAgent(List<AgentCollect> dataset, Calendar selected_cal, Context context){
+    AdapterAgent(List<AgentCollect> dataset) {
         this.agentCollectList = dataset;
-        this.selected_cal = selected_cal;
-        this.context = context;
     }
 
     @NonNull
@@ -49,9 +45,9 @@ public class AdapterAgent extends RecyclerView.Adapter<AdapterAgent.AgentHolder>
     @Override
     public void onBindViewHolder(@NonNull final AgentHolder holder, int position) {
         final AgentCollect agentCollect = agentCollectList.get(position);
-        List<AccountAmountCollect>  accountAmountCollectList = agentCollect.getAccountAmountCollectList();
+        List<AccountAmountCollect> accountAmountCollectList = agentCollect.getAccountAmountCollectList();
         int total_collect = 0;
-        for(AccountAmountCollect accountAmountCollect:accountAmountCollectList){
+        for (AccountAmountCollect accountAmountCollect : accountAmountCollectList) {
             total_collect += accountAmountCollect.getAmount();
         }
 
@@ -59,8 +55,8 @@ public class AdapterAgent extends RecyclerView.Adapter<AdapterAgent.AgentHolder>
         agent_info_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                agentCollect.getAgent().setName(((HashMap<String, String>)dataSnapshot.getValue()).get("name").toString().split(" ")[0]);
-                agentCollect.getAgent().setMobile(((HashMap<String, String>)dataSnapshot.getValue()).get("mobile").toString());
+                agentCollect.getAgent().setName(((HashMap<String, String>) dataSnapshot.getValue()).get("name").split(" ")[0]);
+                agentCollect.getAgent().setMobile(((HashMap<String, String>) dataSnapshot.getValue()).get("mobile"));
                 holder.agent_name.setText(agentCollect.getAgent().getName());
 
             }
@@ -72,9 +68,7 @@ public class AdapterAgent extends RecyclerView.Adapter<AdapterAgent.AgentHolder>
         });
 
 
-
-
-        holder.total_collection.setText("₹ "+String.valueOf(total_collect));
+        holder.total_collection.setText("₹ " + String.valueOf(total_collect));
         holder.agent_id.setText(agentCollect.getAgent().getId());
 
     }
