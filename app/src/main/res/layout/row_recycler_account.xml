@@ -86,13 +86,54 @@
                 android:text="..."
                 android:textColor="@color/colorWhiteText"
                 android:textSize="32sp" />
+            <TextView
+                android:id="@+id/r_amt_key"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/customer_deposited_field"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/roboto_light"
+                android:text="Remaining Amount"
+                android:textColor="@color/colorWhiteText" />
+
+            <TextView
+                android:id="@+id/r_amt_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/customer_deposited_field"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_toEndOf="@id/r_amt_key"
+                android:fontFamily="@font/roboto_medium"
+                android:textColor="@color/colorWhiteText" />
+
+            <TextView
+                android:id="@+id/interest_key"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/r_amt_field"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/roboto_light"
+                android:text="Interest"
+                android:textColor="@color/colorWhiteText" />
+
+            <TextView
+                android:id="@+id/interest_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/r_amt_field"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_toEndOf="@id/interest_key"
+                android:fontFamily="@font/roboto_medium"
+                android:textColor="@color/colorWhiteText" />
 
 
             <TextView
                 android:id="@+id/lf_key"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/customer_deposited_field"
+                android:layout_below="@id/interest_field"
                 android:layout_marginTop="8dp"
                 android:fontFamily="@font/roboto_light"
                 android:text="LF Number"
@@ -102,7 +143,7 @@
                 android:id="@+id/lf_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/customer_deposited_field"
+                android:layout_below="@id/interest_field"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:layout_toEndOf="@id/lf_key"

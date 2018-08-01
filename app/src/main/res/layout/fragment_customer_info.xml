@@ -33,9 +33,10 @@
         tools:targetApi="o" />
 
 
-    <ScrollView
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:overScrollMode="never"
         android:layout_below="@+id/edit_cust_button">
 
         <RelativeLayout
@@ -333,6 +334,6 @@
             </android.support.v7.widget.RecyclerView>
 
         </RelativeLayout>
-    </ScrollView>
+    </android.support.v4.widget.NestedScrollView>
 
 </RelativeLayout>

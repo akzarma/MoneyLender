@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="40dp"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     android:layout_marginTop="16dp"
@@ -13,12 +12,11 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="32dp">
+        android:layout_height="match_parent">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/account_number_prefix_field"
@@ -40,7 +38,7 @@
                     android:id="@+id/account_number_monthly_grant"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Account No (Optional)"
+                    android:hint="Suffix Account No (Optional)"
                     android:inputType="text" />
             </android.support.design.widget.TextInputLayout>
 
@@ -110,9 +108,9 @@
                 android:layout_below="@id/discount_amount_til"
                 android:layout_marginEnd="4dp"
                 android:layout_marginStart="4dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="10dp"
                 android:fontFamily="@font/roboto_regular"
-                android:text="Select Type"
+                android:text="Select Account Type"
                 android:textAllCaps="true" />
 
 
@@ -140,7 +138,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/account_type_field"
-                android:layout_marginTop="24dp"
                 android:visibility="invisible">
 
                 <android.support.v7.widget.AppCompatEditText
@@ -235,24 +232,9 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/account_type_field"
                     android:fontFamily="@font/roboto_regular"
-                    android:hint="Rate of Interest (Annual)"
-                    android:inputType="number" />
+                    android:hint="Rate of Interest (Monthly)"
+                    android:inputType="numberDecimal" />
             </android.support.design.widget.TextInputLayout>
         </RelativeLayout>
     </ScrollView>
-    <!--<Button-->
-    <!--android:id="@+id/grant_button_monthly"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_below="@id/loan_grant_roi_til"-->
-    <!--android:layout_alignParentEnd="true"-->
-    <!--android:layout_marginTop="8dp"-->
-    <!--android:background="@drawable/material_button"-->
-    <!--android:fontFamily="@font/roboto_bold"-->
-    <!--android:paddingLeft="8dp"-->
-    <!--android:paddingRight="8dp"-->
-    <!--android:text="Grant Loan"-->
-    <!--android:visibility="invisible"-->
-    <!--android:textColor="#fff" />-->
-
 </RelativeLayout>

@@ -92,11 +92,32 @@
                 android:textColor="@color/colorWhiteText" />
 
             <TextView
+                android:id="@+id/interest_key"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/remaining_money_field"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/roboto_light"
+                android:text="Interest"
+                android:textColor="@color/colorWhiteText" />
+
+            <TextView
+                android:id="@+id/interest_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/remaining_money_field"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_toEndOf="@id/interest_key"
+                android:fontFamily="@font/roboto_medium"
+                android:textColor="@color/colorWhiteText" />
+
+            <TextView
                 android:id="@+id/collect_account_key"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/remaining_money_key"
-                android:layout_marginTop="16dp"
+                android:layout_below="@id/interest_field"
+                android:layout_marginTop="8dp"
                 android:fontFamily="@font/roboto_light"
                 android:text="Account No"
                 android:textColor="@color/colorWhiteText" />
@@ -105,9 +126,9 @@
                 android:id="@+id/customer_account_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/remaining_money_key"
+                android:layout_below="@id/interest_field"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_toEndOf="@id/collect_account_key"
                 android:fontFamily="@font/roboto_medium"
                 android:textColor="@color/colorWhiteText" />
@@ -245,7 +266,7 @@
                 android:id="@+id/collect_mobile_key"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/collect_type_key"
+                android:layout_below="@id/customer_account_type_field"
                 android:layout_marginTop="8dp"
                 android:fontFamily="@font/roboto_light"
                 android:text="Mobile"

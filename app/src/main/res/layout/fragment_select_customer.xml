@@ -29,11 +29,19 @@
         android:text="Select Customer (Customer ID)"
         android:textAllCaps="true" />
 
+    <EditText
+        android:id="@+id/search_edit"
+        android:hint="Search"
+        android:singleLine="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/select_account_title"/>
+
     <Spinner
         android:id="@+id/customer_spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/select_account_title">
+        android:layout_below="@id/search_edit">
 
     </Spinner>
 
