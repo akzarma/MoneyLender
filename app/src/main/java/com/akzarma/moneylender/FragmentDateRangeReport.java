@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import jxl.Workbook;
 import jxl.write.Label;
@@ -128,11 +129,13 @@ public class FragmentDateRangeReport extends Fragment {
                                     (date_cal.equals(from_cal) || date_cal.equals(to_cal))) {
                                 for (DataSnapshot account : date.getChildren()) {
                                     DateAmount dateAmount = new DateAmount();
-                                    dateAmount.setAmount(Long.parseLong(account.getValue().toString()));
+                                    dateAmount.setBothAmounts(String.valueOf(account.getValue()));
                                     dateAmount.setDate(date.getKey());
                                     if (calendarDateAmountHashMap.containsKey(date_str)) {
-                                        Long amount = calendarDateAmountHashMap.get(date_str).getAmount() + dateAmount.getAmount();
-                                        dateAmount.setAmount(amount);
+                                        Long amount_principal = calendarDateAmountHashMap.get(date_str).getAmount_principal() + dateAmount.getAmount_principal();
+                                        Long amount_interest = calendarDateAmountHashMap.get(date_str).getAmount_interest() + dateAmount.getAmount_interest();
+                                        dateAmount.setAmount_interest(amount_interest);
+                                        dateAmount.setAmount_principal(amount_principal);
                                         calendarDateAmountHashMap.put(date_str, dateAmount);
                                     } else {
                                         calendarDateAmountHashMap.put(date_str, dateAmount);
@@ -162,17 +165,19 @@ public class FragmentDateRangeReport extends Fragment {
 
                     for (DataSnapshot date : dataSnapshot.getChildren()) {
 
-                        Calendar date_cal = StringDateToCal(date.getKey());
+                        Calendar date_cal = StringDateToCal(Objects.requireNonNull(date.getKey()));
                         String date_str = CaltoStringDate(date_cal);
                         if ((date_cal.after(from_cal) && date_cal.before(to_cal)) ||
                                 (date_cal.equals(from_cal) || date_cal.equals(to_cal))) {
                             for (DataSnapshot account : date.getChildren()) {
                                 DateAmount dateAmount = new DateAmount();
-                                dateAmount.setAmount(Long.parseLong(String.valueOf(account.getValue())));
+                                dateAmount.setBothAmounts(String.valueOf(account.getValue()));
                                 dateAmount.setDate(date.getKey());
                                 if (calendarDateAmountHashMap.containsKey(date_str)) {
-                                    Long amount = calendarDateAmountHashMap.get(date_str).getAmount() + dateAmount.getAmount();
-                                    dateAmount.setAmount(amount);
+                                    Long amount_principal = calendarDateAmountHashMap.get(date_str).getAmount_principal() + dateAmount.getAmount_principal();
+                                    Long amount_interest = calendarDateAmountHashMap.get(date_str).getAmount_interest() + dateAmount.getAmount_interest();
+                                    dateAmount.setAmount_interest(amount_interest);
+                                    dateAmount.setAmount_principal(amount_principal);
                                     calendarDateAmountHashMap.put(date_str, dateAmount);
                                 } else {
                                     calendarDateAmountHashMap.put(date_str, dateAmount);
@@ -211,6 +216,7 @@ public class FragmentDateRangeReport extends Fragment {
                 int serialCol = 0;
                 int dateCol = 1;
                 int collectionCol = 2;
+                int intCollectionCol = 3;
                 try {
 
                     final WritableWorkbook workbook = Workbook.createWorkbook(actualDoc);
@@ -218,7 +224,8 @@ public class FragmentDateRangeReport extends Fragment {
                     Label heading = new Label(0, row, "Monthly Report from " + from_date + " to " + to_date);
                     row++;
                     Label account_label = new Label(dateCol, row, "Date");
-                    Label amount_label = new Label(collectionCol, row, "Collection");
+                    Label amount_label = new Label(collectionCol, row, "Disbursement Collection");
+                    Label int_amount_label = new Label(intCollectionCol, row, "Interest Collection");
                     Label sr_number = new Label(serialCol, row, "Sr.No");
                     row++;
 
@@ -226,11 +233,13 @@ public class FragmentDateRangeReport extends Fragment {
                         sheet.addCell(heading);
                         sheet.addCell(account_label);
                         sheet.addCell(amount_label);
+                        sheet.addCell(int_amount_label);
                         sheet.addCell(sr_number);
 
 
                         long total_amount = 0;
-                        Number ser_no, amount_collected;
+                        long total_amount_int = 0;
+                        Number ser_no, amount_collected, int_amount_collected;
                         Label date_label;
                         Calendar curr_cal = (Calendar) from_cal.clone();
                         Calendar to_cal_copy = (Calendar) to_cal.clone();
@@ -242,14 +251,18 @@ public class FragmentDateRangeReport extends Fragment {
                             ser_no = new Number(serialCol, row, row - 1);
                             date_label = new Label(dateCol, row, curr_date);
                             if (calendarDateAmountHashMap.containsKey(curr_date)) {
-                                total_amount += calendarDateAmountHashMap.get(curr_date).getAmount();
-                                amount_collected = new Number(collectionCol, row, calendarDateAmountHashMap.get(curr_date).getAmount());
+                                total_amount += calendarDateAmountHashMap.get(curr_date).getAmount_principal();
+                                total_amount_int += calendarDateAmountHashMap.get(curr_date).getAmount_interest();
+                                amount_collected = new Number(collectionCol, row, calendarDateAmountHashMap.get(curr_date).getAmount_principal());
+                                int_amount_collected = new Number(intCollectionCol, row, calendarDateAmountHashMap.get(curr_date).getAmount_interest());
                             } else {
                                 amount_collected = new Number(collectionCol, row, 0);
+                                int_amount_collected = new Number(intCollectionCol, row, 0);
                             }
                             row++;
                             sheet.addCell(date_label);
                             sheet.addCell(amount_collected);
+                            sheet.addCell(int_amount_collected);
                             sheet.addCell(ser_no);
                             curr_cal.add(Calendar.DAY_OF_MONTH, 1);
                         }
@@ -257,8 +270,10 @@ public class FragmentDateRangeReport extends Fragment {
                         row++;
                         date_label = new Label(dateCol, row, "Total Collection");
                         amount_collected = new Number(collectionCol, row, total_amount);
+                        int_amount_collected = new Number(intCollectionCol, row, total_amount_int);
                         sheet.addCell(date_label);
                         sheet.addCell(amount_collected);
+                        sheet.addCell(int_amount_collected);
 
                         try {
                             workbook.write();

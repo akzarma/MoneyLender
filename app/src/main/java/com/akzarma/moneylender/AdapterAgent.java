@@ -1,7 +1,6 @@
 package com.akzarma.moneylender;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -15,7 +14,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -48,7 +46,7 @@ public class AdapterAgent extends RecyclerView.Adapter<AdapterAgent.AgentHolder>
         List<AccountAmountCollect> accountAmountCollectList = agentCollect.getAccountAmountCollectList();
         int total_collect = 0;
         for (AccountAmountCollect accountAmountCollect : accountAmountCollectList) {
-            total_collect += accountAmountCollect.getAmount();
+            total_collect += accountAmountCollect.getPrin_amount_collected() + accountAmountCollect.getInt_amount_collected();
         }
 
         DatabaseReference agent_info_db_ref = database.getReference("agents").child(agentCollect.getAgent().getId());

@@ -45,7 +45,8 @@ public class AdapterDateRange extends RecyclerView.Adapter<AdapterDateRange.Date
     public void onBindViewHolder(@NonNull AdapterDateRange.DateRangeHolder holder, int position) {
         DateAmount dateAmount = dateAmountList.get(position);
         holder.date_date_range_textview.setText(dateAmount.getDate());
-        holder.collection_date_range_textview.setText("₹ " + String.valueOf(dateAmount.getAmount()));
+        holder.collection_date_range_textview.setText("P: ₹ " + String.valueOf(dateAmount.getAmount_principal()) + " I: ₹ " +
+                String.valueOf(dateAmount.getAmount_interest()));
     }
 
 

@@ -133,7 +133,7 @@ public class FragmentDashboardSpecific extends Fragment {
                             Account account_temp = new Account();
                             account_temp.setNo(account.getKey());
                             accountAmountCollectList.add(new AccountAmountCollect(account_temp,
-                                    Long.parseLong(Objects.requireNonNull(account.getValue()).toString())));
+                                    Objects.requireNonNull(String.valueOf(account.getValue()))));
                         }
                     }
 
@@ -151,9 +151,9 @@ public class FragmentDashboardSpecific extends Fragment {
                             Log.d("accountType query for:", each_account_amount.getAccount().getNo());
                             each_account_amount.getAccount().setType(type);
                             if (type.equals("0")) {
-                                total_daily_amount += each_account_amount.getAmount();
+                                total_daily_amount += each_account_amount.getPrin_amount_collected()+ each_account_amount.getInt_amount_collected();
                             } else if (type.equals("1")) {
-                                total_monthly_amount_till_today += each_account_amount.getAmount();
+                                total_monthly_amount_till_today += each_account_amount.getPrin_amount_collected()+ each_account_amount.getInt_amount_collected();
                             }
                             total_collection = total_monthly_amount_till_today + total_daily_amount;
 

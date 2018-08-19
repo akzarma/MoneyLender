@@ -13,8 +13,6 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -37,7 +35,7 @@ public class AdapterAccount extends RecyclerView.Adapter<AdapterAccount.AccountH
     private Context context;
     private FragmentManager fragmentManager;
     private String curr_agent;
-    long remaining_amt;
+    long remaining_int;
 
     AdapterAccount(Customer customer, FragmentManager fragmentManager, Context context) {
         this.accountList = customer.getAccounts1();
@@ -68,58 +66,47 @@ public class AdapterAccount extends RecyclerView.Adapter<AdapterAccount.AccountH
 
         holder.lf_field.setText(account.getLf_no());
         holder.info_field.setText(account.getInfo());
-        holder.customer_loan_amount_field.setText("₹ " + (String.valueOf(account.getFile_amt())));
+        holder.customer_loan_amount_field.setText("₹ " + (String.valueOf(account.getDisb_amt())));
+        holder.f_amt_field.setText("₹ " + (String.valueOf(account.getFile_amt())));
         holder.loan_duration_field.setText(String.valueOf(account.getDuration()));
         holder.start_date_field.setText(MainActivity.CaltoStringDate(account.getO_date()));
         holder.end_date_field.setText(MainActivity.CaltoStringDate(account.getC_date()));
-        holder.customer_deposited_field.setText("₹ " + String.valueOf(account.getDeposited()));
+        holder.customer_deposited_field.setText("₹ " + String.valueOf(account.getDeposited_principle()));
+        holder.int_deposited_field.setText("₹ " + String.valueOf(account.getDeposited_int()));
+        holder.r_amt_field.setText("₹ " + String.valueOf(account.getR_amt()));
         if (account.getType().equals("0")) {
             holder.customer_account_type_field.setText("Daily Basis");
             holder.customer_account_field.setText(account.getNo() + " (Daily Basis)");
-            holder.interest_field.setVisibility(View.INVISIBLE);
-            holder.interest_key.setVisibility(View.INVISIBLE);
+            holder.interest_field.setVisibility(View.GONE);
+            holder.interest_key.setVisibility(View.GONE);
             Calendar c_date_cal = Calendar.getInstance();
-            holder.r_amt_field.setText("₹ " + account.getR_amt().toString());
             c_date_cal.setTimeInMillis(account.getC_date().getTimeInMillis());
             holder.loan_duration_field.setText(String.valueOf(account.getDuration()) + " days");
         } else if (account.getType().equals("1")) {
             double roi = account.getRoi();
-            remaining_amt = account.getR_amt();
+            remaining_int = account.getInterest();
             double roi_per_month = roi / 12;
             Calendar last_int_calc_cal = account.getLast_int_calc();
-            holder.interest_field.setText(String.valueOf(account.getInterest()));
+            holder.interest_field.setText("₹ " + String.valueOf(account.getInterest()));
             Long days_diff_without_calc = TimeUnit.MILLISECONDS.toDays(curr_cal.getTimeInMillis() - last_int_calc_cal.getTimeInMillis());
 
             int months_passed_without_calc = Integer.parseInt(String.valueOf(days_diff_without_calc / 30).split("\\.")[0]);
             if (months_passed_without_calc > 0) {
-                long old_remaining_amt = account.getR_amt();
-                remaining_amt = compoundInterest(remaining_amt, roi_per_month, months_passed_without_calc);
-                final long new_interest = remaining_amt-old_remaining_amt;
-                account.setInterest(new_interest);
-                holder.interest_field.setText("₹ " + String.valueOf(new_interest));
+                remaining_int += simpleInterest(account.getDisb_amt(), roi_per_month, months_passed_without_calc);
+                account.setInterest(remaining_int);
+                holder.interest_field.setText("₹ " + String.valueOf(remaining_int));
+
                 database.getReference("customers")
                         .child(customer.getId())
                         .child("accounts")
                         .child(account.getNo())
-                        .child("r_amt")
-                        .setValue(remaining_amt).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        database.getReference("customers")
-                                .child(customer.getId())
-                                .child("accounts")
-                                .child(account.getNo())
-                                .child("last_int_calc").setValue(MainActivity.CaltoStringDate(curr_cal));
-                        database.getReference("customers")
-                                .child(customer.getId())
-                                .child("accounts")
-                                .child(account.getNo())
-                                .child("interest").setValue(new_interest);
-                        holder.r_amt_field.setText("₹ " + String.valueOf(remaining_amt));
-                    }
-                });
-            }else{
-                holder.r_amt_field.setText("₹ " + String.valueOf(remaining_amt));
+                        .child("last_int_calc").setValue(MainActivity.CaltoStringDate(curr_cal));
+                database.getReference("customers")
+                        .child(customer.getId())
+                        .child("accounts")
+                        .child(account.getNo())
+                        .child("r_int").setValue(remaining_int);
+
             }
 
             holder.account_info_card_layout.setBackgroundColor(context.getResources().getColor(R.color.colorIndigo));
@@ -154,14 +141,14 @@ public class AdapterAccount extends RecyclerView.Adapter<AdapterAccount.AccountH
                                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                                 for (DataSnapshot date : dataSnapshot.getChildren()) {
                                                     Calendar curr_date = MainActivity.StringDateToCal(Objects.requireNonNull(date.getKey()));
-                                                    if ((curr_date.after(o_date) && curr_date.before(c_date)) ||
+                                                    if (curr_date.after(o_date) ||
                                                             (curr_date.equals(o_date) || curr_date.equals(c_date))) {
                                                         DateAmount dateAmount = new DateAmount();
                                                         dateAmount.setDate(date.getKey());
-                                                        Long curr_amount = ((HashMap<String, Long>) Objects.requireNonNull(date.getValue())).get(account.getNo());
+                                                        String curr_amount = ((HashMap<String, String>) Objects.requireNonNull(date.getValue())).get(account.getNo());
 
                                                         if (curr_amount != null) {
-                                                            dateAmount.setAmount(curr_amount);
+                                                            dateAmount.setBothAmounts(curr_amount);
                                                             dateAmountList.add(dateAmount);
 
                                                         }
@@ -201,7 +188,6 @@ public class AdapterAccount extends RecyclerView.Adapter<AdapterAccount.AccountH
                 });
 
 
-
             }
         });
     }
@@ -217,12 +203,14 @@ public class AdapterAccount extends RecyclerView.Adapter<AdapterAccount.AccountH
         TextView info_field;
         TextView customer_loan_amount_field;
         TextView customer_deposited_field;
+        TextView int_deposited_field;
         TextView customer_account_type_field;
         TextView customer_account_field;
         TextView loan_duration_field;
         TextView start_date_field;
         TextView end_date_field;
         TextView r_amt_field;
+        TextView f_amt_field;
         TextView interest_field;
         TextView interest_key;
         CardView cardView;
@@ -236,19 +224,22 @@ public class AdapterAccount extends RecyclerView.Adapter<AdapterAccount.AccountH
             info_field = view.findViewById(R.id.info_field);
             customer_loan_amount_field = view.findViewById(R.id.customer_loan_amount_field);
             customer_deposited_field = view.findViewById(R.id.customer_deposited_field);
+            int_deposited_field = view.findViewById(R.id.int_collected_field);
             customer_account_type_field = view.findViewById(R.id.customer_account_type_field);
             customer_account_field = view.findViewById(R.id.customer_account_field);
             loan_duration_field = view.findViewById(R.id.loan_duration_field);
             end_date_field = view.findViewById(R.id.last_date_field);
-            r_amt_field = view.findViewById(R.id.r_amt_field);
+            r_amt_field = view.findViewById(R.id.remaining_money_field);
+            f_amt_field = view.findViewById(R.id.f_amt_field);
             start_date_field = view.findViewById(R.id.start_date_field);
             cardView = view.findViewById(R.id.account_info_card);
             account_info_card_layout = view.findViewById(R.id.account_info_card_layout);
 
         }
     }
-    private Long compoundInterest(Long amt, double roi_per_month, int months) {
-        return (long) ((double) amt * ((1+(roi_per_month / 100)*months)));
+
+    private Long simpleInterest(Long amt, double roi_per_month, int months) {
+        return (long) ((double) amt * ((roi_per_month / 100) * months));
     }
 
 }

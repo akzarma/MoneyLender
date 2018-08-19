@@ -70,6 +70,7 @@ public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragme
     String selected_days = "100";
     int fields_loaded = 0;
     Calendar curr_cal;
+    String final_account_no;
 
     private OnFragmentInteractionListener mListener;
 
@@ -446,7 +447,6 @@ public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragme
                         }
                     }
                 }
-                final String final_account_no;
                 if (account_no.getText().toString().equals("")) {
                     final_account_no = String.valueOf(lastAccountNo + 1);
                 } else {
@@ -565,7 +565,7 @@ public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragme
         account_number_details.put("lf_no", grant_info.get("lf_number"));
 
         Map<String, Object> map = new HashMap<>();
-        map.put(grant_info.get("account"), account_number_details);
+        map.put(final_account_no, account_number_details);
 
         customers.updateChildren(map, new DatabaseReference.CompletionListener() {
             @Override

@@ -146,7 +146,7 @@ public class FragmentShowCustomer extends Fragment {
                 //customerList and customers list are in sync do not operate them individually
 
                 fields_loaded += 1;
-                if (fields_loaded == 2) {
+                if (fields_loaded == 1) {
                     showAdapter();
                 }
             }
@@ -158,54 +158,54 @@ public class FragmentShowCustomer extends Fragment {
             }
         });
 
-        DatabaseReference inactive_customers_db_ref = database.getReference("inactive").child("customers");
-
-        inactive_customers_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                for (DataSnapshot customer : dataSnapshot.getChildren()) {
-                    Customer customer1 = customer.getValue(Customer.class);
-                    assert customer1 != null;
-                    customer1.setId(customer.getKey());
-                    boolean contains_monthly = false;
-                    boolean contains_daily = false;
-                    ArrayList<Account> accounts = new ArrayList<>();
-                    for (DataSnapshot each_account : customer.child("accounts").getChildren()) {
-                        Account account = new Account(each_account.getValue());
-                        account.setNo(each_account.getKey());
-                        accounts.add(account);
-                        if (account.getType().equals("1")) {
-                            contains_monthly = true;
-                        }
-                        if (account.getType().equals("0")) {
-                            contains_daily = true;
-                        }
-                    }
-                    customer1.setAccounts1(accounts);
-                    if (!containsId(customerList
-                            , customer1.getId())) {
-                        if (account_type.equals("1") && contains_monthly) {
-                            customerList.add(customer1);
-                        } else if (account_type.equals("0") && contains_daily) {
-                            customerList.add(customer1);
-                        }
-                    }
-                }
-
-                //customerList and customers list are in sync do not operate them individually
-
-                fields_loaded += 1;
-                if (fields_loaded == 2) {
-                    showAdapter();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+//        DatabaseReference inactive_customers_db_ref = database.getReference("inactive").child("customers");
+//
+//        inactive_customers_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//
+//                for (DataSnapshot customer : dataSnapshot.getChildren()) {
+//                    Customer customer1 = customer.getValue(Customer.class);
+//                    assert customer1 != null;
+//                    customer1.setId(customer.getKey());
+//                    boolean contains_monthly = false;
+//                    boolean contains_daily = false;
+//                    ArrayList<Account> accounts = new ArrayList<>();
+//                    for (DataSnapshot each_account : customer.child("accounts").getChildren()) {
+//                        Account account = new Account(each_account.getValue());
+//                        account.setNo(each_account.getKey());
+//                        accounts.add(account);
+//                        if (account.getType().equals("1")) {
+//                            contains_monthly = true;
+//                        }
+//                        if (account.getType().equals("0")) {
+//                            contains_daily = true;
+//                        }
+//                    }
+//                    customer1.setAccounts1(accounts);
+//                    if (!containsId(customerList
+//                            , customer1.getId())) {
+//                        if (account_type.equals("1") && contains_monthly) {
+//                            customerList.add(customer1);
+//                        } else if (account_type.equals("0") && contains_daily) {
+//                            customerList.add(customer1);
+//                        }
+//                    }
+//                }
+//
+//                //customerList and customers list are in sync do not operate them individually
+//
+//                fields_loaded += 1;
+//                if (fields_loaded == 2) {
+//                    showAdapter();
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
 
         search_button.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -2,11 +2,18 @@ package com.akzarma.moneylender;
 
 public class AccountAmountCollect {
     private Account account;
-    private Long amount_collected;
+    private Long prin_amount_collected;
+    private Long int_amount_collected;
 
-    AccountAmountCollect(Account account, Long amount) {
+    AccountAmountCollect(){
+
+    }
+    AccountAmountCollect(Account account, String prin_int) {
         this.account = account;
-        this.amount_collected = amount;
+        if (prin_int.contains(",")) {
+            this.prin_amount_collected = Long.parseLong(prin_int.split(",")[0]);
+            this.int_amount_collected = Long.parseLong(prin_int.split(",")[1]);
+        }
     }
 
     public Account getAccount() {
@@ -17,11 +24,19 @@ public class AccountAmountCollect {
         this.account = account;
     }
 
-    public Long getAmount() {
-        return amount_collected;
+    public Long getPrin_amount_collected() {
+        return prin_amount_collected;
     }
 
-    public void setAmount(Long amount) {
-        this.amount_collected = amount;
+    public void setPrin_amount_collected(Long prin_amount_collected) {
+        this.prin_amount_collected = prin_amount_collected;
+    }
+
+    public Long getInt_amount_collected() {
+        return int_amount_collected;
+    }
+
+    public void setInt_amount_collected(Long int_amount_collected) {
+        this.int_amount_collected = int_amount_collected;
     }
 }

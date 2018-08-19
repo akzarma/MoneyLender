@@ -8,7 +8,8 @@ public class Account implements Serializable {
     private String no;
     private Long disb_amt;
     private Long file_amt;
-    private Long deposited = 0L;
+    private Long deposited_principle = 0L;
+    private Long deposited_int = 0L;
     private Calendar o_date;
     private Calendar c_date;
     private Calendar last_int_calc;
@@ -16,21 +17,21 @@ public class Account implements Serializable {
     private Long r_amt;
     private long interest = 0;
 
-
+    private boolean active = true;
     private Calendar last_pay_date;
     private double roi = 0.0;
     private String type; //    "0" or  "1"
-    private Long duration =0L;
+    private Long duration = 0L;
     private String lf_no = "";
 
     public HashMap<String, String> getMap() {
         HashMap<String, String> attrs = new HashMap<>();
         attrs.put("disb_amt", String.valueOf(this.disb_amt));
         attrs.put("file_amt", String.valueOf(this.file_amt));
-        attrs.put("deposited", String.valueOf(this.deposited));
+        attrs.put("deposited", String.valueOf(this.deposited_principle) + "," + String.valueOf(this.deposited_int));
         attrs.put("o_date", MainActivity.CaltoStringDate(this.o_date));
         attrs.put("c_date", MainActivity.CaltoStringDate(this.c_date));
-        if (this.last_int_calc !=null)
+        if (this.last_int_calc != null)
             attrs.put("last_int_calc", MainActivity.CaltoStringDate(this.last_int_calc));
         attrs.put("info", this.info);
         if (this.r_amt != null)
@@ -42,7 +43,8 @@ public class Account implements Serializable {
         attrs.put("type", this.type);
         attrs.put("duration", String.valueOf(this.duration));
         attrs.put("lf_no", this.lf_no);
-        attrs.put("interest", String.valueOf(this.interest));
+        attrs.put("r_int", String.valueOf(this.interest));
+        attrs.put("active", String.valueOf(this.active));
         return attrs;
     }
 
@@ -65,9 +67,13 @@ public class Account implements Serializable {
         }
         if (value1.get("roi") != null)
             this.roi = Double.parseDouble(value1.get("roi").toString());
-        if (value1.get("deposited") != null)
-            this.deposited = Long.parseLong(value1.get("deposited").toString());
-
+        if (value1.get("deposited") != null) {
+            String deposited_val = value1.get("deposited").toString();
+            if (deposited_val.contains(",")) {
+                this.deposited_principle = Long.parseLong(deposited_val.split(",")[0]);
+                this.deposited_int = Long.parseLong(deposited_val.split(",")[1]);
+            }
+        }
         this.type = value1.get("type").toString();
         if (value1.get("duration") != null)
             this.duration = Long.parseLong(value1.get("duration").toString());
@@ -82,9 +88,19 @@ public class Account implements Serializable {
             this.setLast_int_calc(value1.get("last_int_calc").toString());
             MainActivity.CaltoStringDate(this.last_int_calc);
         }
-        if(value1.get("interest")!=null){
-            this.interest = Long.parseLong(value1.get("interest").toString());
+        if (value1.get("r_int") != null) {
+            this.interest = Long.parseLong(value1.get("r_int").toString());
         }
+        if (value1.get("active") != null)
+            this.active = Boolean.parseBoolean(value1.get("active").toString());
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public long getInterest() {
@@ -157,13 +173,20 @@ public class Account implements Serializable {
 
     }
 
-    public Long getDeposited() {
-        return deposited;
+    public Long getDeposited_principle() {
+        return deposited_principle;
     }
 
+    public void setDeposited_principle(Long deposited_principle) {
+        this.deposited_principle = deposited_principle;
+    }
 
-    public void setDeposited(Long deposited) {
-        this.deposited = deposited;
+    public Long getDeposited_int() {
+        return deposited_int;
+    }
+
+    public void setDeposited_int(Long deposited_int) {
+        this.deposited_int = deposited_int;
     }
 
     public String getNo() {

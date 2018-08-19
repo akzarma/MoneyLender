@@ -1,7 +1,6 @@
 package com.akzarma.moneylender;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -78,7 +77,8 @@ public class AdapterCustomerDailyInfo extends RecyclerView.Adapter<AdapterCustom
 //        final String logged_agent = MainActivity.getData("user_id", context);
         holder.agent_id.setText(customerAmount.getCustomer().getAccounts1().get(0).getNo());
         holder.agent_name.setText(customerAmount.getCustomer().getName());
-        holder.total_collection.setText("₹ " + String.valueOf(customerAmount.getAmount_collected()));
+        holder.total_collection.setText("P: ₹ " + String.valueOf(customerAmount.getPrin_amount_collected()) +
+                " I: ₹ " + String.valueOf(customerAmount.getInt_amount_collected()));
 
 
         final List<DateAmount> dateAmountList = new ArrayList<>();
@@ -95,15 +95,15 @@ public class AdapterCustomerDailyInfo extends RecyclerView.Adapter<AdapterCustom
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (DataSnapshot date : dataSnapshot.getChildren()) {
                             Calendar curr_date = MainActivity.StringDateToCal(date.getKey());
-                            if ((curr_date.after(o_date) && curr_date.before(c_date)) ||
+                            if (curr_date.after(o_date) ||
                                     (curr_date.equals(o_date) || curr_date.equals(c_date))) {
                                 DateAmount dateAmount = new DateAmount();
                                 dateAmount.setDate(date.getKey());
-                                Long curr_amount = ((HashMap<String, Long>) date.getValue())
+                                String curr_amount = ((HashMap<String, String>) date.getValue())
                                         .get(customerAmount.getCustomer().getAccounts1().get(0).getNo());
 
                                 if (curr_amount != null) {
-                                    dateAmount.setAmount(curr_amount);
+                                    dateAmount.setBothAmounts(curr_amount);
                                     dateAmountList.add(dateAmount);
 
                                 }

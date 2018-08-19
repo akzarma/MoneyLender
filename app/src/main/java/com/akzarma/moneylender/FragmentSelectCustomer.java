@@ -132,7 +132,7 @@ public class FragmentSelectCustomer extends Fragment {
                     //customerList and customers list are in sync do not operate them individually
 
                     fields_loaded += 1;
-                    if (fields_loaded == 2) {
+                    if (fields_loaded == 1) {
                         fab.setVisibility(View.VISIBLE);
                         progressBar.setVisibility(View.INVISIBLE);
                         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, getInfoStringList(customerList));
@@ -149,38 +149,38 @@ public class FragmentSelectCustomer extends Fragment {
                 }
             });
 
-            DatabaseReference inactive_customers_db_ref = database.getReference("inactive").child("customers");
-
-            inactive_customers_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                    for (DataSnapshot customer : dataSnapshot.getChildren()) {
-                        Customer customer1 = customer.getValue(Customer.class);
-                        customer1.setId(customer.getKey());
-                        if (!containsId(customerList, customer1.getId())) {
-                            customerList.add(customer1);
-                        }
-                    }
-
-                    fields_loaded += 1;
-                    if (fields_loaded == 2) {
-                        if (!customerList.isEmpty())
-                            fab.setVisibility(View.VISIBLE);
-                        progressBar.setVisibility(View.INVISIBLE);
-                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, getInfoStringList(customerList));
-                        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        spinner.setAdapter(spinnerAdapter);
-                        search_edit.setVisibility(View.VISIBLE);
-
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
+//            DatabaseReference inactive_customers_db_ref = database.getReference("inactive").child("customers");
+//
+//            inactive_customers_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//
+//                    for (DataSnapshot customer : dataSnapshot.getChildren()) {
+//                        Customer customer1 = customer.getValue(Customer.class);
+//                        customer1.setId(customer.getKey());
+//                        if (!containsId(customerList, customer1.getId())) {
+//                            customerList.add(customer1);
+//                        }
+//                    }
+//
+//                    fields_loaded += 1;
+//                    if (fields_loaded == 2) {
+//                        if (!customerList.isEmpty())
+//                            fab.setVisibility(View.VISIBLE);
+//                        progressBar.setVisibility(View.INVISIBLE);
+//                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, getInfoStringList(customerList));
+//                        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//                        spinner.setAdapter(spinnerAdapter);
+//                        search_edit.setVisibility(View.VISIBLE);
+//
+//                    }
+//                }
+//
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                }
+//            });
 
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -58,15 +58,16 @@ public class GrantLoanDialogFragment extends DialogFragment {
         assert getArguments() != null;
         grant_info = (HashMap<String, String>) getArguments().getSerializable(GRANT_INFO);
 
-        TextView account_value_field = view.findViewById(R.id.grant_loan_account_value);
+        TextView roi_value = view.findViewById(R.id.roi_value);
         TextView customer_field = view.findViewById(R.id.grant_loan_customer_value);
         TextView disbursement_field = view.findViewById(R.id.grant_loan_dis_amount_value);
         TextView file_field = view.findViewById(R.id.grant_loan_file_value);
         TextView type_field = view.findViewById(R.id.grant_loan_type_value);
         TextView duration_field = view.findViewById(R.id.grant_loan_duration_value);
+        TextView roi_text = view.findViewById(R.id.roi_text);
 
-        account_value_field.setText(String.valueOf(Objects.requireNonNull(grant_info).get("account")));
         customer_field.setText(String.valueOf(Objects.requireNonNull(grant_info).get("customer")));
+        roi_value.setText(String.valueOf(Objects.requireNonNull(grant_info).get("roi")));
         disbursement_field.setText(String.valueOf(Objects.requireNonNull(grant_info).get("amount")));
         file_field.setText(String.valueOf(Objects.requireNonNull(grant_info).get("file_amount")));
 
@@ -74,6 +75,8 @@ public class GrantLoanDialogFragment extends DialogFragment {
             case "0":
                 duration_field.setText(MessageFormat.format("{0} days", grant_info.get("duration")));
                 type_field.setText("Daily basis");
+                roi_text.setVisibility(View.GONE);
+                roi_value.setVisibility(View.GONE);
                 break;
             case "1":
                 duration_field.setText(MessageFormat.format("{0} month(s)", grant_info.get("duration")));

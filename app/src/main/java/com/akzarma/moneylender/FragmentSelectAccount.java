@@ -129,15 +129,18 @@ public class FragmentSelectAccount extends Fragment {
 
                             if (account_map != null) {
                                 for (Map.Entry<String, Object> account : account_map.entrySet()) {
+
                                     if (account_customer_map.containsKey(account.getKey())) {
-                                        Account account1 = new Account();
+                                        Account account1 = new Account(account.getValue());
                                         account1.setNo(account.getKey());
-                                        AccountString accountString = new AccountString();
-                                        accountString.setAccount(account1);
-                                        accountString.setInfo(((HashMap<String, Object>) customer_map.
-                                                get(single_customer.getKey())).get("name") + " (A/C: " +
-                                                account.getKey() + ")");
-                                        accountStringList.add(accountString);
+                                        if(account1.isActive()) {
+                                            AccountString accountString = new AccountString();
+                                            accountString.setAccount(account1);
+                                            accountString.setInfo(((HashMap<String, Object>) customer_map.
+                                                    get(single_customer.getKey())).get("name") + " (A/C: " +
+                                                    account.getKey() + ")");
+                                            accountStringList.add(accountString);
+                                        }
                                     }
                                 }
                             }

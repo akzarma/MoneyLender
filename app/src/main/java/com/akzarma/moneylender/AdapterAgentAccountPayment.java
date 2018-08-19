@@ -1,7 +1,6 @@
 package com.akzarma.moneylender;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -16,7 +15,7 @@ public class AdapterAgentAccountPayment extends RecyclerView.Adapter<AdapterAgen
 
     private List<DateAmount> dateAmountList;
 
-    public AdapterAgentAccountPayment(List<DateAmount> dataset) {
+    AdapterAgentAccountPayment(List<DateAmount> dataset) {
         this.dateAmountList = dataset;
     }
 
@@ -34,7 +33,8 @@ public class AdapterAgentAccountPayment extends RecyclerView.Adapter<AdapterAgen
         final DateAmount dateAmount = dateAmountList.get(position);
 
         holder.date.setText(dateAmount.getDate());
-        holder.amount_deposited.setText("₹ " + String.valueOf(dateAmount.getAmount()));
+        holder.amount_deposited.setText("₹ " + String.valueOf(dateAmount.getAmount_principal()) + " I: ₹ " +
+                String.valueOf(dateAmount.getAmount_interest()));
     }
 
     @Override

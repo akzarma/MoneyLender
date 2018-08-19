@@ -28,6 +28,10 @@
         <item>Daily basis</item>
         <item>Monthly basis</item>
     </string-array>
+    <string-array name="payment_options">
+        <item>Collect Interest+Disbursement</item>
+        <item>Collect Disbursement only</item>
+    </string-array>
     <string-array name="loan_duration_days">
         <item>100 days</item>
         <item>200 days</item>

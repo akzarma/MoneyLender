@@ -19,7 +19,7 @@ public class AdapterAccountAgent extends RecyclerView.Adapter<AdapterAccountAgen
         Collections.sort(accountAgentList, new Comparator<AccountAgent>() {
             @Override
             public int compare(AccountAgent o1, AccountAgent o2) {
-                return o1.getAccount().getNo().compareTo(o2.getAccount().getNo());
+                return o1.getAgent().getId().compareTo(o2.getAgent().getId());
             }
         });
         this.accountAgentList = accountAgentList;

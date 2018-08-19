@@ -50,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/hori_line"
                 android:fontFamily="@font/roboto_medium"
-                android:text="Loan Amount"
+                android:text="Disb Amount"
                 android:textAllCaps="true"
                 android:textColor="@color/colorWhiteText" />
 
@@ -86,24 +86,46 @@
                 android:text="..."
                 android:textColor="@color/colorWhiteText"
                 android:textSize="32sp" />
+
+
             <TextView
-                android:id="@+id/r_amt_key"
+                android:id="@+id/int_collected_key"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/customer_deposited_field"
-                android:layout_marginTop="8dp"
+                android:layout_below="@id/customer_loan_amount_field"
+                android:layout_marginTop="16dp"
                 android:fontFamily="@font/roboto_light"
-                android:text="Remaining Amount"
+                android:text="Total Interest Collected"
                 android:textColor="@color/colorWhiteText" />
 
             <TextView
-                android:id="@+id/r_amt_field"
+                android:id="@+id/int_collected_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/customer_deposited_field"
+                android:layout_below="@id/customer_loan_amount_field"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_toEndOf="@id/int_collected_key"
+                android:fontFamily="@font/roboto_medium"
+                android:textColor="@color/colorWhiteText" />
+            <TextView
+                android:id="@+id/remaining_money_key"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/int_collected_field"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/roboto_light"
+                android:text="Remaining Balance "
+                android:textColor="@color/colorWhiteText" />
+
+            <TextView
+                android:id="@+id/remaining_money_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/int_collected_field"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
-                android:layout_toEndOf="@id/r_amt_key"
+                android:layout_toEndOf="@id/remaining_money_key"
                 android:fontFamily="@font/roboto_medium"
                 android:textColor="@color/colorWhiteText" />
 
@@ -111,29 +133,50 @@
                 android:id="@+id/interest_key"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/r_amt_field"
+                android:layout_below="@id/remaining_money_field"
                 android:layout_marginTop="8dp"
                 android:fontFamily="@font/roboto_light"
-                android:text="Interest"
+                android:text="Remaining Interest"
                 android:textColor="@color/colorWhiteText" />
 
             <TextView
                 android:id="@+id/interest_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/r_amt_field"
+                android:layout_below="@id/remaining_money_field"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:layout_toEndOf="@id/interest_key"
                 android:fontFamily="@font/roboto_medium"
                 android:textColor="@color/colorWhiteText" />
+            <TextView
+                android:id="@+id/f_amt_key"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/interest_field"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/roboto_light"
+                android:text="Filed Amount"
+                android:textColor="@color/colorWhiteText" />
+
+            <TextView
+                android:id="@+id/f_amt_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/interest_field"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_toEndOf="@id/f_amt_key"
+                android:fontFamily="@font/roboto_medium"
+                android:textColor="@color/colorWhiteText" />
+
 
 
             <TextView
                 android:id="@+id/lf_key"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/interest_field"
+                android:layout_below="@id/f_amt_field"
                 android:layout_marginTop="8dp"
                 android:fontFamily="@font/roboto_light"
                 android:text="LF Number"
@@ -143,7 +186,7 @@
                 android:id="@+id/lf_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/interest_field"
+                android:layout_below="@id/f_amt_field"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:layout_toEndOf="@id/lf_key"
