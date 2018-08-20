@@ -33,7 +33,7 @@ public class AdapterAgentAccountPayment extends RecyclerView.Adapter<AdapterAgen
         final DateAmount dateAmount = dateAmountList.get(position);
 
         holder.date.setText(dateAmount.getDate());
-        holder.amount_deposited.setText("₹ " + String.valueOf(dateAmount.getAmount_principal()) + " I: ₹ " +
+        holder.amount_deposited.setText("P: ₹ " + String.valueOf(dateAmount.getAmount_principal()) + " I: ₹ " +
                 String.valueOf(dateAmount.getAmount_interest()));
     }
 

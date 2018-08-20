@@ -92,7 +92,7 @@ public class AdapterAccount extends RecyclerView.Adapter<AdapterAccount.AccountH
 
             int months_passed_without_calc = Integer.parseInt(String.valueOf(days_diff_without_calc / 30).split("\\.")[0]);
             if (months_passed_without_calc > 0) {
-                remaining_int += simpleInterest(account.getDisb_amt(), roi_per_month, months_passed_without_calc);
+                remaining_int += simpleInterest(account.getR_amt(), roi_per_month, months_passed_without_calc);
                 account.setInterest(remaining_int);
                 holder.interest_field.setText("₹ " + String.valueOf(remaining_int));
 

@@ -16,6 +16,22 @@
         android:theme="@style/LinearProgress"
         android:visibility="invisible" />
     <Button
+        android:id="@+id/delete_cust_button"
+        android:layout_width="125dp"
+        android:layout_height="35dp"
+        android:layout_below="@+id/info_cust_progress"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/rounded_button"
+        android:fontFamily="@font/roboto_regular"
+        android:paddingHorizontal="10dp"
+        android:layout_marginRight="15dp"
+        android:textColor="#3c3c3c"
+        android:textSize="14sp"
+        tools:targetApi="o" />
+
+    <Button
         android:id="@+id/edit_cust_button"
         android:layout_width="125dp"
         android:layout_height="35dp"

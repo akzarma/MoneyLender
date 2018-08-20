@@ -73,7 +73,7 @@ public class AdapterCustomer extends RecyclerView.Adapter<AdapterCustomer.Custom
         return customerList.size();
     }
 
-    public class CustomerHolder extends RecyclerView.ViewHolder {
+    class CustomerHolder extends RecyclerView.ViewHolder {
         TextView cust_name_field;
         TextView cust_id_field;
         CardView customer_card;

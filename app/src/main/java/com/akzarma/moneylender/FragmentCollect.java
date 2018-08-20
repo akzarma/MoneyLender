@@ -251,7 +251,7 @@ public class FragmentCollect extends Fragment {
                                 int months_passed_without_calc = Integer.parseInt(String.valueOf(days_diff_without_calc / 30).split("\\.")[0]);
                                 if (months_passed_without_calc > 0) {
 //                                    long old_remaining_amt = account.getR_amt();
-                                    remaining_int += simpleInterest(disb_amt, roi_per_month, months_passed_without_calc);
+                                    remaining_int += simpleInterest(remaining_amt, roi_per_month, months_passed_without_calc);
                                     account.setInterest(remaining_int);
                                     interest_field.setText("₹ " + String.valueOf(remaining_int));
 
