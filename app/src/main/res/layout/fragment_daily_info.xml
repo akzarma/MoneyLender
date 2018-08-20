@@ -6,7 +6,6 @@
     android:orientation="vertical"
     tools:context=".FragmentDailyInfo">
 
-    <!-- TODO: Update blank fragment layout -->
     <Button
         android:id="@+id/date_button"
         android:layout_width="140dp"

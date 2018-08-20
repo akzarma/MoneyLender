@@ -5,7 +5,6 @@
     android:orientation="vertical"
     tools:context=".FragmentDateRangeReport">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
         android:id="@+id/fragment_textV_day"
         android:layout_width="match_parent"

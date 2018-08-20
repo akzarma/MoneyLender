@@ -18,6 +18,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -66,7 +67,7 @@ public class AdapterAccount extends RecyclerView.Adapter<AdapterAccount.AccountH
 
         holder.lf_field.setText(account.getLf_no());
         holder.info_field.setText(account.getInfo());
-        holder.customer_loan_amount_field.setText("₹ " + (String.valueOf(account.getDisb_amt())));
+        holder.customer_loan_amount_field.setText(MessageFormat.format("₹ {0}", String.valueOf(account.getDisb_amt())));
         holder.f_amt_field.setText("₹ " + (String.valueOf(account.getFile_amt())));
         holder.loan_duration_field.setText(String.valueOf(account.getDuration()));
         holder.start_date_field.setText(MainActivity.CaltoStringDate(account.getO_date()));

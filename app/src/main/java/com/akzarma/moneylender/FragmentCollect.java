@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -40,7 +41,7 @@ import java.util.concurrent.TimeUnit;
 import static com.akzarma.moneylender.HomeActivity.database;
 import static com.akzarma.moneylender.MainActivity.logged_agent;
 
-public class FragmentCollect extends Fragment {
+public class FragmentCollect extends Fragment implements CollectConfirmDialogFragment.NoticeDialogListener{
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     Customer selected_customer;
@@ -50,6 +51,8 @@ public class FragmentCollect extends Fragment {
     Long remaining_amt;
     Long remaining_int;
     long disb_amt;
+    ProgressBar progressBar;
+    EditText amount_field;
     int fields_loaded = 0;
     int months_passed;
     int months_left = 0;
@@ -67,7 +70,6 @@ public class FragmentCollect extends Fragment {
      *
      * @return A new instance of fragment FragmentCollect.
      */
-    // TODO: Rename and change types and number of parameters
     public static FragmentCollect newInstance(Account account) {
         FragmentCollect fragment = new FragmentCollect();
         Bundle args = new Bundle();
@@ -86,9 +88,9 @@ public class FragmentCollect extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_collect_daily, container, false);
-        final ProgressBar progressBar = view.findViewById(R.id.collect_money_progress);
+        progressBar = view.findViewById(R.id.collect_money_progress);
         progressBar.setVisibility(View.VISIBLE);
-        final EditText amount_field = view.findViewById(R.id.amount_field);
+        amount_field = view.findViewById(R.id.amount_field);
         final TextView customer_name_field = view.findViewById(R.id.customer_name_field);
         final TextView customer_id_field = view.findViewById(R.id.customer_id_field);
         final TextView customer_loan_amount_field = view.findViewById(R.id.customer_loan_amount_field);
@@ -333,9 +335,21 @@ public class FragmentCollect extends Fragment {
                 startActivity(callIntent);
             }
         });
+
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final Long amount_received = Long.parseLong(String.valueOf(amount_field.getText()));
+
+                /*TODO Execute the following 3 instructions. Do the rest of the processing in
+                   onDialogPositiveClick() method, constructed at the bottom of this fragment
+                */
+                HashMap<String, String> collect_info = new HashMap<>();
+                collect_info.put("collect_amount",String.valueOf(amount_received)); // put all data into this HashMap
+                setUpDialog(collect_info);
+
+
                 progressBar.setVisibility(View.VISIBLE);
                 if (amount_field.getText().toString().length() == 0) {
                     amount_field.setError("Amount Money is required!");
@@ -343,7 +357,6 @@ public class FragmentCollect extends Fragment {
                     return;
                 }
                 fab.setVisibility(View.INVISIBLE);
-                final Long amount_received = Long.parseLong(String.valueOf(amount_field.getText()));
 
                 if (!pay_option_principle) {
 
@@ -492,6 +505,22 @@ public class FragmentCollect extends Fragment {
         return view;
     }
 
+    //This method calls the DialogFragment
+    private void setUpDialog(HashMap<String, String> grant_info) {
+
+
+        assert getFragmentManager() != null;
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment prev = getFragmentManager().findFragmentByTag("collect_dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+        CollectConfirmDialogFragment dialogFragment = CollectConfirmDialogFragment.newInstance(grant_info);
+        dialogFragment.setTargetFragment(this, 0);
+        dialogFragment.show(ft, "collect_dialog");
+    }
+
 
     private Long simpleInterest(Long amt, double roi_per_month, int months) {
         return (long) ((double) amt * ((roi_per_month / 100) * months));
@@ -516,6 +545,17 @@ public class FragmentCollect extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onDialogPositiveClick(HashMap<String, String> finalGrant_info) {
+        //Collect loan instructions
+    }
+
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) {
+        //Never called. Refer to CollectConfirmDialogFragment. This method can be called from
+        //there
     }
 
     /**

@@ -18,8 +18,8 @@
         android:layout_height="wrap_content"
         android:contentDescription="@string/nav_header_desc"
         android:scaleType="fitCenter"
-        android:adjustViewBounds="true"
-        app:srcCompat="@drawable/ic_launch" />
+        app:srcCompat="@drawable/ic_launch"
+        android:adjustViewBounds="true"/>
 
     <TextView
         android:id="@+id/nav_header_username"
