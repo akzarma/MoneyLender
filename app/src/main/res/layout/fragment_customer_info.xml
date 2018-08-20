@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".FragmentCustomerInfo">
 
-    <!-- TODO: Update blank fragment layout -->
     <ProgressBar
         android:id="@+id/info_cust_progress"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"

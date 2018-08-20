@@ -52,12 +52,10 @@ import static com.akzarma.moneylender.HomeActivity.database;
  * create an instance of this fragment.
  */
 public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragment.NoticeDialogListener {
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
@@ -84,7 +82,6 @@ public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragme
      *
      * @return A new instance of fragment FragmentLoanGrant.
      */
-    // TODO: Rename and change types and number of parameters
     public static FragmentLoanGrant newInstance(Customer customer) {
         FragmentLoanGrant fragment = new FragmentLoanGrant();
         Bundle args = new Bundle();

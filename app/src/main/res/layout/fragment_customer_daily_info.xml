@@ -20,7 +20,6 @@
         android:theme="@style/LinearProgress"
         android:visibility="invisible" />
 
-    <!-- TODO: Update blank fragment layout -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

@@ -422,7 +422,6 @@
                 android:text="" />
         </RelativeLayout>
     </ScrollView>
-    <!-- TODO: Update blank fragment layout -->
 
 
     <!--<Button-->
