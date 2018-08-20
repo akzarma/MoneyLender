@@ -41,7 +41,7 @@ public class CollectConfirmDialogFragment extends DialogFragment{
 
     private static final String COLLECT_INFO = "collect_info";
 
-    public static CollectConfirmDialogFragment newInstance(HashMap<String, String> collect_info) {
+    public static CollectConfirmDialogFragment newInstance(HashMap<String, Long> collect_info) {
         CollectConfirmDialogFragment fragment = new CollectConfirmDialogFragment();
         Bundle args = new Bundle();
         args.putSerializable(COLLECT_INFO, collect_info);
