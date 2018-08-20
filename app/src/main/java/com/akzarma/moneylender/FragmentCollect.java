@@ -2,6 +2,7 @@ package com.akzarma.moneylender;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,7 +43,7 @@ import java.util.concurrent.TimeUnit;
 import static com.akzarma.moneylender.HomeActivity.database;
 import static com.akzarma.moneylender.MainActivity.logged_agent;
 
-public class FragmentCollect extends Fragment implements CollectConfirmDialogFragment.NoticeDialogListener{
+public class FragmentCollect extends Fragment implements CollectConfirmDialogFragment.NoticeDialogListener {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     Customer selected_customer;
@@ -345,9 +347,9 @@ public class FragmentCollect extends Fragment implements CollectConfirmDialogFra
                 /*TODO Execute the following 3 instructions. Do the rest of the processing in
                    onDialogPositiveClick() method, constructed at the bottom of this fragment
                 */
-                HashMap<String, String> collect_info = new HashMap<>();
-                collect_info.put("collect_amount",String.valueOf(amount_received)); // put all data into this HashMap
-                setUpDialog(collect_info);
+//                final HashMap<String, Long> collect_info = new HashMap<>();
+//                collect_info.put("collect_amount", amount_received); // put all data into this HashMap
+//                setUpDialog(collect_info);
 
 
                 progressBar.setVisibility(View.VISIBLE);
@@ -372,7 +374,7 @@ public class FragmentCollect extends Fragment implements CollectConfirmDialogFra
                                 if (get_value != null && get_value.toString().contains(",")) {
                                     deposited_principal = Long.parseLong(get_value.toString().split(",")[0]);
                                     deposited_int = Long.parseLong(get_value.toString().split(",")[1]);
-                                    if(!get_value.toString().contains(",")){
+                                    if (!get_value.toString().contains(",")) {
                                         deposited_principal = Long.parseLong(get_value.toString());
                                     }
                                 } else {
@@ -381,7 +383,7 @@ public class FragmentCollect extends Fragment implements CollectConfirmDialogFra
                                 }
 
 
-                                long principal_collected, interest_collected;
+                                final long principal_collected, interest_collected;
 
                                 if (amount_received > remaining_int) {
                                     remaining_amt -= (amount_received - remaining_int);
@@ -397,63 +399,83 @@ public class FragmentCollect extends Fragment implements CollectConfirmDialogFra
                                 deposited_principal += principal_collected;
                                 deposited_int += interest_collected;
 
-                                DatabaseReference agent = database.getReference("agentCollect");
-                                agent.child(logged_agent).child(curr_date)
-                                        .child(selected_account.getNo())
-                                        .setValue(String.valueOf(principal_collected) + ","
-                                                + String.valueOf(interest_collected)).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                builder.setMessage("Deposited Principal : " + principal_collected
+                                        + "\nDeposited Interest : " + interest_collected)
+                                        .setTitle("Confirm Loan Collection?");
+
+                                builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                                     @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        database.getReference("customers")
-                                                .child(selected_customer.getId()).child("accounts")
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        DatabaseReference agent = database.getReference("agentCollect");
+                                        agent.child(logged_agent).child(curr_date)
                                                 .child(selected_account.getNo())
-                                                .child("deposited").setValue(String.valueOf(deposited_principal) +
-                                                "," + String.valueOf(deposited_int))
-                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                    @Override
-                                                    public void onComplete(@NonNull Task<Void> task) {
-                                                        database.getReference("customers")
-                                                                .child(selected_customer.getId()).child("accounts")
-                                                                .child(selected_account.getNo())
-                                                                .child("last_pay_date").setValue(MainActivity.CaltoStringDate(curr_cal)).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                .setValue(String.valueOf(principal_collected) + ","
+                                                        + String.valueOf(interest_collected)).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                database.getReference("customers")
+                                                        .child(selected_customer.getId()).child("accounts")
+                                                        .child(selected_account.getNo())
+                                                        .child("deposited").setValue(String.valueOf(deposited_principal) +
+                                                        "," + String.valueOf(deposited_int))
+                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                             @Override
                                                             public void onComplete(@NonNull Task<Void> task) {
-                                                                if (amount_received > remaining_int) {
-                                                                    database.getReference("customers")
-                                                                            .child(selected_customer.getId()).child("accounts")
-                                                                            .child(selected_account.getNo())
-                                                                            .child("r_amt").setValue(remaining_amt);
-                                                                }
-
-                                                                interest_field.setText(String.valueOf(remaining_int));
                                                                 database.getReference("customers")
-                                                                        .child(selected_customer.getId())
-                                                                        .child("accounts")
+                                                                        .child(selected_customer.getId()).child("accounts")
                                                                         .child(selected_account.getNo())
-                                                                        .child("r_int").setValue(remaining_int);
-                                                                Log.d("deposited new money: ", "Account: " + selected_account.getNo());
+                                                                        .child("last_pay_date").setValue(MainActivity.CaltoStringDate(curr_cal)).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                    @Override
+                                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                                        if (amount_received > remaining_int) {
+                                                                            database.getReference("customers")
+                                                                                    .child(selected_customer.getId()).child("accounts")
+                                                                                    .child(selected_account.getNo())
+                                                                                    .child("r_amt").setValue(remaining_amt);
+                                                                        }
+
+                                                                        interest_field.setText(String.valueOf(remaining_int));
+                                                                        database.getReference("customers")
+                                                                                .child(selected_customer.getId())
+                                                                                .child("accounts")
+                                                                                .child(selected_account.getNo())
+                                                                                .child("r_int").setValue(remaining_int);
+                                                                        Log.d("deposited new money: ", "Account: " + selected_account.getNo());
 
 
-                                                                if (remaining_amt == 0) {
-                                                                    database.getReference("customers").child(selected_customer.getId()).child("accounts")
-                                                                            .child(selected_account.getNo()).child("active").setValue(false);
-                                                                }
-                                                                Toast.makeText(getContext(), "Amount Collected!", Toast.LENGTH_LONG).show();
+                                                                        if (remaining_amt == 0) {
+                                                                            database.getReference("customers").child(selected_customer.getId()).child("accounts")
+                                                                                    .child(selected_account.getNo()).child("active").setValue(false);
+                                                                        }
+                                                                        Toast.makeText(getContext(), "Amount Collected!", Toast.LENGTH_LONG).show();
 
-                                                                FragmentManager fragmentManager = getFragmentManager();
-                                                                assert fragmentManager != null;
-                                                                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                                                        FragmentManager fragmentManager = getFragmentManager();
+                                                                        assert fragmentManager != null;
+                                                                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-                                                                FragmentAccountTypeInfo fragmentAccountTypeInfo = FragmentAccountTypeInfo.newInstance(Calendar.getInstance(), selected_customer.getAccounts1().get(0).getType());
-                                                                fragmentTransaction.replace(R.id.fragment_container, fragmentAccountTypeInfo).addToBackStack(null).
-                                                                        commit();
+                                                                        FragmentAccountTypeInfo fragmentAccountTypeInfo = FragmentAccountTypeInfo.newInstance(Calendar.getInstance(), selected_customer.getAccounts1().get(0).getType());
+                                                                        fragmentTransaction.replace(R.id.fragment_container, fragmentAccountTypeInfo).addToBackStack(null).
+                                                                                commit();
+                                                                    }
+                                                                });
+
                                                             }
                                                         });
-
-                                                    }
-                                                });
+                                            }
+                                        });
                                     }
                                 });
+
+                                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Toast.makeText(getContext() , "Cancelled" ,Toast.LENGTH_LONG).show();
+                                    }
+                                });
+
+                                builder.create();
+
 
                             }
 
@@ -506,7 +528,7 @@ public class FragmentCollect extends Fragment implements CollectConfirmDialogFra
     }
 
     //This method calls the DialogFragment
-    private void setUpDialog(HashMap<String, String> grant_info) {
+    private void setUpDialog(HashMap<String, Long> grant_info) {
 
 
         assert getFragmentManager() != null;
@@ -550,6 +572,7 @@ public class FragmentCollect extends Fragment implements CollectConfirmDialogFra
     @Override
     public void onDialogPositiveClick(HashMap<String, String> finalGrant_info) {
         //Collect loan instructions
+
     }
 
     @Override
