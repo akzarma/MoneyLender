@@ -77,8 +77,12 @@ public class AdapterCustomerDailyInfo extends RecyclerView.Adapter<AdapterCustom
 //        final String logged_agent = MainActivity.getData("user_id", context);
         holder.agent_id.setText(customerAmount.getCustomer().getAccounts1().get(0).getNo());
         holder.agent_name.setText(customerAmount.getCustomer().getName());
-        holder.total_collection.setText("P: ₹ " + String.valueOf(customerAmount.getPrin_amount_collected()) +
-                " I: ₹ " + String.valueOf(customerAmount.getInt_amount_collected()));
+        if (customerAmount.getCustomer().getAccounts1().get(0).getType().equals("1")) {
+            holder.total_collection.setText("P: ₹ " + String.valueOf(customerAmount.getPrin_amount_collected()) +
+                    " I: ₹ " + String.valueOf(customerAmount.getInt_amount_collected()));
+        } else {
+            holder.total_collection.setText("P: ₹ " + String.valueOf(customerAmount.getPrin_amount_collected()));
+        }
 
 
         final List<DateAmount> dateAmountList = new ArrayList<>();
