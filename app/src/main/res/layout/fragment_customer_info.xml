@@ -14,6 +14,23 @@
         android:indeterminate="true"
         android:theme="@style/LinearProgress"
         android:visibility="invisible" />
+
+    <Button
+        android:id="@+id/delete_customer"
+        android:layout_width="125dp"
+        android:layout_height="35dp"
+        android:layout_below="@+id/info_cust_progress"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/rounded_button_delete"
+        android:fontFamily="@font/roboto_regular"
+        android:paddingHorizontal="10dp"
+        android:text="Delete"
+        android:layout_marginLeft="15dp"
+        android:textColor="#fff"
+        android:textSize="14sp"
+        tools:targetApi="o" />
+
     <Button
         android:id="@+id/edit_cust_button"
         android:layout_width="125dp"
