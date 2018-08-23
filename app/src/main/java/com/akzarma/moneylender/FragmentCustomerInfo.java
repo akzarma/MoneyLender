@@ -1,10 +1,13 @@
 package com.akzarma.moneylender;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -18,8 +21,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
+
+import static com.akzarma.moneylender.HomeActivity.database;
 
 
 /**
@@ -88,6 +99,7 @@ public class FragmentCustomerInfo extends Fragment {
         ImageView dialer_view = view.findViewById(R.id.dialer_view);
         ImageView g_dialer_view = view.findViewById(R.id.g_dialer_view);
         Button edit_cust_button = view.findViewById(R.id.edit_cust_button);
+        Button delete_customer = view.findViewById(R.id.delete_customer);
 
         name_field.setText(selected_customer.getName());
         aadhar_field.setText(selected_customer.getAadhar());
@@ -107,6 +119,47 @@ public class FragmentCustomerInfo extends Fragment {
                 FragmentKYC far = FragmentKYC.newInstance(selected_customer);
                 fragmentTransaction.replace(R.id.fragment_container, far).addToBackStack(null).
                         commit();
+            }
+        });
+
+        delete_customer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Confirm?")
+                        .setMessage("Are you sure you want to delete the customer?");
+                builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        DatabaseReference ref = database.getReference("customers").child(selected_customer.getId());
+                        Map<String,Object> invalid = new HashMap<>();
+                        invalid.put("invalid","true");
+                        ref.updateChildren(invalid, new DatabaseReference.CompletionListener() {
+                            @Override
+                            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                                if (databaseError == null) {
+
+                                    assert getFragmentManager() != null;
+                                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                                    FragmentShowCustomer fd = FragmentShowCustomer.newInstance("0");
+                                    ft.replace(R.id.fragment_container, fd).addToBackStack(null).
+                                            commit();
+                                }else {
+
+                                    Toast.makeText(getContext(),"Error deleting the customer. Please try again later",Toast.LENGTH_LONG).show();
+                                }
+
+                            }
+                        });
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        
+                    }
+                });
+                builder.show();
             }
         });
 

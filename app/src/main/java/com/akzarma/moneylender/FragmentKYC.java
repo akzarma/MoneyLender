@@ -1,8 +1,10 @@
 package com.akzarma.moneylender;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -243,69 +245,86 @@ public class FragmentKYC extends Fragment {
                 fab.setVisibility(View.INVISIBLE);
 //                else address_til.setErrorEnabled(false);
 
-                if (selected_customer_to_update == null) {
-                    DatabaseReference customers = database.getReference("customers");
-                    String key = customer_id_field.getText().toString();
-                    Map<String, Object> id = new HashMap<>();
-                    Map<String, Object> attrs = new HashMap<>();
-                    String name = name_field.getText().toString();
-                    attrs.put("name", name.substring(0, 1).toUpperCase() + name.substring(1));
-                    attrs.put("aadhar", aadhar_field.getText().toString());
-                    attrs.put("occupation", occupation_field.getText().toString());
-                    attrs.put("mobile", mobile_field.getText().toString());
-                    attrs.put("dob", dob_field.getText().toString());
-                    attrs.put("address", address_field.getText().toString());
-                    attrs.put("g_name", g_name_field.getText().toString());
-                    attrs.put("g_mobile", g_mobile_field.getText().toString());
-                    attrs.put("g_address", g_address_field.getText().toString());
+                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
+                builder.setTitle("Add Customer?")
+                        .setMessage(String.valueOf(name_field.getText()));
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (selected_customer_to_update == null) {
+                            DatabaseReference customers = database.getReference("customers");
+                            String key = customer_id_field.getText().toString();
+                            Map<String, Object> id = new HashMap<>();
+                            Map<String, Object> attrs = new HashMap<>();
+                            String name = name_field.getText().toString();
+                            attrs.put("name", name.substring(0, 1).toUpperCase() + name.substring(1));
+                            attrs.put("aadhar", aadhar_field.getText().toString());
+                            attrs.put("occupation", occupation_field.getText().toString());
+                            attrs.put("mobile", mobile_field.getText().toString());
+                            attrs.put("dob", dob_field.getText().toString());
+                            attrs.put("address", address_field.getText().toString());
+                            attrs.put("g_name", g_name_field.getText().toString());
+                            attrs.put("g_mobile", g_mobile_field.getText().toString());
+                            attrs.put("g_address", g_address_field.getText().toString());
 
-                    id.put(key, attrs);
+                            id.put(key, attrs);
 
-                    customers.updateChildren(id, new DatabaseReference.CompletionListener() {
-                        @Override
-                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                            if (databaseError == null) {
-                                Snackbar snackbar = Snackbar
-                                        .make(rl, "Customer Added Successfully!", Snackbar.LENGTH_LONG);
-                                snackbar.show();
-                                cust_id_ref.setValue(lastCustomerId + 1);
-                                assert getFragmentManager() != null;
-                                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                                FragmentKYC fd = new FragmentKYC();
-                                ft.replace(R.id.fragment_container, fd).addToBackStack(null).
-                                        commit();
+                            customers.updateChildren(id, new DatabaseReference.CompletionListener() {
+                                @Override
+                                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                    if (databaseError == null) {
+                                        Snackbar snackbar = Snackbar
+                                                .make(rl, "Customer Added Successfully!", Snackbar.LENGTH_LONG);
+                                        snackbar.show();
+                                        cust_id_ref.setValue(lastCustomerId + 1);
+                                        assert getFragmentManager() != null;
+                                        FragmentTransaction ft = getFragmentManager().beginTransaction();
+                                        FragmentKYC fd = new FragmentKYC();
+                                        ft.replace(R.id.fragment_container, fd).addToBackStack(null).
+                                                commit();
 
-                            } else {
-                                Toast.makeText(getContext(), "There is some error in saving the details.", Toast.LENGTH_SHORT).show();
-                            }
+                                    } else {
+                                        Toast.makeText(getContext(), "There is some error in saving the details.", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                        } else {
+                            DatabaseReference cust_ref = database.getReference("customers").child(selected_customer_to_update.getId());
+                            cust_ref.child("name").setValue(name_field.getText().toString());
+                            cust_ref.child("aadhar").setValue(aadhar_field.getText().toString());
+                            cust_ref.child("occupation").setValue(occupation_field.getText().toString());
+                            cust_ref.child("mobile").setValue(mobile_field.getText().toString());
+                            cust_ref.child("dob").setValue(dob_field.getText().toString());
+                            cust_ref.child("address").setValue(address_field.getText().toString());
+                            cust_ref.child("g_name").setValue(g_name_field.getText().toString());
+                            cust_ref.child("g_mobile").setValue(g_mobile_field.getText().toString());
+                            cust_ref.child("g_address").setValue(g_address_field.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    Snackbar snackbar = Snackbar
+                                            .make(rl, "Customer Updated Successfully!", Snackbar.LENGTH_LONG);
+                                    snackbar.show();
+                                    assert getFragmentManager() != null;
+                                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                                    FragmentKYC fd = new FragmentKYC();
+                                    ft.replace(R.id.fragment_container, fd).addToBackStack(null).
+                                            commit();
+                                }
+                            });
+
+
                         }
-                    });
-                } else {
-                    DatabaseReference cust_ref = database.getReference("customers").child(selected_customer_to_update.getId());
-                    cust_ref.child("name").setValue(name_field.getText().toString());
-                    cust_ref.child("aadhar").setValue(aadhar_field.getText().toString());
-                    cust_ref.child("occupation").setValue(occupation_field.getText().toString());
-                    cust_ref.child("mobile").setValue(mobile_field.getText().toString());
-                    cust_ref.child("dob").setValue(dob_field.getText().toString());
-                    cust_ref.child("address").setValue(address_field.getText().toString());
-                    cust_ref.child("g_name").setValue(g_name_field.getText().toString());
-                    cust_ref.child("g_mobile").setValue(g_mobile_field.getText().toString());
-                    cust_ref.child("g_address").setValue(g_address_field.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            Snackbar snackbar = Snackbar
-                                    .make(rl, "Customer Updated Successfully!", Snackbar.LENGTH_LONG);
-                            snackbar.show();
-                            assert getFragmentManager() != null;
-                            FragmentTransaction ft = getFragmentManager().beginTransaction();
-                            FragmentKYC fd = new FragmentKYC();
-                            ft.replace(R.id.fragment_container, fd).addToBackStack(null).
-                                    commit();
-                        }
-                    });
+                    }
+                });
+
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getContext(),"Cancelled",Toast.LENGTH_LONG).show();
+                    }
+                });
 
 
-                }
 
 //                customers.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
 //                    @Override
