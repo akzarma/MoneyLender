@@ -98,6 +98,7 @@
                         android:layout_toEndOf="@id/int_collected_key"
                         android:fontFamily="@font/roboto_medium"
                         android:textColor="@color/colorWhiteText" />
+
                     <TextView
                         android:id="@+id/remaining_money_key"
                         android:layout_width="wrap_content"
@@ -118,6 +119,7 @@
                         android:layout_toEndOf="@id/remaining_money_key"
                         android:fontFamily="@font/roboto_medium"
                         android:textColor="@color/colorWhiteText" />
+
                     <TextView
                         android:id="@+id/interest_key"
                         android:layout_width="wrap_content"
@@ -159,7 +161,6 @@
                         android:layout_toEndOf="@id/f_amt_key"
                         android:fontFamily="@font/roboto_medium"
                         android:textColor="@color/colorWhiteText" />
-
 
 
                     <TextView
@@ -357,36 +358,36 @@
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
 
-            <RelativeLayout
-                android:id="@+id/payment_relative_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/collect_card"
-                android:layout_marginRight="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_centerHorizontal="true">
+            <!--<RelativeLayout-->
+            <!--android:id="@+id/payment_relative_layout"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@id/collect_card"-->
+            <!--android:layout_marginRight="20dp"-->
+            <!--android:layout_marginLeft="20dp"-->
+            <!--android:layout_centerHorizontal="true">-->
 
-                <TextView
-                    android:id="@+id/payment_method_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="2dp"
-                    android:text="Payment Option: " />
+            <!--<TextView-->
+            <!--android:id="@+id/payment_method_text"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:paddingTop="2dp"-->
+            <!--android:text="Payment Option: " />-->
 
-                <Spinner
-                    android:id="@+id/pay_option_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_toEndOf="@+id/payment_method_text"
-                    android:entries="@array/payment_options"
-                    android:spinnerMode="dialog" />
-            </RelativeLayout>
+            <!--<Spinner-->
+            <!--android:id="@+id/pay_option_spinner"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_toEndOf="@+id/payment_method_text"-->
+            <!--android:entries="@array/payment_options"-->
+            <!--android:spinnerMode="dialog" />-->
+            <!--</RelativeLayout>-->
 
             <RelativeLayout
                 android:id="@+id/amount_relative_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/payment_relative_layout"
+                android:layout_below="@id/collect_card"
                 android:layout_centerHorizontal="true">
 
                 <TextView
