@@ -665,7 +665,7 @@ public class FragmentAccountTypeInfo extends Fragment {
                         String each_acc = acc_custAgent.getKey();
                         Number ser_no;
                         Label account_number;
-                        if (customer_amount_map.containsKey(each_acc)) {
+                        if (customer_amount_map.containsKey(each_acc) && customer_amount_map.get(each_acc).getCustomer().getAccounts1().get(0).getR_amt()!=0) {
                             ser_no = new Number(serialCol, row, row - 1);
                             account_number = new Label(accountCol, row, String.valueOf(customer_amount_map.get(each_acc).getCustomer().getAccounts1().get(0).getNo()));
                             customer_label = new Label(custCol, row, String.valueOf(customer_amount_map.get(each_acc).getCustomer().getName()) + " (" +
@@ -676,7 +676,19 @@ public class FragmentAccountTypeInfo extends Fragment {
                             agent_label_value = new Label(agentCol, row, acc_custAgent.getValue().getAgent_id());
                             total_amount += customer_amount_map.get(each_acc).getPrin_amount_collected();
                             int_total_amount += customer_amount_map.get(each_acc).getInt_amount_collected();
-                        } else {
+                            row++;
+                            try {
+                                sheet.addCell(account_number);
+                                sheet.addCell(amount_collected);
+                                sheet.addCell(int_amount_collected);
+                                sheet.addCell(customer_label);
+                                sheet.addCell(agent_label_value);
+                                sheet.addCell(ser_no);
+                            } catch (WriteException e) {
+                                e.printStackTrace();
+                            }
+
+                        } else if(!customer_amount_map.containsKey(each_acc)){
                             String cust_id = acc_custAgent.getValue().getCust_id();
                             ser_no = new Number(serialCol, row, row - 1);
                             account_number = new Label(accountCol, row, String.valueOf(each_acc));
@@ -685,20 +697,21 @@ public class FragmentAccountTypeInfo extends Fragment {
                             amount_collected = new Number(amountCol, row, 0);
                             int_amount_collected = new Number(intAmountCol, row, 0);
                             agent_label_value = new Label(agentCol, row, acc_custAgent.getValue().getAgent_id());
+                            row++;
+                            try {
+                                sheet.addCell(account_number);
+                                sheet.addCell(amount_collected);
+                                sheet.addCell(int_amount_collected);
+                                sheet.addCell(customer_label);
+                                sheet.addCell(agent_label_value);
+                                sheet.addCell(ser_no);
+                            } catch (WriteException e) {
+                                e.printStackTrace();
+                            }
 
                         }
 
-                        row++;
-                        try {
-                            sheet.addCell(account_number);
-                            sheet.addCell(amount_collected);
-                            sheet.addCell(int_amount_collected);
-                            sheet.addCell(customer_label);
-                            sheet.addCell(agent_label_value);
-                            sheet.addCell(ser_no);
-                        } catch (WriteException e) {
-                            e.printStackTrace();
-                        }
+
 
                     }
 

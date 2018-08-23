@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:contentDescription="@string/nav_header_desc"
         android:scaleType="fitCenter"
-        app:srcCompat="@drawable/ic_launch"
+        app:srcCompat="@drawable/ic_launch_xml"
         android:adjustViewBounds="true"/>
 
     <TextView
