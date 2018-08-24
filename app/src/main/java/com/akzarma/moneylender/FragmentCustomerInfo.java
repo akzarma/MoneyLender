@@ -133,7 +133,7 @@ public class FragmentCustomerInfo extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         DatabaseReference ref = database.getReference("customers").child(selected_customer.getId());
                         Map<String,Object> invalid = new HashMap<>();
-                        invalid.put("invalid","true");
+                        invalid.put("inactive","true");
                         ref.updateChildren(invalid, new DatabaseReference.CompletionListener() {
                             @Override
                             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {

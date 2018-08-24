@@ -125,8 +125,10 @@ public class FragmentSelectCustomer extends Fragment {
                     for (DataSnapshot customer : dataSnapshot.getChildren()) {
                         Customer customer1 = customer.getValue(Customer.class);
                         customer1.setId(customer.getKey());
-                        if (!containsId(customerList, customer1.getId())) {
-                            customerList.add(customer1);
+                        if (!customer1.isInactive()) {
+                            if (!containsId(customerList, customer1.getId())) {
+                                customerList.add(customer1);
+                            }
                         }
                     }
                     //customerList and customers list are in sync do not operate them individually

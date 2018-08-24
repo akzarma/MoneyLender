@@ -107,7 +107,7 @@ public class AdapterCustomerDailyInfo extends RecyclerView.Adapter<AdapterCustom
                                         .get(customerAmount.getCustomer().getAccounts1().get(0).getNo());
 
                                 if (curr_amount != null) {
-                                    dateAmount.setBothAmounts(curr_amount);
+                                    dateAmount.setAllAmounts(curr_amount);
                                     dateAmountList.add(dateAmount);
 
                                 }

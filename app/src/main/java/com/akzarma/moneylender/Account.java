@@ -23,6 +23,7 @@ public class Account implements Serializable {
     private String type; //    "0" or  "1"
     private Long duration = 0L;
     private String lf_no = "";
+    private Customer customer;
 
     public HashMap<String, String> getMap() {
         HashMap<String, String> attrs = new HashMap<>();
@@ -93,6 +94,14 @@ public class Account implements Serializable {
         }
         if (value1.get("active") != null)
             this.active = Boolean.parseBoolean(value1.get("active").toString());
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
     public boolean isActive() {

@@ -28,7 +28,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -123,17 +122,22 @@ public class FragmentSelectAccount extends Fragment {
                         for (DataSnapshot single_customer : dataSnapshot.getChildren()) {
                             HashMap<String, Object> customer_map = new HashMap<>();
                             customer_map.put(single_customer.getKey(), single_customer.getValue());
-                            HashMap<String, Object> account_map;
-                            account_map = (HashMap<String, Object>) ((HashMap<String, Object>)
-                                    customer_map.get(single_customer.getKey())).get("accounts");
+                            HashMap<String, Object> account_map, single_cust_map;
+                            single_cust_map = ((HashMap<String, Object>)
+                                    customer_map.get(single_customer.getKey()));
+                            account_map = ((HashMap<String, Object>) single_cust_map.get("accounts"));
+                            boolean is_inactive = false;
+                            if (single_cust_map.get("inactive") != null) {
+                                is_inactive = Boolean.parseBoolean(single_cust_map.get("inactive").toString());
+                            }
 
-                            if (account_map != null) {
+                            if (account_map != null && !is_inactive) {
                                 for (Map.Entry<String, Object> account : account_map.entrySet()) {
 
                                     if (account_customer_map.containsKey(account.getKey())) {
                                         Account account1 = new Account(account.getValue());
                                         account1.setNo(account.getKey());
-                                        if(account1.isActive()) {
+                                        if (account1.isActive()) {
                                             AccountString accountString = new AccountString();
                                             accountString.setAccount(account1);
                                             accountString.setInfo(((HashMap<String, Object>) customer_map.

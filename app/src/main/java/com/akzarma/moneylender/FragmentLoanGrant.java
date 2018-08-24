@@ -430,7 +430,7 @@ public class FragmentLoanGrant extends Fragment implements GrantLoanDialogFragme
                     return;
                 }
                 if (account_type_selected.equals("1")) {
-                    if (edit_roi.getText().toString().length() == 0) {
+                    if (edit_roi.getText().toString().length() == 0 || Integer.parseInt(edit_roi.getText().toString())==0) {
                         edit_roi.setError("Rate of interest is required for Monthly basis account!");
                         return;
                     }

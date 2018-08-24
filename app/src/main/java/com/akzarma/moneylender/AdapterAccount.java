@@ -149,7 +149,7 @@ public class AdapterAccount extends RecyclerView.Adapter<AdapterAccount.AccountH
                                                         String curr_amount = ((HashMap<String, String>) Objects.requireNonNull(date.getValue())).get(account.getNo());
 
                                                         if (curr_amount != null) {
-                                                            dateAmount.setBothAmounts(curr_amount);
+                                                            dateAmount.setAllAmounts(curr_amount);
                                                             dateAmountList.add(dateAmount);
 
                                                         }

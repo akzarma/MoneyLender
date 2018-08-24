@@ -14,6 +14,7 @@ public class Customer implements Serializable, Cloneable {
     private String g_name = "";
     private String g_mobile = "";
     private String g_address = "";
+    private boolean inactive = false;
 
     private List<Account> accounts1;
 
@@ -24,6 +25,14 @@ public class Customer implements Serializable, Cloneable {
         } catch (CloneNotSupportedException e) {
             throw new Error("Could not clone customer.");
         }
+    }
+
+    public boolean isInactive() {
+        return inactive;
+    }
+
+    public void setInactive(boolean inactive) {
+        this.inactive = inactive;
     }
 
     public String getG_name() {

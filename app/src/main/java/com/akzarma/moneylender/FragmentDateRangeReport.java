@@ -27,7 +27,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import jxl.Workbook;
@@ -60,6 +62,12 @@ public class FragmentDateRangeReport extends Fragment {
     private AdapterDateRange mAdapter;
     private RecyclerView recyclerView;
     private List<DateAmount> dateAmountList;
+    private HashMap<String, Account> accountHashMap = new HashMap<>();
+    private HashSet<String> account_no_list = new HashSet<>();
+
+    final HashMap<String, DateAmount> calendarDateAmountHashMap = new HashMap<>();
+    private Calendar from_cal, to_cal;
+    private String from_date, to_date;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -99,20 +107,23 @@ public class FragmentDateRangeReport extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_date_range_report, container, false);
         recyclerView = view.findViewById(R.id.recycler);
-        final Button get_excel_button = view.findViewById(R.id.get_excel_button);
-        get_excel_button.setVisibility(View.INVISIBLE);
+        final Button get_both_excel_button = view.findViewById(R.id.get_both_excel_button);
+        final Button get_daily_excel_button = view.findViewById(R.id.get_daily_excel_button);
+        final Button get_monthly_excel_button = view.findViewById(R.id.get_monthly_excel_button);
+        get_both_excel_button.setVisibility(View.INVISIBLE);
+        get_daily_excel_button.setVisibility(View.INVISIBLE);
+        get_monthly_excel_button.setVisibility(View.INVISIBLE);
 
         TextView fragment_textV_day = view.findViewById(R.id.fragment_textV_day);
 
 
-        final Calendar from_cal = (Calendar) getArguments().getSerializable(ARG_PARAM1);
-        final Calendar to_cal = (Calendar) getArguments().getSerializable(ARG_PARAM2);
+        from_cal = (Calendar) getArguments().getSerializable(ARG_PARAM1);
+        to_cal = (Calendar) getArguments().getSerializable(ARG_PARAM2);
 
-        final String from_date = CaltoStringDate(from_cal);
-        final String to_date = CaltoStringDate(to_cal);
+        from_date = CaltoStringDate(from_cal);
+        to_date = CaltoStringDate(to_cal);
 
         fragment_textV_day.setText(from_date + " to " + to_date);
-        final HashMap<String, DateAmount> calendarDateAmountHashMap = new HashMap<>();
 
         if (MainActivity.logged_type.equals("admin")) {
             DatabaseReference agent_collect_db_ref = database.getReference("agentCollect");
@@ -122,14 +133,14 @@ public class FragmentDateRangeReport extends Fragment {
 
                     for (DataSnapshot agent : dataSnapshot.getChildren())
                         for (DataSnapshot date : agent.getChildren()) {
-
                             Calendar date_cal = StringDateToCal(date.getKey());
                             String date_str = CaltoStringDate(date_cal);
                             if ((date_cal.after(from_cal) && date_cal.before(to_cal)) ||
                                     (date_cal.equals(from_cal) || date_cal.equals(to_cal))) {
                                 for (DataSnapshot account : date.getChildren()) {
+                                    account_no_list.add(account.getKey());
                                     DateAmount dateAmount = new DateAmount();
-                                    dateAmount.setBothAmounts(String.valueOf(account.getValue()));
+                                    dateAmount.setAllAmounts(String.valueOf(account.getValue()));
                                     dateAmount.setDate(date.getKey());
                                     if (calendarDateAmountHashMap.containsKey(date_str)) {
                                         Long amount_principal = calendarDateAmountHashMap.get(date_str).getAmount_principal() + dateAmount.getAmount_principal();
@@ -149,7 +160,79 @@ public class FragmentDateRangeReport extends Fragment {
                     recyclerView.setLayoutManager(mLayoutManager);
                     recyclerView.setItemAnimator(new DefaultItemAnimator());
                     recyclerView.setAdapter(mAdapter);
-                    get_excel_button.setVisibility(View.VISIBLE);
+
+                    DatabaseReference agent_account_db_ref = database.getReference("agentAccount");
+                    agent_account_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            List<String> account_no_to_remove = new ArrayList<>();
+                            for (DataSnapshot agent : dataSnapshot.getChildren()) {
+                                account_no_to_remove.clear();
+                                for (String each_account : account_no_list) {
+                                    if (agent.hasChild(each_account)) {
+                                        Account account = new Account();
+                                        account.setNo(each_account);
+                                        Customer customer = new Customer();
+                                        customer.setId(String.valueOf(agent.child(each_account).getValue()));
+                                        account.setCustomer(customer);
+                                        accountHashMap.put(each_account, account);
+                                        account_no_to_remove.add(each_account);
+                                    }
+                                }
+                                account_no_list.removeAll(account_no_to_remove);
+                            }
+
+                            final DatabaseReference cust_db_ref = database.getReference("customers");
+                            cust_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    for (Map.Entry<String, Account> each_account : accountHashMap.entrySet()) {
+                                        String cust_id = each_account.getValue().getCustomer().getId();
+                                        if (dataSnapshot.hasChild(cust_id)) {
+                                            Customer customer = dataSnapshot.child(cust_id).getValue(Customer.class);
+                                            customer.setId(cust_id);
+                                            each_account.getValue().setCustomer(customer);
+                                        }
+                                    }
+
+                                    final DatabaseReference cust_db_ref = database.getReference("accountType");
+                                    cust_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            for (Map.Entry<String, Account> each_account : accountHashMap.entrySet()) {
+                                                String acc_id = each_account.getKey();
+                                                each_account.getValue().setType(dataSnapshot.child(acc_id).getValue(String.class));
+                                            }
+
+                                            get_both_excel_button.setVisibility(View.VISIBLE);
+                                            get_daily_excel_button.setVisibility(View.VISIBLE);
+                                            get_monthly_excel_button.setVisibility(View.VISIBLE);
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                        }
+                                    });
+
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+
                 }
 
                 @Override
@@ -158,6 +241,9 @@ public class FragmentDateRangeReport extends Fragment {
                 }
             });
         } else if (logged_type.equals("agent")) {
+            get_daily_excel_button.setVisibility(View.GONE);
+            get_monthly_excel_button.setVisibility(View.GONE);
+
             DatabaseReference agent_collect_db_ref = database.getReference("agentCollect").child(logged_agent);
             agent_collect_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -171,7 +257,7 @@ public class FragmentDateRangeReport extends Fragment {
                                 (date_cal.equals(from_cal) || date_cal.equals(to_cal))) {
                             for (DataSnapshot account : date.getChildren()) {
                                 DateAmount dateAmount = new DateAmount();
-                                dateAmount.setBothAmounts(String.valueOf(account.getValue()));
+                                dateAmount.setAllAmounts(String.valueOf(account.getValue()));
                                 dateAmount.setDate(date.getKey());
                                 if (calendarDateAmountHashMap.containsKey(date_str)) {
                                     Long amount_principal = calendarDateAmountHashMap.get(date_str).getAmount_principal() + dateAmount.getAmount_principal();
@@ -191,7 +277,7 @@ public class FragmentDateRangeReport extends Fragment {
                     recyclerView.setLayoutManager(mLayoutManager);
                     recyclerView.setItemAnimator(new DefaultItemAnimator());
                     recyclerView.setAdapter(mAdapter);
-                    get_excel_button.setVisibility(View.VISIBLE);
+                    get_both_excel_button.setVisibility(View.VISIBLE);
                 }
 
                 @Override
@@ -201,100 +287,132 @@ public class FragmentDateRangeReport extends Fragment {
             });
         }
 
-        get_excel_button.setOnClickListener(new View.OnClickListener() {
+        get_daily_excel_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String state = Environment.getExternalStorageState();
-                if (Environment.MEDIA_MOUNTED.equals(state)) {
-                    Log.d("Frag date range", "onCreate: " + "true file");
-                } else Log.d("Frag date range", "onCreate: " + "not writable");
-                File root = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "MoneyLender");
-                File DocsDirectory = new File(root.getAbsolutePath(), "Monthly Reports");
-                DocsDirectory.mkdirs();
-                File actualDoc = new File(DocsDirectory.getAbsolutePath(), from_date + "_to_" + to_date + ".xls");
-                int row = 0;
-                int serialCol = 0;
-                int dateCol = 1;
-                int collectionCol = 2;
-                int intCollectionCol = 3;
-                try {
+                generat_excel(0);
+            }
+        });
 
-                    final WritableWorkbook workbook = Workbook.createWorkbook(actualDoc);
-                    final WritableSheet sheet = workbook.createSheet("Test Sheet", 0);
-                    Label heading = new Label(0, row, "Monthly Report from " + from_date + " to " + to_date);
-                    row++;
-                    Label account_label = new Label(dateCol, row, "Date");
-                    Label amount_label = new Label(collectionCol, row, "Disbursement Collection");
-                    Label int_amount_label = new Label(intCollectionCol, row, "Interest Collection");
-                    Label sr_number = new Label(serialCol, row, "Sr.No");
-                    row++;
+        get_monthly_excel_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                generat_excel(1);
+            }
+        });
 
-                    try {
-                        sheet.addCell(heading);
-                        sheet.addCell(account_label);
-                        sheet.addCell(amount_label);
-                        sheet.addCell(int_amount_label);
-                        sheet.addCell(sr_number);
-
-
-                        long total_amount = 0;
-                        long total_amount_int = 0;
-                        Number ser_no, amount_collected, int_amount_collected;
-                        Label date_label;
-                        Calendar curr_cal = (Calendar) from_cal.clone();
-                        Calendar to_cal_copy = (Calendar) to_cal.clone();
-                        to_cal_copy.add(Calendar.DAY_OF_MONTH, 1);
-                        while (curr_cal.before(to_cal_copy)) {
-                            String curr_date = MainActivity.CaltoStringDate(curr_cal);
-
-
-                            ser_no = new Number(serialCol, row, row - 1);
-                            date_label = new Label(dateCol, row, curr_date);
-                            if (calendarDateAmountHashMap.containsKey(curr_date)) {
-                                total_amount += calendarDateAmountHashMap.get(curr_date).getAmount_principal();
-                                total_amount_int += calendarDateAmountHashMap.get(curr_date).getAmount_interest();
-                                amount_collected = new Number(collectionCol, row, calendarDateAmountHashMap.get(curr_date).getAmount_principal());
-                                int_amount_collected = new Number(intCollectionCol, row, calendarDateAmountHashMap.get(curr_date).getAmount_interest());
-                            } else {
-                                amount_collected = new Number(collectionCol, row, 0);
-                                int_amount_collected = new Number(intCollectionCol, row, 0);
-                            }
-                            row++;
-                            sheet.addCell(date_label);
-                            sheet.addCell(amount_collected);
-                            sheet.addCell(int_amount_collected);
-                            sheet.addCell(ser_no);
-                            curr_cal.add(Calendar.DAY_OF_MONTH, 1);
-                        }
-
-                        row++;
-                        date_label = new Label(dateCol, row, "Total Collection");
-                        amount_collected = new Number(collectionCol, row, total_amount);
-                        int_amount_collected = new Number(intCollectionCol, row, total_amount_int);
-                        sheet.addCell(date_label);
-                        sheet.addCell(amount_collected);
-                        sheet.addCell(int_amount_collected);
-
-                        try {
-                            workbook.write();
-                            workbook.close();
-                            Toast.makeText(getContext(), "File saved in Documents folder", Toast.LENGTH_LONG).show();
-                        } catch (IOException | WriteException e) {
-                            e.printStackTrace();
-                        }
-                    } catch (WriteException e) {
-                        e.printStackTrace();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        get_both_excel_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                generat_excel(-1);
             }
 
 
         });
 
+
         return view;
     }
+
+
+    void generat_excel(int account_type) {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            Log.d("Frag date range", "onCreate: " + "true file");
+        } else Log.d("Frag date range", "onCreate: " + "not writable");
+        File root = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "MoneyLender");
+        File DocsDirectory = new File(root.getAbsolutePath(), "Monthly Reports");
+        DocsDirectory.mkdirs();
+        File actualDoc = new File(DocsDirectory.getAbsolutePath(), from_date + "_to_" + to_date + ".xls");
+        int row = 0;
+        int serialCol = 0;
+        int dateCol = 1;
+        int nameCol = 2;
+        int collectionCol = 3;
+        int intCollectionCol = 4;
+        int intTotalCol = 5;
+        try {
+
+            final WritableWorkbook workbook = Workbook.createWorkbook(actualDoc);
+            final WritableSheet sheet = workbook.createSheet("Test Sheet", 0);
+            Label heading = new Label(0, row, "Monthly Report from " + from_date + " to " + to_date);
+            row++;
+            Label account_label = new Label(dateCol, row, "Date");
+            Label cust_name_label = new Label(dateCol, row, "Customer Name");
+            Label amount_label = new Label(collectionCol, row, "Disbursement Collection");
+            Label int_amount_label = new Label(intCollectionCol, row, "Interest Collection");
+            Label int_total_label = new Label(intTotalCol, row, "Total Collection");
+            Label sr_number = new Label(serialCol, row, "Sr.No");
+            row++;
+
+            try {
+                sheet.addCell(heading);
+                sheet.addCell(account_label);
+                sheet.addCell(amount_label);
+                sheet.addCell(int_amount_label);
+                sheet.addCell(int_total_label);
+                sheet.addCell(sr_number);
+
+
+                long total_amount = 0;
+                long total_amount_int = 0;
+                Number ser_no, amount_collected, int_amount_collected, int_total_collected;
+                Label date_label;
+                Calendar curr_cal = (Calendar) from_cal.clone();
+                Calendar to_cal_copy = (Calendar) to_cal.clone();
+                to_cal_copy.add(Calendar.DAY_OF_MONTH, 1);
+                while (curr_cal.before(to_cal_copy)) {
+                    String curr_date = MainActivity.CaltoStringDate(curr_cal);
+
+
+                    ser_no = new Number(serialCol, row, row - 1);
+                    date_label = new Label(dateCol, row, curr_date);
+                    if (calendarDateAmountHashMap.containsKey(curr_date)) {
+                        total_amount += calendarDateAmountHashMap.get(curr_date).getAmount_principal();
+                        total_amount_int += calendarDateAmountHashMap.get(curr_date).getAmount_interest();
+                        amount_collected = new Number(collectionCol, row, calendarDateAmountHashMap.get(curr_date).getAmount_principal());
+                        int_amount_collected = new Number(intCollectionCol, row, calendarDateAmountHashMap.get(curr_date).getAmount_interest());
+                        int_total_collected = new Number(intTotalCol, row, calendarDateAmountHashMap.get(curr_date).getAmount_interest() +
+                                calendarDateAmountHashMap.get(curr_date).getAmount_principal());
+                    } else {
+                        amount_collected = new Number(collectionCol, row, 0);
+                        int_amount_collected = new Number(intCollectionCol, row, 0);
+                        int_total_collected = new Number(intTotalCol, row, 0);
+                    }
+                    row++;
+                    sheet.addCell(date_label);
+                    sheet.addCell(amount_collected);
+                    sheet.addCell(int_amount_collected);
+                    sheet.addCell(int_total_collected);
+                    sheet.addCell(ser_no);
+                    curr_cal.add(Calendar.DAY_OF_MONTH, 1);
+                }
+
+                row++;
+                date_label = new Label(dateCol, row, "Total Collection");
+                amount_collected = new Number(collectionCol, row, total_amount);
+                int_amount_collected = new Number(intCollectionCol, row, total_amount_int);
+                int_total_collected = new Number(intTotalCol, row, total_amount + total_amount_int);
+                sheet.addCell(date_label);
+                sheet.addCell(int_total_collected);
+                sheet.addCell(amount_collected);
+                sheet.addCell(int_amount_collected);
+
+                try {
+                    workbook.write();
+                    workbook.close();
+                    Toast.makeText(getContext(), "File saved in Documents folder", Toast.LENGTH_LONG).show();
+                } catch (IOException | WriteException e) {
+                    e.printStackTrace();
+                }
+            } catch (WriteException e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

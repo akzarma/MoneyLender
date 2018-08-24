@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -18,11 +17,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -343,13 +340,12 @@ public class FragmentCollect extends Fragment {
             @Override
             public void onClick(View v) {
                 progressBar.setVisibility(View.VISIBLE);
-                if (amount_field.getText().toString().length() == 0) {
-                    amount_field.setError("Amount Money is required!");
+                if (amount_field.getText().toString().length() == 0 || Long.parseLong(amount_field.getText().toString()) == 0) {
+                    amount_field.setError("Amount is required!");
                     progressBar.setVisibility(View.INVISIBLE);
                     return;
                 }
                 final Long amount_received = Long.parseLong(String.valueOf(amount_field.getText()));
-
 
 
                 fab.setVisibility(View.INVISIBLE);
@@ -405,59 +401,60 @@ public class FragmentCollect extends Fragment {
                                     agent.child(logged_agent).child(curr_date)
                                             .child(selected_account.getNo())
                                             .setValue(String.valueOf(principal_collected) + ","
-                                                    + String.valueOf(interest_collected)).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            database.getReference("customers")
-                                                    .child(selected_customer.getId()).child("accounts")
-                                                    .child(selected_account.getNo())
-                                                    .child("deposited").setValue(String.valueOf(deposited_principal) +
-                                                    "," + String.valueOf(deposited_int))
-                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                        @Override
-                                                        public void onComplete(@NonNull Task<Void> task) {
-                                                            database.getReference("customers")
-                                                                    .child(selected_customer.getId()).child("accounts")
-                                                                    .child(selected_account.getNo())
-                                                                    .child("last_pay_date").setValue(MainActivity.CaltoStringDate(curr_cal)).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    + String.valueOf(interest_collected) + "," + remaining_amt + "," + remaining_int)
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    database.getReference("customers")
+                                                            .child(selected_customer.getId()).child("accounts")
+                                                            .child(selected_account.getNo())
+                                                            .child("deposited").setValue(String.valueOf(deposited_principal) +
+                                                            "," + String.valueOf(deposited_int))
+                                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                 @Override
                                                                 public void onComplete(@NonNull Task<Void> task) {
-                                                                    if (amount_received > remaining_int) {
-                                                                        database.getReference("customers")
-                                                                                .child(selected_customer.getId()).child("accounts")
-                                                                                .child(selected_account.getNo())
-                                                                                .child("r_amt").setValue(remaining_amt);
-                                                                    }
-
-                                                                    interest_field.setText(String.valueOf(remaining_int));
                                                                     database.getReference("customers")
-                                                                            .child(selected_customer.getId())
-                                                                            .child("accounts")
+                                                                            .child(selected_customer.getId()).child("accounts")
                                                                             .child(selected_account.getNo())
-                                                                            .child("r_int").setValue(remaining_int);
-                                                                    Log.d("deposited new money: ", "Account: " + selected_account.getNo());
+                                                                            .child("last_pay_date").setValue(MainActivity.CaltoStringDate(curr_cal)).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                        @Override
+                                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                                            if (amount_received > remaining_int) {
+                                                                                database.getReference("customers")
+                                                                                        .child(selected_customer.getId()).child("accounts")
+                                                                                        .child(selected_account.getNo())
+                                                                                        .child("r_amt").setValue(remaining_amt);
+                                                                            }
+
+                                                                            interest_field.setText(String.valueOf(remaining_int));
+                                                                            database.getReference("customers")
+                                                                                    .child(selected_customer.getId())
+                                                                                    .child("accounts")
+                                                                                    .child(selected_account.getNo())
+                                                                                    .child("r_int").setValue(remaining_int);
+                                                                            Log.d("deposited new money: ", "Account: " + selected_account.getNo());
 
 
-                                                                    if (remaining_amt == 0) {
-                                                                        database.getReference("customers").child(selected_customer.getId()).child("accounts")
-                                                                                .child(selected_account.getNo()).child("active").setValue(false);
-                                                                    }
-                                                                    Toast.makeText(getContext(), "Amount Collected!", Toast.LENGTH_LONG).show();
+                                                                            if (remaining_amt == 0) {
+                                                                                database.getReference("customers").child(selected_customer.getId()).child("accounts")
+                                                                                        .child(selected_account.getNo()).child("active").setValue(false);
+                                                                            }
+                                                                            Toast.makeText(getContext(), "Amount Collected!", Toast.LENGTH_LONG).show();
 
-                                                                    FragmentManager fragmentManager = getFragmentManager();
-                                                                    assert fragmentManager != null;
-                                                                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                                                            FragmentManager fragmentManager = getFragmentManager();
+                                                                            assert fragmentManager != null;
+                                                                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-                                                                    FragmentAccountTypeInfo fragmentAccountTypeInfo = FragmentAccountTypeInfo.newInstance(Calendar.getInstance(), selected_customer.getAccounts1().get(0).getType());
-                                                                    fragmentTransaction.replace(R.id.fragment_container, fragmentAccountTypeInfo).addToBackStack(null).
-                                                                            commit();
+                                                                            FragmentAccountTypeInfo fragmentAccountTypeInfo = FragmentAccountTypeInfo.newInstance(Calendar.getInstance(), selected_customer.getAccounts1().get(0).getType());
+                                                                            fragmentTransaction.replace(R.id.fragment_container, fragmentAccountTypeInfo).addToBackStack(null).
+                                                                                    commit();
+                                                                        }
+                                                                    });
+
                                                                 }
                                                             });
-
-                                                        }
-                                                    });
-                                        }
-                                    });
+                                                }
+                                            });
                                 }
                             });
 
@@ -524,8 +521,6 @@ public class FragmentCollect extends Fragment {
     }
 
 
-
-
     private Long simpleInterest(Long amt, double roi_per_month, int months) {
         return (long) ((double) amt * ((roi_per_month / 100) * months));
     }
@@ -550,9 +545,6 @@ public class FragmentCollect extends Fragment {
         super.onDetach();
         mListener = null;
     }
-
-
-
 
 
     /**

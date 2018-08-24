@@ -135,7 +135,7 @@ public class FragmentShowCustomer extends Fragment {
                         }
                     }
                     customer1.setAccounts1(accounts);
-                    if (!containsId(customerList, customer1.getId())) {
+                    if (!containsId(customerList, customer1.getId()) && !customer1.isInactive()) {
                         if (account_type.equals("1") && contains_monthly) {
                             customerList.add(customer1);
                         } else if (account_type.equals("0") && (contains_daily || !contains_monthly)) {
