@@ -57,6 +57,15 @@
         android:background="@drawable/rounded_button"
         android:layout_gravity="center" />
 
+    <Button
+        android:id="@+id/agent_excel_button"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:text="Agent wise Excel"
+        android:padding="10dp"
+        android:background="@drawable/rounded_button"
+        android:layout_gravity="center" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler"
         android:layout_width="match_parent"

@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class DateAmount implements Serializable {
     String date;
+    String acc_id;
     private Long amount_principal = 0L;
     private Long amount_interest = 0L;
     private Long remaining_prin = 0L;
@@ -22,6 +23,14 @@ public class DateAmount implements Serializable {
             }
         }
 
+    }
+
+    public String getAcc_id() {
+        return acc_id;
+    }
+
+    public void setAcc_id(String acc_id) {
+        this.acc_id = acc_id;
     }
 
     public Long getRemaining_prin() {
