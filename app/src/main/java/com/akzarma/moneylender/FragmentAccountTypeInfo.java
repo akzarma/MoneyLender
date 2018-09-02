@@ -172,7 +172,7 @@ public class FragmentAccountTypeInfo extends Fragment {
                             agent.setId(logged_agent);
                             AgentAmount agentAmount = new AgentAmount();
                             agentAmount.setAgent(agent);
-                            agentAmount.setBothAmountsCollected(String.valueOf(each_account.getValue()));
+                            agentAmount.setAllAmountsCollected(String.valueOf(each_account.getValue()));
                             agentAmountHashMap.put(each_account.getKey(), agentAmount);
                         }
 
@@ -236,7 +236,7 @@ public class FragmentAccountTypeInfo extends Fragment {
                                                             newCustomer.setAccounts1(accountList);
                                                             CustomerAmount customerAmount = new CustomerAmount();
                                                             customerAmount.setCustomer(newCustomer);
-                                                            customerAmount.setBothAmountsCollected(amount_collected);
+                                                            customerAmount.setAllAmountsCollected(amount_collected);
 
                                                             if (customerAmount.getCustomer().getAccounts1().get(0).getType().equals(selected_account_type))
                                                                 customer_amount_map.put(each_acc_amt.getKey(), customerAmount);
@@ -391,7 +391,7 @@ public class FragmentAccountTypeInfo extends Fragment {
                                     agent.setId(each_agent_map.getKey());
                                     AgentAmount agentAmount = new AgentAmount();
                                     agentAmount.setAgent(agent);
-                                    agentAmount.setBothAmountsCollected(String.valueOf(each_account_amount_map.getValue()));
+                                    agentAmount.setAllAmountsCollected(String.valueOf(each_account_amount_map.getValue()));
                                     if (!agentAmountHashMap.containsKey(each_account_amount_map.getKey()))
                                         agentAmountHashMap.put(each_account_amount_map.getKey(), agentAmount);
                                 }
@@ -483,7 +483,7 @@ public class FragmentAccountTypeInfo extends Fragment {
                                                             newCustomer.setAccounts1(accountList);
                                                             CustomerAmount customerAmount = new CustomerAmount();
                                                             customerAmount.setCustomer(newCustomer);
-                                                            customerAmount.setBothAmountsCollected(amount_collected);
+                                                            customerAmount.setAllAmountsCollected(amount_collected);
 
                                                             if (customerAmount.getCustomer().getAccounts1().get(0).getType().equals(selected_account_type))
                                                                 customer_amount_map.put(each_acc_amt.getKey(), customerAmount);
@@ -628,7 +628,7 @@ public class FragmentAccountTypeInfo extends Fragment {
                     Log.d(TAG, "onCreate: " + "true file");
                 } else Log.d(TAG, "onCreate: " + "not writable");
                 File root = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "MoneyLender");
-                File DocsDirectory = new File(root.getAbsolutePath(), "Reports");
+                File DocsDirectory = new File(root.getAbsolutePath(), "Specific Day Reports");
                 DocsDirectory.mkdirs();
                 File actualDoc = new File(DocsDirectory.getAbsolutePath(), cal_str + ".xls");
                 try {

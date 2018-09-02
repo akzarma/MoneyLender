@@ -125,9 +125,9 @@ public class FragmentDateRangeReport extends Fragment {
         final Button get_daily_excel_button = view.findViewById(R.id.get_daily_excel_button);
         final Button get_monthly_excel_button = view.findViewById(R.id.get_monthly_excel_button);
         final Button agent_excel_button = view.findViewById(R.id.agent_excel_button);
-        get_both_excel_button.setVisibility(View.INVISIBLE);
+        get_both_excel_button.setVisibility(View.GONE);
         get_daily_excel_button.setVisibility(View.INVISIBLE);
-        get_monthly_excel_button.setVisibility(View.INVISIBLE);
+        get_monthly_excel_button.setVisibility(View.GONE);
 
         TextView fragment_textV_day = view.findViewById(R.id.fragment_textV_day);
 
@@ -240,9 +240,9 @@ public class FragmentDateRangeReport extends Fragment {
                                                     each_account.getValue().setType(dataSnapshot.child(acc_id).getValue(String.class));
                                                 }
 
-                                                get_both_excel_button.setVisibility(View.VISIBLE);
+//                                                get_both_excel_button.setVisibility(View.VISIBLE);
                                                 get_daily_excel_button.setVisibility(View.VISIBLE);
-                                                get_monthly_excel_button.setVisibility(View.VISIBLE);
+//                                                get_monthly_excel_button.setVisibility(View.VISIBLE);
                                             }
 
                                             @Override
@@ -367,9 +367,9 @@ public class FragmentDateRangeReport extends Fragment {
                                                     each_account.getValue().setType(dataSnapshot.child(acc_id).getValue(String.class));
                                                 }
 
-                                                get_both_excel_button.setVisibility(View.VISIBLE);
+//                                                get_both_excel_button.setVisibility(View.VISIBLE);
                                                 get_daily_excel_button.setVisibility(View.VISIBLE);
-                                                get_monthly_excel_button.setVisibility(View.VISIBLE);
+//                                                get_monthly_excel_button.setVisibility(View.VISIBLE);
                                             }
 
                                             @Override
@@ -408,6 +408,7 @@ public class FragmentDateRangeReport extends Fragment {
 
             get_daily_excel_button.setVisibility(View.GONE);
             get_monthly_excel_button.setVisibility(View.GONE);
+            agent_excel_button.setVisibility(View.GONE);
 
             DatabaseReference agent_collect_db_ref = database.getReference("agentCollect").child(logged_agent);
             agent_collect_db_ref.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -468,6 +469,8 @@ public class FragmentDateRangeReport extends Fragment {
             public void onClick(View v) {
                 get_daily_excel_button.setText("Generating...");
                 generate_specific_excel("0");
+                generate_specific_excel("1");
+                generate_excel();
                 get_daily_excel_button.setText("Done");
                 get_daily_excel_button.setEnabled(false);
 
@@ -478,7 +481,6 @@ public class FragmentDateRangeReport extends Fragment {
             @Override
             public void onClick(View v) {
                 get_monthly_excel_button.setText("Generating...");
-                generate_specific_excel("1");
                 get_monthly_excel_button.setText("Done");
                 get_monthly_excel_button.setEnabled(false);
 
@@ -489,7 +491,6 @@ public class FragmentDateRangeReport extends Fragment {
             @Override
             public void onClick(View v) {
                 get_both_excel_button.setText("Generating...");
-                generate_excel();
                 get_both_excel_button.setText("Done");
                 get_both_excel_button.setEnabled(false);
 
@@ -511,9 +512,9 @@ public class FragmentDateRangeReport extends Fragment {
         File root = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "MoneyLender");
         File DocsDirectory;
         if (selected_agent == null) {
-            DocsDirectory = new File(root.getAbsolutePath(), "Monthly Reports/BothAccounts/AllAgents");
+            DocsDirectory = new File(root.getAbsolutePath(), "Monthly Reports/Both Type of Accounts/AllAgents");
         } else {
-            DocsDirectory = new File(root.getAbsolutePath(), "Monthly Reports/BothAccounts/" + selected_agent);
+            DocsDirectory = new File(root.getAbsolutePath(), "Monthly Reports/Both Type of Accounts/" + selected_agent);
         }
         DocsDirectory.mkdirs();
         File actualDoc = new File(DocsDirectory.getAbsolutePath(), from_date + "_to_" + to_date + ".xls");
@@ -614,15 +615,15 @@ public class FragmentDateRangeReport extends Fragment {
         File DocsDirectory;
         if (account_type.equals("0")) {
             if (selected_agent == null) {
-                DocsDirectory = new File(root.getAbsolutePath(), "Monthly Reports/DailyBasis/AllAgents");
+                DocsDirectory = new File(root.getAbsolutePath(), "Monthly Collection Sheet/Daily Basis Accounts/AllAgents");
             } else {
-                DocsDirectory = new File(root.getAbsolutePath(), "Monthly Reports/DailyBasis/" + selected_agent);
+                DocsDirectory = new File(root.getAbsolutePath(), "Monthly Collection Sheet/Daily Basis Accounts/" + selected_agent);
             }
         } else {
             if (selected_agent == null) {
-                DocsDirectory = new File(root.getAbsolutePath(), "Monthly Reports/MonthlyBasis/AllAgents");
+                DocsDirectory = new File(root.getAbsolutePath(), "Monthly Collection Sheet/Monthly Basis Accounts/AllAgents");
             } else {
-                DocsDirectory = new File(root.getAbsolutePath(), "Monthly Reports/MonthlyBasis/" + selected_agent);
+                DocsDirectory = new File(root.getAbsolutePath(), "Monthly Collection Sheet/Monthly Basis Accounts/" + selected_agent);
             }
         }
         DocsDirectory.mkdirs();
